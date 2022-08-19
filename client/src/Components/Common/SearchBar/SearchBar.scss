@@ -1,0 +1,65 @@
+@use "Styles/vars";
+@use "Styles/funcs";
+
+$transition: all 0.3s ease;
+
+.searchContainer {
+  @include funcs.flexCenter();
+  height: 80px;
+  position: relative;
+  overflow: hidden;
+  width: 450px;
+
+  input {
+    height: 50px;
+    width: 90%;
+    font-size: vars.$listFont;
+    color: vars.$tertiaryColor;
+    background: transparent;
+    border: none;
+    outline: none;
+
+    &:focus + .labelName,
+    &:valid + .labelName {
+      .contentName {
+        content: "";
+        display: none;
+        transform: translateX(150%);
+      }
+
+      &::after {
+        transform: translateX(0%);
+      }
+    }
+  }
+
+  label {
+    @include funcs.flexCenter();
+    position: absolute;
+    bottom: 15px;
+    left: 5%;
+    width: 90%;
+    height: 40px;
+    pointer-events: none;
+    border-bottom: 1px solid vars.$white;
+    overflow: hidden;    
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: -3px;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      border-bottom: 3px solid vars.$tertiaryColor;
+      transform: translate(-100%);
+      transition: $transition;
+    }
+
+    .contentName {
+      position: absolute;
+      transition: $transition;
+      font-size: 2rem;
+    }
+  }
+}

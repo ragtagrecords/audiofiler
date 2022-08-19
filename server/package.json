@@ -1,0 +1,20 @@
+{
+  "name": "audiofiler-server",
+  "version": "1.0.0",
+  "description": "serve staic audio files",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "reboot": "git stash && git fetch origin main && git reset origin/main --hard && rm -rf node_modules && npm install && forever start app.js "
+  },
+  "author": "Ragtag Records",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.17.3",
+    "express-fileupload": "^1.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1"
+  }
+}

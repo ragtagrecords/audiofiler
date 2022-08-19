@@ -1,0 +1,41 @@
+@use "Styles/vars";
+@use "sass:math";
+
+@keyframes fadeInAndOut {
+  0%   {opacity: 0; }
+  50%   {opacity: 100; }
+  100%   {opacity: 0; }
+}
+
+.container {
+  $width: 430px;
+  $height: 430px;
+  width: $width;
+  height: $height;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border: 5px solid vars.$tertiaryColor;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1010;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 50px;
+  margin: auto;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.container.show {
+  animation-name: fadeInAndOut;
+  animation-duration: 1.5s;
+}
+
+.text {
+  font-size: 40px;
+  color: vars.$tertiaryColor;
+}

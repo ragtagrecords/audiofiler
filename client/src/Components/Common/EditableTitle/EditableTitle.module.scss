@@ -1,0 +1,31 @@
+@use "Styles/vars";
+
+.editableTitle {
+    background: transparent;
+    input {
+      font-family: vars.$font;
+      caret-color: vars.$tertiaryColor;
+      width: 100%;
+      font-size: 2rem;
+      font-weight: bold;
+      background-image: linear-gradient(vars.$tertiaryColor, vars.$white);
+      background-clip: text;
+      color: transparent;
+
+      box-sizing: border-box;
+      align-items: flex-end;
+      border: none;
+      outline: none;
+      border-radius: vars.$roundCorners;
+      text-align: center;
+      padding: 10px;  
+
+      &::placeholder {
+        opacity: 1;
+      }
+
+      &:focus {
+        outline: 1px solid vars.$tertiaryColor;
+      }
+    }
+}

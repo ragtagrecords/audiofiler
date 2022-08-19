@@ -1,0 +1,32 @@
+@use "Styles/vars";
+@use "Styles/funcs";
+
+#header {
+  @include funcs.flexCenter();
+  min-height: 80px;
+  z-index: vars.$floatingZ;
+  width: 100%;
+  justify-content: flex-start;
+
+  #header-left {
+    width: 50px;
+  }
+  #header-center {
+    @include funcs.flexCenter();
+    width: calc(100% - 100px);
+  }
+  #header-right {
+    width: 50px;
+  }
+
+  /* transition */
+
+  background: rgb(18, 31, 38);
+  
+  .noClickThru 
+  {
+    width: 100%;
+    height: 160px;
+    pointer-events: auto;
+  }
+}

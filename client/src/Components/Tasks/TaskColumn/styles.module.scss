@@ -1,0 +1,21 @@
+$headerHeight: 40px;
+$headerTopMargin: 10px;
+
+.columnContainer {
+    width: 25%;
+    height: 90%;
+    max-width: 350px;
+    background-color: #383838;
+    border-radius: 15px;
+    margin: 0px 20px;
+
+    h2 {
+      margin: $headerTopMargin 0px 0px 20px;
+      text-align: left;
+      height: $headerHeight;
+    }
+
+    .cardsContainer {
+      height: calc(100% - $headerHeight - $headerTopMargin);
+    }
+}

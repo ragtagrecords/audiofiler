@@ -1,0 +1,278 @@
+@use "Styles/vars";
+@use "Styles/funcs";
+
+$uiHeight: calc(vars.$footerHeight / 4);
+.audioPlayer {
+  @include funcs.flexCenter();
+  background-color: vars.$primaryColor;
+  z-index: vars.$floatingZ;
+  height: 100%;
+  pointer-events: none;
+
+  .audioPlayerUI {
+    @include funcs.flexCenter();
+    pointer-events: auto;
+
+    &.name {
+      width: 10%;
+      height: $uiHeight;
+      font-size: 1.2rem;
+      h2 {
+        margin: 0;
+      }
+    }
+
+    &.currentPosition {
+      width: 30%;
+      height: $uiHeight;
+
+      .currentTime,
+      .duration {
+        font-size: 1rem;
+        padding: 0 2%;
+      }
+
+      .currentTime {
+        margin-left: 25px;
+      }
+
+      .slider {
+        @include funcs.flexCenter();
+
+        $thumbRadius: 26px;
+        $knob: rgb(17, 17, 17);
+        $selected-knob: rgba(vars.$secondaryColor, 0.8);
+        $progressHeight: calc($thumbRadius / 10);
+
+        @mixin thumb {
+          height: $thumbRadius;
+          width: $thumbRadius;
+          border-radius: 50%;
+          border: 2px solid vars.$tertiaryColor;
+          background-color: $knob;
+
+          cursor: pointer;
+          z-index: 3;
+          box-sizing: border-box;
+          box-shadow: 1px 1px 1px rgba(vars.$tertiaryColor, 0.5),
+            0px 0px 1px rgba(vars.$tertiaryColor, 0.2);
+        }
+
+        .progressBar {
+          $bar-bg: #74b0d6d5;
+          $seek-before-width: 0;
+          $seek-before-color: rgba(vars.$white, 0.3);
+          position: relative;
+
+          @mixin activeThumb {
+            transform: scale(1.3);
+            background: $selected-knob;
+            border: 7px solid rgba(vars.$tertiaryColor, 0.1);
+            user-select: none;
+          }
+
+          appearance: none;
+          background: $bar-bg;
+          border-radius: $thumbRadius;
+          position: relative;
+          width: 100%;
+          height: $progressHeight;
+          outline: none;
+
+          /* chrome safari knob */
+          &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            @include thumb();
+          }
+
+          /* chrome safari knob while dragging */
+          &:active::-webkit-slider-thumb {
+            @include activeThumb();
+          }
+
+          /* firefox knob */
+          &::-moz-range-thumb {
+            @include thumb();
+          }
+
+          /* firefox knob while dragging */
+          &:active::-moz-range-thumb {
+            @include activeThumb();
+          }
+
+          /* firefox */
+          &::-moz-range-track {
+            background: transparent;
+            border-radius: $thumbRadius;
+            position: relative;
+            width: 100%;
+            height: $thumbRadius;
+            outline: none;
+          }
+
+          &::-moz-focus-outer {
+            border: 0;
+          }
+
+          /* safari */
+          &::-webkit-slider-runnable-track {
+            background: transparent;
+            border-radius: $thumbRadius;
+            position: relative;
+            width: 100%;
+            height: $thumbRadius;
+            outline: none;
+          }
+
+          /* chrome safari progress bar */
+          &::before {
+            content: "";
+            height: $progressHeight;
+            width: $seek-before-width;
+            background-color: $seek-before-color;
+            border-top-left-radius: $thumbRadius;
+            border-bottom-left-radius: $thumbRadius;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            cursor: pointer;
+          }
+
+          /* firefox progress bar */
+          &::-moz-range-progress {
+            background-color: $seek-before-color;
+            border-top-left-radius: $thumbRadius;
+            border-bottom-left-radius: $thumbRadius;
+            height: $progressHeight;
+          }
+        }
+      }
+    }
+
+    &.controls {
+      width: 10%;
+      height: $uiHeight;
+
+      .forwardBackward {
+        @include funcs.flexCenter();
+        width: 60px;
+        color: vars.$white;
+        background-color: transparent;
+        border: none;
+        font-family: monospace;
+        font-size: 2.2rem;
+        cursor: pointer;
+
+        &:hover, &:active {
+          color: vars.$secondaryColor;
+        }
+
+        &:not(&:hover), &:not(&:active) {
+          color: vars.$white;
+        }
+
+        &#forward {
+          justify-content: start;
+        }
+
+        &#backward {
+          justify-content: end;
+        }
+      }
+
+      .playPause {
+        @include funcs.flexCenter();
+        width: 100px;
+        background-color: transparent;
+        border: none;
+        border-radius: 50%;
+        font-size: 4rem;
+        color: vars.$white;
+
+        &:hover, &:active {
+          color: vars.$secondaryColor;
+        }
+        
+      }
+
+      .loop {
+        background-color: transparent;
+        border: none;
+        font-size: 1.2rem;
+        color: vars.$white;
+        margin: 10px;
+        width: 60px;
+
+        #isLooping {
+          color: vars.$tertiaryColor;
+          border: 1px solid vars.$tertiaryColor;
+          border-radius: 50%;
+          padding: 10px;
+          margin: -11px;
+        }
+      }
+    }
+  }
+}
+
+/* -------------
+  media queries
+----------------- */
+
+@media screen and (max-width: vars.$tabletBreakpoint) {
+  // scale the height of the footer
+  $footerScale: 1.5;
+  $nameHeight: (0.3 * $footerScale * vars.$footerHeight);
+  $positionHeight: (0.3 * $footerScale * vars.$footerHeight);
+  $controlsHeight: (0.4 * $footerScale * vars.$footerHeight);
+
+  .audioPlayer {
+    flex-direction: column;
+    justify-content: end;
+    touch-action: none;
+    height: 100%;
+
+    .audioPlayerUI {
+
+      &.name {
+        width: 90%;
+        height: $nameHeight;
+        align-items: end;
+      }
+
+      &.currentPosition {
+        width: 65%;
+        height: $positionHeight;
+      }
+
+      &.controls {  
+        height: $controlsHeight;
+        width: 90%;
+        padding-bottom: 10px;
+
+        button {
+          width: 20px;
+        }
+      }
+
+      & button {
+        padding: 1vh;
+      }
+    }
+
+    .currentTime {
+      margin: 0 !important;
+    }
+  }
+}
+
+@media screen and (max-width: vars.$phoneBreakpoint) {
+  .audioPlayer {
+    .audioPlayerUI {
+      &.currentPosition {
+        width: 90%;
+      }
+    }
+  }
+}

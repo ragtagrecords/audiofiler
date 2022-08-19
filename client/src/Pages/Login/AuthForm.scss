@@ -1,0 +1,7 @@
+@use "Styles/funcs";
+@use "Styles/form";
+
+.container {
+  height: 100vh;
+  @include funcs.flexCenter();
+}

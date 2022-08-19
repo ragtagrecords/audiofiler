@@ -1,0 +1,29 @@
+@use "Styles/vars";
+@use "Styles/funcs";
+
+.appContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  overflow-x: hidden;
+
+  .pageContent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    align-items: center;
+  }
+
+  .footer {
+    width: 100%;
+    height: vars.$footerHeight;
+  }
+
+  @media screen and (max-width: vars.$tabletBreakpoint) {
+    .footer {
+      height: calc(1.5 * vars.$footerHeight);
+    }
+  }
+}

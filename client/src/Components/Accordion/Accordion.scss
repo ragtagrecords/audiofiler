@@ -1,0 +1,24 @@
+@use "Styles/vars";
+@use "Styles/funcs";
+
+.accordionContainer {
+  @include funcs.flexCenter();
+  background-color: #1e5c93;
+}
+
+.accordion {
+  width: 100%;
+  max-width: 450px;
+  border-radius: vars.$roundCorners;
+  padding: 0 30px;
+}
+
+/* -------------
+  media queries
+----------------- */
+
+@media screen and (max-width: vars.$phoneBreakpoint) {
+  .accordion {
+      width: 92%;
+  }
+}

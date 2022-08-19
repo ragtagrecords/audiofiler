@@ -1,0 +1,9 @@
+@use "vars";
+
+body {
+  background-color: #1e5c93;
+  color: vars.$tertiaryColor;
+  font-family: vars.$font;
+  font-size: vars.$defaultFontSize;
+  margin: 0;
+}

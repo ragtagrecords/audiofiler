@@ -1,0 +1,23 @@
+@use "Styles/vars";
+@use "Styles/funcs";
+@use "Styles/lists";
+@use "Styles/doc";
+
+.playlists {
+  @include funcs.flexCenter();
+  padding: 10px 0;
+
+  li {
+    height: 80px;
+    border-radius: vars.$roundCorners;
+
+    &.searchItem {
+      @include funcs.flexCenter();
+    }
+
+    .bar {
+      width: 500px;
+      max-width: 90%;
+    }
+  }
+}

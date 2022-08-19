@@ -1,0 +1,47 @@
+@use "Styles/funcs";
+@use "Styles/vars";
+
+$height: 60px;
+
+button.accordionBody {
+  display: none;
+  color: vars.$tertiaryColor;
+  font-size: 2.2rem;
+
+  &.info {
+    cursor: pointer;
+  }
+
+  &.open {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    padding: 5px 0px 30px 0px;
+
+    p {
+      margin: 10px 20px;
+      display: flex;
+      justify-content: left;
+      font-size: 16px;
+
+      input {
+        border: none;
+        background: none;
+        color: whitesmoke;
+        font-size: inherit;
+        width: 60px;
+      }
+
+      textarea {
+        border: none;
+        background: none;
+        color: whitesmoke;
+        font-size: inherit;
+        width: 340px;
+        height: 100px;
+        resize: none;
+      }
+    }
+  }
+}
+

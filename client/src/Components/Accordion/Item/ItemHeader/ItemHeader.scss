@@ -1,0 +1,67 @@
+@use "Styles/funcs";
+@use "Styles/vars";
+
+$height: 60px;
+
+.accordionHeader {
+    @include funcs.flexCenter();
+    height: $height;
+
+    .accordionHeaderSection {
+      button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0px;
+      }
+      
+      &.left, &.right {
+        width: 0%;
+        height: $height;
+      }
+      &.center {
+        width: 100%;
+
+        .accordionButton {
+          @include funcs.flexCenter();
+          height: $height;
+          padding: 0px 20px;
+          cursor: pointer;
+
+          span {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+
+          span, input {
+            background: transparent;
+            color: vars.$tertiaryColor;
+            text-align: center;
+            font-size: 1.5rem;
+            border: none;
+            min-width: 0;
+          };
+        }
+      }
+    }
+
+	&.selected, &.adding {
+		.accordionHeaderSection {
+			&.left, &.right {
+				width: 15%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+        flex-shrink: 0;
+			}
+			&.center {
+				width: 70%;
+
+				.accordionButton {
+					width: 100%;
+				}
+			}
+		}
+	}
+}

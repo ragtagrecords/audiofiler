@@ -1,0 +1,32 @@
+// general colors
+$gray: rgb(43, 43, 43);
+$white: whitesmoke;
+
+// colors for primary theme
+$primaryColor: rgb(2, 17, 26);
+$secondaryColor: #355a6e;
+$tertiaryColor: #5ae7ff;
+
+// font
+$font: monospace;
+$defaultFontSize: 1rem;
+$listFont: 2.2rem;
+
+// layers seperated with z-indices
+$floatingZ : 1000;
+
+
+// media query breakpoints
+$phoneBreakpoint: 600px;
+$tabletBreakpoint: 1080px;
+
+$light-primary-color: whitesmoke;
+$light-secondary-color: #51626c;
+$light-tertiary-color: #0b0b0b;
+
+// bubble styles
+$roundCorners: 25px;
+
+// layout heights
+
+$footerHeight: 120px;
