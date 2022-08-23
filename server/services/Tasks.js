@@ -69,13 +69,15 @@ async function getTasksByID(db, id = null, songID = null, parentID = null) {
     whereValue = [parentID];
   }
 
-  return sqlSelect(
+  const rows = await sqlSelect(
       db,
       'task',
       allColumns,
       whereClause,
       whereValue,
   );
+
+  return rows ? rows[0] : false;
 }
 
 async function updateTask(db, id, task) {

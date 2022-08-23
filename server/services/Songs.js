@@ -53,13 +53,15 @@ async function getSongByID(db, id) {
         return false;
     }
 
-    return sqlSelect(
+    const rows = await sqlSelect(
         db,
         'songs',
         allColumns,
         'WHERE id = ?',
         [id],
     );
+
+    return rows ? rows[0] : false;
 }
 
 async function getSongsByPlaylistID(db, id) {
@@ -68,7 +70,7 @@ async function getSongsByPlaylistID(db, id) {
         return false;
     }
 
-    return sqlSelect(
+    return await sqlSelect(
         db,
         'songs',
         [...allColumns, 'songPlaylists.position'],

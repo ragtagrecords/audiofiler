@@ -10,7 +10,6 @@ services:
     volumes:
       - "./config/createTables.sql:/docker-entrypoint-initdb.d/createTables.sql"
       - "./config/insertData.sql:/docker-entrypoint-initdb.d/insertData.sql"
-      - "./config/addPriveliges.sql:/docker-entrypoint-initdb.d/addPriveliges.sql"
     ports:
       - "${MYSQL_DB_PORT}:${MYSQL_DB_PORT}"
     environment:

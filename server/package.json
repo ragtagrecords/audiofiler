@@ -4,7 +4,7 @@
   "description": "serve staic audio files",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "reboot": "git stash && git fetch origin main && git reset origin/main --hard && rm -rf node_modules && npm install && forever start app.js "
   },
   "author": "Ragtag Records",
@@ -15,6 +15,7 @@
     "express": "^4.17.3",
     "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.19"
   }
 }

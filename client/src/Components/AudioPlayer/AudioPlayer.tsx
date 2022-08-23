@@ -17,12 +17,6 @@ export const AudioPlayer = ({ song, skipSong, prevSong }: AudioPlayerProps) => {
   const [seekTime, setSeekTime] = useState<number>(0);
   const [isLooping, setIsLooping] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (song && song.id) {
-      setIsPlaying(true);
-    }
-  }, [song]);
-
   return (
     <div className="audioPlayer">
       {song && song.path
