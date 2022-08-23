@@ -1,4 +1,4 @@
-const { sqlInsert, sqlSelect, sqlUpdate, sqlDelete } = require('../services/Db.js');
+const { sqlInsert, sqlSelect, sqlUpdate, sqlDelete, sqlMax } = require('../services/Db.js');
 const { getSongs, getSongsByPlaylistID } = require('../services/Songs.js');
 
 const defSongPlaylistsColumns = [
@@ -9,12 +9,20 @@ const defSongPlaylistsColumns = [
 
 const allColumns = [...defSongPlaylistsColumns, 'songPlaylists.id'];
 
-async function addSongToPlaylist(db, songID, playlistID, order = null)
+async function addSongToPlaylist(db, songID, playlistID)
 {
     if(!db || !songID || !playlistID) {
         console.log('ERROR: songID and playlistID required');
         return false;
     }
+
+    const position = await sqlMax(
+        db, 'songPlaylists',
+        'position',
+        'WHERE playlistID = ?',
+        [playlistID],
+        playlistID
+    );
 
     return sqlInsert(
         db,
@@ -23,7 +31,7 @@ async function addSongToPlaylist(db, songID, playlistID, order = null)
         [
             songID,
             playlistID,
-            order
+            position ?? 0
         ]
     );
 }
