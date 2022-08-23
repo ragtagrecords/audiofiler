@@ -1,20 +1,23 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const Logger = require('../utils/Logger.js');
 
 async function connectToDB() {
     const db = await mysql.createConnection({
-        user: "audiofiler-fs",
-        host: "150.238.75.231",
-        password: "weloveclouddatabasesolutions",
-        database: "audiofiler"
+        user: process.env.MYSQL_USER,
+        host: process.env.MYSQL_HOST,
+        port: process.env.MYSQL_PORT,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE,
     });
 
-    if (db) {
-        return db;
-    } else {
-        Logger.logError('createDBConnection()', "Couldn't connect to database");
+    db.connect(function(err) {
+        if (err) {
+            Logger.logError('createDBConnection()', "Couldn't connect to database");
+        }
         return false;
-    }
+    });
+
+    return db;
 }
 
 // TRANSACTIONS
@@ -73,7 +76,7 @@ async function sqlInsert(db, table, cols, args = null) {
     }
 
     return new Promise(async resolve => {
-        await db.query(
+        await db.execute(
             `INSERT INTO ${table} (${cols}) VALUES (${getQuestionMarks(args.length)})`,
             args,
             (err, result) => {
@@ -104,7 +107,7 @@ async function sqlSelect(db, table, cols, whereClause, whereVals, multipleRows =
     }
 
     return new Promise(async resolve => {
-        await db.query(
+        await db.execute(
             `SELECT ${cols} FROM ${table} ${whereClause ?? ''};`,
             whereVals ?? [],
             (err, rows) => {
@@ -133,7 +136,7 @@ async function sqlDelete(db, table, whereClause, args) {
     }
 
     return new Promise(async resolve => {
-        await db.query(
+        await db.execute(
             `DELETE FROM ${table} ${whereClause} LIMIT 100;`,
             args,
             (err, result) => {
@@ -192,7 +195,7 @@ async function sqlUpdate(db, table, whereClause, object, whereValues) {
     let colValues = Object.values(object);
 
     return new Promise(async resolve => {
-        await db.query(
+        await db.execute(
             `UPDATE ${table} SET ${getSQLStringToUpdateColumns(colNames)} ${whereClause};`,
             [...colValues, ...whereValues],
             async (err, res) => {

@@ -23,7 +23,7 @@ const allColumns = [
 
 // Add a row to the songs table
 async function addSong(db, song) {
-    const { path, name, tempo, artist, isParent, parentID, zipPath } = song;
+    const { path, name, tempo, artist, isParent, parentID, zipPath, notes } = song;
 
     if (!path || !name) {
         console.log('ERROR: Song must have path and name');
@@ -42,6 +42,7 @@ async function addSong(db, song) {
             isParent ? isParent : null,
             parentID ? parentID: null,
             zipPath ? zipPath : null,
+            notes ? notes : null,
         ]
     );
 }

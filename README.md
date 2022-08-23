@@ -9,7 +9,7 @@
 git clone git@github.com:TODO
 
 // Build and start the containers in Docker
-docker-compose --env-file ./config/.env.dev up --build
+docker-compose --env-file=./config/.dev.env up --build
 
 // Check api in browser
 http://localhost:3000/songs

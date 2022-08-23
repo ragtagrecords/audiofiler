@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const Logger = require('../utils/Logger.js');
 const { sqlInsert, sqlSelect } = require('../services/Db.js');
 
