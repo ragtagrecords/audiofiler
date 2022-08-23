@@ -115,8 +115,8 @@ export const Playlist = () => {
     if (!s || s.length === 0) {
       return false;
     }
-    dispatch(PLAYLIST_ACTIONS.setIsLoading(false));
     dispatch(PLAYLIST_ACTIONS.setPlaylistSongs(s));
+    dispatch(PLAYLIST_ACTIONS.setIsLoading(false));
     return true;
   };
 

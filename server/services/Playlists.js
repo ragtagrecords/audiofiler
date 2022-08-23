@@ -26,13 +26,15 @@ async function getPlaylistByID(db, id) {
         return false;
     }
 
-    return sqlSelect(
+    const rows = await sqlSelect(
         db,
         'playlists',
         allPlaylistsColumns,
         'WHERE id = ?',
         [id],
     );
+
+    return rows ? rows[0] : false;
 }
 
 async function getPlaylistsBySongID(db, songID) {

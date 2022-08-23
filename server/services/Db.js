@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const Logger = require('../utils/Logger.js');
 
 async function connectToDB() {
@@ -20,25 +20,6 @@ async function connectToDB() {
     return db;
 }
 
-// TRANSACTIONS
-async function rollbackAndLog(db, failures, fileName, errMessage, funcName) {
-    await db.rollback();
-    failures.push({
-        'fileName': fileName,
-        'err': errMessage
-    });
-    Logger.logError(funcName, errMessage);
-}
-
-async function commitAndLog(db, successes, fileName, message, funcName) {
-    await db.commit();
-    successes.push({
-        'fileName': fileName,
-        'err': message
-    });
-    Logger.logSuccess(funcName, message)
-}
-
 function getQuestionMarks(count) {
     if (count <= 0) {
         return '';
@@ -50,46 +31,41 @@ function getQuestionMarks(count) {
     return str;
 }
 
-// Removes null properties from objects within an array
-function deleteNullProperties (arrayOfObjects) {
+/* Given: 
+    [name, tempo, path]
 
-    if (arrayOfObjects.length === 0) {
-        return [];
-    }
-    // For each key in each object, remove it if null
-    arrayOfObjects.forEach((object) => {
-        Object.keys(object).forEach(key => {
-            if (object[key] === null) {
-              delete object[key];
-            }
-          });
-    });
-
-    return arrayOfObjects;
+   Returns:
+    'name = ?, tempo = ?, path = ?'
+*/
+function getSQLStringToUpdateColumns(cols) {
+  let str = '';
+  for(let i = 0; i < cols.length; i += 1) {
+      if (i != 0) {
+          str += ', '
+      }
+      str += `${cols[i]} = ?`
+  }
+  return str;
 }
 
 // Template for INSERT queries on our database
 async function sqlInsert(db, table, cols, args = null) {
 
-    if (!db || !table || !cols || !args) {
-        return false;
-    }
+  if (!db || !table || !cols || !args) {
+    return false;
+  }
 
-    return new Promise(async resolve => {
-        await db.execute(
-            `INSERT INTO ${table} (${cols}) VALUES (${getQuestionMarks(args.length)})`,
-            args,
-            (err, result) => {
-                if (err) {
-                    Logger.logError('sqlInsert()', err.sqlMessage ?? "Database Error, No message found");
-                    resolve(false);
-                } else {
-                    Logger.logSuccess('sqlInsert()', `id(${result.insertId}) added to ${table}`);
-                    resolve(result.insertId);
-                }
-            }
-        );
-    });
+  try {
+    const [result] = await db.execute(
+      `INSERT INTO ${table} (${cols}) VALUES (${getQuestionMarks(args.length)})`,
+      args,
+    );
+    Logger.logSuccess('sqlInsert()', `id(${result.insertId}) added to ${table}`);
+    return result.insertId;
+  } catch (err) {
+    Logger.logError('sqlInsert()', err.sqlMessage ?? "Database Error, No message found");
+    return false;
+  }
 }
 
 // Template for SELECT queries on our database
@@ -106,71 +82,37 @@ async function sqlSelect(db, table, cols, whereClause, whereVals, multipleRows =
         return false;
     }
 
-    return new Promise(async resolve => {
-        await db.execute(
+    try {
+        const [rows] = await db.execute(
             `SELECT ${cols} FROM ${table} ${whereClause ?? ''};`,
             whereVals ?? [],
-            (err, rows) => {
-                if (err) {
-                    Logger.logError(`sqlSelect() on table: ${table}`, err.sqlMessage ?? "Database Error, No message found");
-                    resolve(false);
-                } else {
-                    Logger.logSuccess(
-                        'sqlSelect()',
-                        `Returned ${whereVals ?? 'all rows'} from ${table}` 
-                    );
-                    const result = deleteNullProperties(rows);
-                    resolve(multipleRows || result.length > 1 ? result : result[0]);
-                }
-            }
         );
-
-    });
+        Logger.logSuccess('sqlSelect()', `Returned rows from ${table}`);
+        return rows;
+    } catch (err) {
+        Logger.logError(`sqlSelect() on table: ${table}`, err.sqlMessage ?? "Database Error, No message found");
+        return false;
+    }
 }
 
 // Template for DELETE queries on our database
 async function sqlDelete(db, table, whereClause, args) {
-
     if (!db || !table || !whereClause || !args) {
         return false;
     }
 
-    return new Promise(async resolve => {
-        await db.execute(
-            `DELETE FROM ${table} ${whereClause} LIMIT 100;`,
-            args,
-            (err, result) => {
-                if (err) {
-                    Logger.logError(`sqlDelete() on table: ${table}`, err.sqlMessage ?? "Database Error, No message found");
-                    resolve(false);
-                } else {
-                    Logger.logSuccess(
-                        'sqlDelete()',
-                        `Deleted ${args} from ${table}` 
-                    );
-                    resolve(result.affectedRows);
-                }
-            }
-        );
-
-    });
-}
-
-/* Given: 
-    [name, tempo, path]
-
-   Returns:
-    'name = ?, tempo = ?, path = ?'
-*/
-function getSQLStringToUpdateColumns(cols) {
-    let str = '';
-    for(let i = 0; i < cols.length; i += 1) {
-        if (i != 0) {
-            str += ', '
-        }
-        str += `${cols[i]} = ?`
+    try {
+      const [result] = await db.execute(`DELETE FROM ${table} ${whereClause} LIMIT 100;`, args);
+      Logger.logSuccess(
+        'sqlDelete()',
+        `Deleted ${args} from ${table}`
+      );
+      console.log(result);
+      return result.affectedRows;
+    } catch (err) {
+      Logger.logError(`sqlDelete() on table: ${table}`, err.sqlMessage ?? "Database Error, No message found");
+      return false;
     }
-    return str;
 }
 
 // Template for UPDATE queries on our database
@@ -194,27 +136,39 @@ async function sqlUpdate(db, table, whereClause, object, whereValues) {
     let colNames = Object.keys(object);
     let colValues = Object.values(object);
 
-    return new Promise(async resolve => {
-        await db.execute(
-            `UPDATE ${table} SET ${getSQLStringToUpdateColumns(colNames)} ${whereClause};`,
-            [...colValues, ...whereValues],
-            async (err, res) => {
-                if (err) {
-                    Logger.logError(`sqlUpdate() on table: ${table}`, err.sqlMessage ?? "Database Error, No message found");
-                    resolve(false);
-                } else {
-                    const message = `Updated ${colNames.join(', ')} for ${table} | ${whereClause} | ${whereValues}`;
-                    Logger.logSuccess(
-                        'sqlUpdate()',
-                        message 
-                    );
-                    const updatedRow = await sqlSelect(db, table, colNames, whereClause, whereValues, false);
-                    resolve(updatedRow);
-                }
-            }
-        );
-
-    });
+    try {
+      const [result] = await db.execute(
+        `UPDATE ${table} SET ${getSQLStringToUpdateColumns(colNames)} ${whereClause};`,
+        [...colValues, ...whereValues],
+      );
+      const message = `Updated ${colNames.join(', ')} for ${table} | ${whereClause} | ${whereValues}`;
+      Logger.logSuccess('sqlUpdate()', message);
+      const updatedRow = await sqlSelect(db, table, colNames, whereClause, whereValues, false);
+      return updatedRow;
+    } catch (err) {
+      Logger.logError(`sqlUpdate() on table: ${table}`, err.sqlMessage ?? "Database Error, No message found");
+      return false;
+    }
 }
 
-module.exports = { connectToDB, rollbackAndLog, commitAndLog, sqlInsert, sqlSelect, sqlUpdate, sqlDelete };
+// Template for MAX queries on our database
+async function sqlMax(db, table, maxColumn, whereClause, args) {
+  if (!db || !maxColumn || !table) {
+      console.log('ERROR: Required args not found');
+      return false;
+  }
+
+  try {
+    const [rows] = await db.execute(
+      `SELECT MAX(${maxColumn}) as maxPosition FROM ${table} ${whereClause}`,
+      args ?? [],
+    );
+    Logger.logSuccess('sqlMax()', `Max returned from ${table}`);
+    return rows[0].maxPosition;
+  } catch (err) {
+    Logger.logError('sqlMax()', err.sqlMessage ?? "Database Error, No message found");
+    return false;
+  }
+}
+
+module.exports = { connectToDB, sqlInsert, sqlSelect, sqlUpdate, sqlDelete, sqlMax };
