@@ -1,30 +1,30 @@
 version: '3.8'
 
-x-common-variables: &common-variables
-  MYSQL_DATABASE: audiofiler
-  MYSQL_USER: MYSQL_USER
-  MYSQL_PASSWORD: MYSQL_PASSWORD
-
 services:
   mysql_db:
-    image: mysql
+    image: mysql:latest
+    container_name: mysql_db
     restart: always
     cap_add:
       - SYS_NICE
     volumes:
-      - "./config/setup.sql:/docker-entrypoint-initdb.d/setup.sql"
+      - "./config/createTables.sql:/docker-entrypoint-initdb.d/createTables.sql"
+      - "./config/insertData.sql:/docker-entrypoint-initdb.d/insertData.sql"
+      - "./config/addPriveliges.sql:/docker-entrypoint-initdb.d/addPriveliges.sql"
     ports:
       - "${MYSQL_DB_PORT}:${MYSQL_DB_PORT}"
     environment:
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
-      MYSQL_HOST: localhost
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
   api:
+    container_name: api
     build:
       dockerfile: Dockerfile
       context: "./server"
-    environment:
-      - JWT_SECRET=${JWT_SECRET}
     depends_on:
       - mysql_db
     volumes:
@@ -32,12 +32,16 @@ services:
       - ./server:/app
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
   client:
+    container_name: client
     stdin_open: true
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_API_BASE_URL=${API_BASE_URL}
     build:
       dockerfile: Dockerfile
       context: ./client
@@ -48,8 +52,12 @@ services:
       - ./client:/app
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_BASE_URL=${API_BASE_URL}
 
   adminer:
+      container_name: mysql_ui
       image: adminer:latest
       restart: unless-stopped
       ports:
