@@ -19,43 +19,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
-  api:
-    container_name: api
-    build:
-      dockerfile: Dockerfile
-      context: "./server"
-    depends_on:
-      - mysql_db
-    volumes:
-      - /app/node_modules
-      - ./server:/app
-    ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
-    environment:
-      JWT_SECRET: ${JWT_SECRET}
-      MYSQL_HOST: ${MYSQL_HOST}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-
-  client:
-    container_name: client
-    stdin_open: true
-    build:
-      dockerfile: Dockerfile
-      context: ./client
-    depends_on:
-      - api
-    volumes:
-      - /app/node_modules
-      - ./client:/app
-    ports:
-      - "${CLIENT_PORT}:${CLIENT_PORT}"
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_API_BASE_URL=${API_BASE_URL}
-
-  adminer:
+  mysql_ui:
       container_name: mysql_ui
       image: adminer:latest
       restart: unless-stopped
@@ -65,4 +29,60 @@ services:
         - mysql_db
       environment:
         ADMINER_DEFAULT_SERVER: mysql_db
+
+  database-server:
+    container_name: database-server
+    build:
+      dockerfile: Dockerfile
+      context: "./server"
+    depends_on:
+      - mysql_db
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    ports:
+      - "${DB_SERVER_PORT}:${DB_SERVER_PORT}"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      PORT: ${DB_SERVER_PORT}
+
+  file-server:
+    container_name: file-server
+    build:
+      dockerfile: Dockerfile
+      context: "./file-server"
+    depends_on:
+      - mysql_db
+    volumes:
+      - /app/node_modules
+      - ./file-server:/app
+    ports:
+      - "${FILE_SERVER_PORT}:${FILE_SERVER_PORT}"
+    environment:
+      FILE_SERVER_ROOT_DIR: ${FILE_SERVER_ROOT_DIR}
+      PORT: ${FILE_SERVER_PORT}
+
+  client:
+    container_name: client
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./client
+    depends_on:
+      - database-server
+      - file-server
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    ports:
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      PORT: ${CLIENT_PORT}
+      REACT_APP_DB_SERVER_BASE_URL: ${DB_SERVER_BASE_URL}
+      REACT_APP_FILE_SERVER_BASE_URL: ${FILE_SERVER_BASE_URL}
 
