@@ -60,6 +60,7 @@ services:
     volumes:
       - /app/node_modules
       - ./file-server:/app
+      - ${FILE_SERVER_HOST_ROOT_DIR}:${FILE_SERVER_CONTAINER_ROOT_DIR}
     ports:
       - "${FILE_SERVER_PORT}:${FILE_SERVER_PORT}"
     environment:
@@ -85,4 +86,3 @@ services:
       PORT: ${CLIENT_PORT}
       REACT_APP_DB_SERVER_BASE_URL: ${DB_SERVER_BASE_URL}
       REACT_APP_FILE_SERVER_BASE_URL: ${FILE_SERVER_BASE_URL}
-
