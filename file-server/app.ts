@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '200mb' }));
 
 app.use('/', endpoints);
 
-app.listen(process.env.FILE_SERVER_PORT, function(err: any){
+app.listen(process.env.PORT, function(err: any){
     if (err) console.log(err);
-    console.log("Server listening on PORT", process.env.FILE_SERVER_PORT);
+    console.log("File server listening on PORT", process.env.PORT);
 });

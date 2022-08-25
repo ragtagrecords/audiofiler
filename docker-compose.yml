@@ -1,7 +1,9 @@
+# This file defines the 'recipes' for each container
 version: '3.8'
 
 services:
-  mysql_db:
+  # Database to store info needed to run the web-app
+  mysql_db: # Must match MYSQL_HOST in /config/.dev.env
     image: mysql:latest
     container_name: mysql_db
     restart: always
@@ -19,6 +21,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
+  # Browser UI to interact with database
   mysql_ui:
       container_name: mysql_ui
       image: adminer:latest
@@ -30,6 +33,7 @@ services:
       environment:
         ADMINER_DEFAULT_SERVER: mysql_db
 
+  # API to interact with database
   database-server:
     container_name: database-server
     build:
@@ -50,6 +54,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       PORT: ${DB_SERVER_PORT}
 
+  # API to serve mp3s and zips
   file-server:
     container_name: file-server
     build:
@@ -64,18 +69,16 @@ services:
     ports:
       - "${FILE_SERVER_PORT}:${FILE_SERVER_PORT}"
     environment:
-      FILE_SERVER_ROOT_DIR: ${FILE_SERVER_ROOT_DIR}
+      ROOT_DIR: ${FILE_SERVER_CONTAINER_ROOT_DIR}
       PORT: ${FILE_SERVER_PORT}
 
+  # React web-app
   client:
     container_name: client
     stdin_open: true
     build:
       dockerfile: Dockerfile
       context: ./client
-    depends_on:
-      - database-server
-      - file-server
     volumes:
       - /app/node_modules
       - ./client:/app

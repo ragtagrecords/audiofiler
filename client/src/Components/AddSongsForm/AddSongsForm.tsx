@@ -12,7 +12,7 @@ import {
   SongsFieldList,
 } from 'Components';
 import './AddSongsForm.scss';
-import { apiBaseURL } from 'env';
+import { databaseServerURL } from 'env';
 
 type AddSongFormProps = {
   playlist?: Playlist;
@@ -32,7 +32,7 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
   const navigate = useNavigate();
 
   const getPlaylists = () => {
-    fetch(`${apiBaseURL()}/playlists`)
+    fetch(`${databaseServerURL()}/playlists`)
       .then((response) => response.json())
       .then((data) => setPlaylists(data));
   };

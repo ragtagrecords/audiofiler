@@ -2,9 +2,10 @@ const fs = require('fs');
 import { logError, logSuccess } from './logger';
 
 // Files that are accessible via API live here
-const rootDir = '/public-ext4/main';
+const rootDir = process.env.ROOT_DIR;
 
 export async function hasAccess(path: string, mode: any) {
+  console.log(path);
   fs.access(
     path,
     mode,

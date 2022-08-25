@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeaderPortal, UserMenu } from 'Components';
-import { apiBaseURL } from 'env';
+import { databaseServerURL } from 'env';
 import axios from 'axios';
 import Logo from 'Assets/audio-logo-192.webp';
 
@@ -32,7 +32,7 @@ export const AddPlaylist = () => {
     try {
       // POST new playlist to API
       const res = await axios.post(
-        `${apiBaseURL()}/playlists`,
+        `${databaseServerURL()}/playlists`,
         formData,
       );
 

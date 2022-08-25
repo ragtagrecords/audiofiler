@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { apiBaseURL } from 'env';
+import { databaseServerURL } from 'env';
 import { Task } from 'Types';
 
 // Returns null if there are no results or an error
@@ -14,7 +14,7 @@ export const getTasks = async (songID: string | null = null): Promise<Task[]> =>
 
   try {
     const res = await axios.get(
-      `${apiBaseURL()}${endpoint}`,
+      `${databaseServerURL()}${endpoint}`,
     );
     return res.data.length ? res.data : [];
   } catch (e) {
@@ -28,7 +28,7 @@ export const updateTask = async (task: Task) => {
     return false;
   }
 
-  const url = `${apiBaseURL()}/tasks/${task.id}`;
+  const url = `${databaseServerURL()}/tasks/${task.id}`;
   delete task.id;
 
   if (Object.keys.length === 0) {

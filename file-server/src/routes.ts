@@ -1,7 +1,7 @@
+const rootDir = process.env.ROOT_DIR;
 import { hasAccess, addFile } from './services';
-import fs from 'fs';
-const rootDir = '/public-ext4/main';
 import { logError, logSuccess } from './logger';
+import fs from 'fs';
 
 export const getFileRoute = async (req: any, res: any): Promise<boolean> => {
   const { dir, fileName } = req.params;

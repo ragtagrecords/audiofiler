@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Player, Controls, CurrentPosition } from 'Components';
 import { Song } from 'Types';
 import './AudioPlayer.scss';
+import { fileServerURL } from 'env';
 
 type AudioPlayerProps = {
     song: Song | null,
@@ -22,7 +23,7 @@ export const AudioPlayer = ({ song, skipSong, prevSong }: AudioPlayerProps) => {
       {song && song.path
           && (
           <Player
-            src={song.path}
+            src={`${fileServerURL()}/songs/${song.path}`}
             isPlaying={isPlaying}
             skipSong={skipSong}
             seekTime={seekTime}

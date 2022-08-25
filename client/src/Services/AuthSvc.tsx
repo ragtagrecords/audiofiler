@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { apiBaseURL } from 'env';
+import { databaseServerURL } from 'env';
 
 export const authenticate = async (): Promise<number> => {
   const accessToken = localStorage.getItem('token');
@@ -11,7 +11,7 @@ export const authenticate = async (): Promise<number> => {
   let res;
   try {
     res = await axios.get(
-      `${apiBaseURL()}/authenticate`,
+      `${databaseServerURL()}/authenticate`,
       {
         headers: {
           'x-access-token': accessToken,
@@ -45,7 +45,7 @@ export const authorize = async (username: string, password: string) => {
   let res;
   try {
     res = await axios.post(
-      `${apiBaseURL()}/authorize`,
+      `${databaseServerURL()}/authorize`,
       formData,
     );
   } catch (ex) {
@@ -71,7 +71,7 @@ export const signup = async (username: string, password: string) => {
   let res = null;
   try {
     res = await axios.post(
-      `${apiBaseURL()}/users`,
+      `${databaseServerURL()}/users`,
       formData,
     );
   } catch (ex) {

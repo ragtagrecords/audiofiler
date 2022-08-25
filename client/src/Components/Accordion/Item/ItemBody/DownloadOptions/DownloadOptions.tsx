@@ -4,8 +4,9 @@ import { downloadFile, removeExtraExtensions } from 'Services';
 import './DownloadOptions.scss';
 
 type DownloadableFile = {
-  url: string;
-  fileName: string;
+  folder: string;
+  actualFileName: string;
+  desiredFileName: string;
 }
 
 type DownloadOptionsProps = {
@@ -13,22 +14,19 @@ type DownloadOptionsProps = {
 }
 
 export const DownloadOptions = ({ song }: DownloadOptionsProps) => {
-  const handleClick = (file: DownloadableFile) => {
-    // I hate this - we should just store the zip file and file name explicitly in DB
-    downloadFile(file.url, file.fileName);
-  };
-
   if (song && song.path) {
     const files: DownloadableFile[] = [];
     const songFileExt = `${song.path.split('.').pop()}` ?? 'mp3';
     files.push({
-      url: song.path,
-      fileName: `${removeExtraExtensions(song.name)}.${songFileExt}`,
+      folder: 'songs',
+      actualFileName: song.path,
+      desiredFileName: `${removeExtraExtensions(song.name)}.${songFileExt}`,
     });
     if (song.zipPath) {
       files.push({
-        url: song.zipPath,
-        fileName: `${removeExtraExtensions(song.name)}.zip`,
+        folder: 'zips',
+        actualFileName: song.zipPath,
+        desiredFileName: `${removeExtraExtensions(song.name)}.zip`,
       });
     }
     return (
@@ -36,9 +34,14 @@ export const DownloadOptions = ({ song }: DownloadOptionsProps) => {
         <ul className="downloadOptions">
           {files.map((file: DownloadableFile) => {
             return (
-              <li key={file.url}>
-                <button type="button" onClick={handleClick.bind(null, file)}>
-                  {file.fileName}
+              <li key={file.actualFileName}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    downloadFile(file.folder, file.actualFileName, file.desiredFileName);
+                  }}
+                >
+                  {file.desiredFileName}
                 </button>
               </li>
             );

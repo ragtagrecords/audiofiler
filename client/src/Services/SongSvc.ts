@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { apiBaseURL } from 'env';
+import { databaseServerURL } from 'env';
 import { uploadFile } from 'Services';
 import { Song } from 'Types';
 
@@ -23,7 +23,7 @@ export const getSongs = async (
 
   try {
     const res = await axios.get(
-      `${apiBaseURL()}${endpoint}`,
+      `${databaseServerURL()}${endpoint}`,
     );
     return res.data.length ? res.data : [];
   } catch (e) {
@@ -33,7 +33,7 @@ export const getSongs = async (
 
 export const updateSongName = async (songID: number, newName: string) => {
   try {
-    const res = await axios.put(`${apiBaseURL()}/songs/${songID}/${newName}`);
+    const res = await axios.put(`${databaseServerURL()}/songs/${songID}/${newName}`);
     return res;
   } catch (ex) {
     console.log(ex);
@@ -47,7 +47,7 @@ export const updateSong = async (song: Song) => {
     return false;
   }
 
-  const url = `${apiBaseURL()}/songs/${song.id}`;
+  const url = `${databaseServerURL()}/songs/${song.id}`;
   delete song.id;
 
   if (Object.keys.length === 0) {
@@ -79,7 +79,7 @@ const addSongToDB = async (song: Song) => {
   // post song info to API
   try {
     await axios.post(
-      `${apiBaseURL()}/songs`,
+      `${databaseServerURL()}/songs`,
       payload,
     );
     return true;
@@ -95,7 +95,7 @@ export const deleteSongFromDB = async (id: Song['id']) => {
   }
 
   try {
-    const songDeleted = await axios.delete(`${apiBaseURL()}/songs/${id}`);
+    const songDeleted = await axios.delete(`${databaseServerURL()}/songs/${id}`);
     if (!songDeleted) {
       console.log('ERROR: Failed to delete song from DB');
       return false;
@@ -114,15 +114,13 @@ export const addSong = async (song: Song) => {
     return false;
   }
 
-  const fileServerBaseURL = 'https://files.ragtagrecords.com';
-
   // Store paths and remove files before turning into JSON
   const { file, zipFile } = song;
-  song.path = `${fileServerBaseURL}/songs/${file.name}`;
+  song.path = file.name;
   delete song.file;
 
   if (song.zipFile) {
-    song.zipPath = `${fileServerBaseURL}/zips/${song.zipFile.name}`;
+    song.zipPath = song.zipFile.name;
     delete song.zipFile;
   }
 

@@ -1,17 +1,16 @@
 import axios from 'axios';
+import { fileServerURL } from 'env';
 
-const fileServerURL = 'https://files.ragtagrecords.com';
-
-export const downloadFile = (fileUrl: string, fileName: string) => {
+export const downloadFile = (folder: string, actualFileName: string, desiredFileName: string) => {
   axios({
-    url: fileUrl,
+    url: `${fileServerURL()}/${folder}/${actualFileName}`,
     method: 'GET',
     responseType: 'blob', // important
   }).then((response) => {
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', fileName);
+    link.setAttribute('download', desiredFileName);
     document.body.appendChild(link);
     link.click();
   });
@@ -21,7 +20,7 @@ export const uploadFile = async (file: File, dir: string) => {
   if (!file || !dir) {
     return false;
   }
-  const url = `${fileServerURL}${dir}`;
+  const url = `${fileServerURL()}${dir}`;
   const formData = new FormData();
   formData.append('file', file);
   try {
