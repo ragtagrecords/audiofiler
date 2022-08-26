@@ -3,11 +3,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import playlistReducer from 'Pages/Playlist/PlaylistSlice';
 import taskManagerReducer from 'Pages/Tasks/taskManagerSlice';
+import audioPlayerReducer from 'Components/AudioPlayer/audioPlayerSlice';
 
 export const store = configureStore({
   reducer: {
     playlist: playlistReducer,
     taskManager: taskManagerReducer,
+    audioPlayer: audioPlayerReducer,
   },
 });
 

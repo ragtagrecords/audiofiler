@@ -1,3 +1,4 @@
+import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import React from 'react';
 import {
   BsArrowLeftCircle,
@@ -6,11 +7,10 @@ import {
   BsPauseCircle,
 } from 'react-icons/bs';
 import { ImLoop } from 'react-icons/im';
+import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from '../audioPlayerSlice';
 import './Controls.scss';
 
 type ControlsProps = {
-  isPlaying: boolean;
-  setIsPlaying: any;
   skipSong: any;
   prevSong: any;
   isLooping: boolean;
@@ -18,13 +18,14 @@ type ControlsProps = {
 }
 
 export const Controls = ({
-  isPlaying,
-  setIsPlaying,
   skipSong,
   prevSong,
   isLooping,
   setIsLooping,
 }: ControlsProps) => {
+  const isPlaying = useAppSelector(AUDIO_PLAYER_SELECTORS.selectIsPlaying);
+  const dispatch = useAppDispatch();
+
   return (
     <span className="audioPlayerUI controls">
       <div style={{ width: 80, color: 'transparent' }}>
@@ -37,7 +38,7 @@ export const Controls = ({
         type="button"
         className="playPause"
         onClick={() => {
-          setIsPlaying(!isPlaying);
+          dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(!isPlaying));
         }}
       >
         {isPlaying ? <BsPauseCircle /> : <BsPlayCircle />}

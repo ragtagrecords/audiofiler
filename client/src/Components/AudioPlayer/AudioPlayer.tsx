@@ -3,6 +3,8 @@ import { Player, Controls, CurrentPosition } from 'Components';
 import { Song } from 'Types';
 import './AudioPlayer.scss';
 import { fileServerURL } from 'env';
+import { useAppSelector } from 'Hooks/hooks';
+import { AUDIO_PLAYER_SELECTORS } from './audioPlayerSlice';
 
 type AudioPlayerProps = {
     song: Song | null,
@@ -11,12 +13,13 @@ type AudioPlayerProps = {
 }
 
 export const AudioPlayer = ({ song, skipSong, prevSong }: AudioPlayerProps) => {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   // Time is tracked in seconds
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0); // controlled by audio player
   const [seekTime, setSeekTime] = useState<number>(0);
   const [isLooping, setIsLooping] = useState<boolean>(false);
+
+  const isPlaying = useAppSelector(AUDIO_PLAYER_SELECTORS.selectIsPlaying);
 
   return (
     <div className="audioPlayer">
@@ -49,8 +52,6 @@ export const AudioPlayer = ({ song, skipSong, prevSong }: AudioPlayerProps) => {
 
       <Controls
         prevSong={prevSong}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
         skipSong={skipSong}
         isLooping={isLooping}
         setIsLooping={setIsLooping}

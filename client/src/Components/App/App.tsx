@@ -5,7 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { Song } from 'Types';
-import * as _ from 'Components';
+import { AudioPlayer, Header } from 'Components';
 import './App.scss';
 
 type AppContextType = {
@@ -123,12 +123,12 @@ export const App = ({ children }: AppProps) => {
         className="appContainer"
         style={{ backgroundColor }}
       >
-        <_.Header />
+        <Header />
         <div className="pageContent" ref={pageContentRef}>
           {children}
         </div>
         <div className="footer">
-          <_.AudioPlayer
+          <AudioPlayer
             song={song ?? null}
             skipSong={() => {
               changeSongRelativeToCurrent(1);

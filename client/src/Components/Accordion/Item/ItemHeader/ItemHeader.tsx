@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { IconButton } from 'Components';
 import './ItemHeader.scss';
+import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 
 export const ItemHeader = () => {
   const username = localStorage.getItem('username');
@@ -33,6 +34,7 @@ export const ItemHeader = () => {
   } = itemContext;
 
   const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
+  const isPlaying = useAppSelector(AUDIO_PLAYER_SELECTORS.selectIsPlaying);
   const dispatch = useAppDispatch();
 
   // Either show the add button or the upload button
@@ -91,6 +93,7 @@ export const ItemHeader = () => {
           if (appContext?.song?.id === song.id) {
             setIsOpen(false);
           }
+          dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(true));
           return true;
         default:
           return true;
