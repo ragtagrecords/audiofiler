@@ -79,12 +79,12 @@ export const PLAYLIST_ACTIONS = {
 
 // Selectors are used for checking the current state
 export const PLAYLIST_SELECTORS = {
-  selectPlaylist: (state: RootState) => state.playlist.playlist,
-  selectSelectedSongID: (state: RootState) => state.playlist.selectedSongID,
-  selectQuery: (state: RootState) => state.playlist.query,
-  selectUploadedFiles: (state: RootState) => state.playlist.uploadedFiles,
-  selectIsLoading: (state: RootState) => state.playlist.isLoading,
-  selectMode: (state: RootState) => state.playlist.mode,
+  playlist: (state: RootState) => state.playlist.playlist,
+  selectedSongID: (state: RootState) => state.playlist.selectedSongID,
+  query: (state: RootState) => state.playlist.query,
+  uploadedFiles: (state: RootState) => state.playlist.uploadedFiles,
+  isLoading: (state: RootState) => state.playlist.isLoading,
+  mode: (state: RootState) => state.playlist.mode,
 };
 
 export default playlistSlice.reducer;

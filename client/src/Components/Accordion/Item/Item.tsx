@@ -37,9 +37,9 @@ export const Item = ({
   const [isOpen, setIsOpen] = useState(false);
   const [editedSong, setEditedSong] = useState<Song>(song);
   const [bodyType, setBodyType] = useState<BodyType>('info');
-  const playlist = useAppSelector(PLAYLIST_SELECTORS.selectPlaylist);
-  const selectedSongID = useAppSelector(PLAYLIST_SELECTORS.selectSelectedSongID);
-  const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
+  const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
+  const selectedSongID = useAppSelector(PLAYLIST_SELECTORS.selectedSongID);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
   const playlistContext = useContext(PlaylistCtx);
   if (!playlistContext || !playlist || !playlist.songs) {

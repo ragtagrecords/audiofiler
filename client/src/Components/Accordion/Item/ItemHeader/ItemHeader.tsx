@@ -34,7 +34,7 @@ export const ItemHeader = () => {
     saveEditedSongToDB,
   } = itemContext;
 
-  const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const audioPlayerSongID = useAppSelector(AUDIO_PLAYER_SELECTORS.currentSongID);
   const dispatch = useAppDispatch();
 

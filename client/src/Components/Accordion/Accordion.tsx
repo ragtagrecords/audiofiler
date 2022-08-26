@@ -10,9 +10,9 @@ type AccordionProps = {
 }
 
 export const Accordion = ({ children } : AccordionProps) => {
-  const playlist = useAppSelector(PLAYLIST_SELECTORS.selectPlaylist);
-  const isLoading = useAppSelector(PLAYLIST_SELECTORS.selectIsLoading);
-  const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
+  const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
+  const isLoading = useAppSelector(PLAYLIST_SELECTORS.isLoading);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
   if (isLoading) {
     return (

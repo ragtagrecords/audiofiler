@@ -16,8 +16,8 @@ export const ItemBody = () => {
     return null;
   }
 
-  const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
-  const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.selectUploadedFiles);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
+  const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.uploadedFiles);
   const dispatch = useAppDispatch();
 
   const {

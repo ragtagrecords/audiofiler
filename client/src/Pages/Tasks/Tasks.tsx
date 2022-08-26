@@ -12,8 +12,8 @@ export const Tasks = () => {
   // const [allTasks, setAllTasks] = useState<Task[] | null>(null);
   const { songID } = useParams<string>();
   const appContext = useContext(AppCtx);
-  const allTasks = useAppSelector(TASK_SELECTORS.selectAllTasks);
-  const columns = useAppSelector(TASK_SELECTORS.selectColumns);
+  const allTasks = useAppSelector(TASK_SELECTORS.allTasks);
+  const columns = useAppSelector(TASK_SELECTORS.columns);
   const dispatch = useAppDispatch();
 
   // TODO: move all this logic to the reducer, saga or thunk i guess

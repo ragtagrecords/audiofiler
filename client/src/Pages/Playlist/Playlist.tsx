@@ -55,11 +55,11 @@ export const Playlist = () => {
 
   // State from redux
   const allSongs = useAppSelector(AUDIO_PLAYER_SELECTORS.allSongs);
-  const playlist = useAppSelector(PLAYLIST_SELECTORS.selectPlaylist);
+  const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const audioPlayerSongQueue = useAppSelector(AUDIO_PLAYER_SELECTORS.songQueue);
-  const query = useAppSelector(PLAYLIST_SELECTORS.selectQuery);
-  const isLoading = useAppSelector(PLAYLIST_SELECTORS.selectIsLoading);
-  const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
+  const query = useAppSelector(PLAYLIST_SELECTORS.query);
+  const isLoading = useAppSelector(PLAYLIST_SELECTORS.isLoading);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
 
   const auth = async () => {

@@ -12,7 +12,7 @@ export const DragIconPortal = () => {
     size: '300px',
   }), []);
 
-  const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
   return (
     <Portal node={document && document.getElementById('root')}>

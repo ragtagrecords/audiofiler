@@ -132,8 +132,8 @@ export const TASK_ACTIONS = {
 
 // Selectors are used for checking the current state
 export const TASK_SELECTORS = {
-  selectAllTasks: (state: RootState) => state.taskManager.allTasks,
-  selectColumns: (state: RootState) => state.taskManager.columns,
+  allTasks: (state: RootState) => state.taskManager.allTasks,
+  columns: (state: RootState) => state.taskManager.columns,
 };
 
 export default taskManagerSlice.reducer;
