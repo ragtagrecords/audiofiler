@@ -1,6 +1,6 @@
 // This file defines the state and actions for the playlist in Redux
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { BodyType, Playlist, Song } from 'Types';
+import { Playlist, Song } from 'Types';
 import type { RootState } from 'Hooks/store';
 
 type Modes = 'normal' | 'editing' | 'adding' | 'dragging';

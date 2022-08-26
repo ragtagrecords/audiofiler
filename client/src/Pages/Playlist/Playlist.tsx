@@ -25,6 +25,7 @@ import {
   updatePlaylist,
   updateSongPlaylist,
 } from 'Services';
+import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
 import './Playlist.scss';
@@ -116,31 +117,6 @@ export const Playlist = () => {
     }
 
     return true;
-  };
-
-  // TODO: move function to helper file, doesnt need local state
-  // Returns songs from the array that match the query
-  // Optionally pass in songs to exclude from the search
-  const filterSongs = (
-    songs: Song[],
-    query: string,
-    excludedSongs: Song[] | null,
-  ) => {
-    if (!songs) {
-      return [] as Song[];
-    }
-
-    // Grab ID's from excluded songs
-    const excludedSongIDs = excludedSongs ? excludedSongs.map((s) => s.id) : [];
-
-    // Remove songs that are excluded or don't match query
-    const filteredSongs = songs.filter((song) => {
-      const matchesQuery = query === '' || song.name.toLowerCase().includes(query.toLowerCase());
-      const excluded = excludedSongs && excludedSongIDs.includes(song.id);
-      return matchesQuery && !excluded;
-    });
-
-    return filteredSongs;
   };
 
   const loadAllSongs = async () => {
