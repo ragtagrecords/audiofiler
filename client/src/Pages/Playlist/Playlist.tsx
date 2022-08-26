@@ -101,7 +101,7 @@ export const Playlist = () => {
     const p = await getPlaylistByID(playlistID);
     const songs = await getSongs(playlistID);
 
-    if (!p || !p.name || !songs || songs.length === 0) {
+    if (!p || !p.name || !songs || songs.length === 0 || !songs[0].id) {
       return false;
     }
 
@@ -109,7 +109,10 @@ export const Playlist = () => {
     dispatch(PLAYLIST_ACTIONS.setPlaylist(p));
 
     if (!audioPlayerSongQueue) {
-      dispatch(AUDIO_PLAYER_ACTIONS.setSongQueue(songs));
+      dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+        songID: songs[0].id,
+        playlistSongs: songs,
+      }));
     }
 
     return true;

@@ -4,16 +4,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Song } from 'Types';
 import { AudioPlayer, Header } from 'Components';
 import './App.scss';
-import { AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
-import { useAppSelector } from 'Hooks/hooks';
 
 type AppContextType = {
-  playlistID: number | null;
   arePortalsOpen: boolean;
-  setPlaylistID: any;
   setArePortalsOpen: any;
   backgroundColor: string;
   setBackgroundColor: any;
@@ -27,7 +22,6 @@ type AppProps = {
 
 export const App = ({ children }: AppProps) => {
   // State is empty until song is selected
-  const [playlistID, setPlaylistID] = useState<number | null>(null);
   const [arePortalsOpen, setArePortalsOpen] = useState<boolean>(false);
   const [backgroundColor, setBackgroundColor] = useState<string>('#1e5c93');
 
@@ -53,8 +47,6 @@ export const App = ({ children }: AppProps) => {
 
   return (
     <AppCtx.Provider value={{
-      playlistID,
-      setPlaylistID,
       arePortalsOpen,
       setArePortalsOpen,
       backgroundColor,

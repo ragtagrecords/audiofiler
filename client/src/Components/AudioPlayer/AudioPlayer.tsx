@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Player, Controls, CurrentPosition } from 'Components';
-import { Song } from 'Types';
 import { fileServerURL } from 'env';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from './audioPlayerSlice';

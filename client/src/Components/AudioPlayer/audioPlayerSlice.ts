@@ -1,7 +1,6 @@
 // This file defines the state and actions for the AudioPlayer in Redux
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from 'Hooks/store';
-import { store } from 'Hooks/store';
 import { validIndex } from 'helpers';
 import { Song } from 'Types';
 
