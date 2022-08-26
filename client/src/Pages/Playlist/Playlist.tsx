@@ -1,8 +1,7 @@
 import React, {
-  createContext, useContext, useEffect, useState,
+  createContext, useEffect, useState,
 } from 'react';
 import { useParams } from 'react-router-dom';
-import { AppCtx } from 'Components/App/App';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { MenuOption, Playlist as PlaylistT, Song } from 'Types';
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -18,7 +17,6 @@ import {
   SearchBar,
   DragIconPortal,
 } from 'Components';
-
 import {
   authenticate,
   getSongs,
@@ -27,15 +25,14 @@ import {
   updatePlaylist,
   updateSongPlaylist,
 } from 'Services';
-
+import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
 import './Playlist.scss';
 
 interface PlaylistContextInterface {
   userID: number | null;
-  changeSong: any;
   addSongToCurrentPlaylist: any;
-  loadPlaylistSongs: any;
+  loadPlaylist: any;
 }
 
 export const PlaylistCtx = createContext<PlaylistContextInterface | null>(null);
@@ -52,14 +49,13 @@ export const Playlist = () => {
     return (<div>No playlistID found</div>);
   }
 
-  const appContext = useContext(AppCtx);
   // TODO: move userID to redux
   const [userID, setUserID] = useState<number | null>(null);
 
   // State from redux
+  const allSongs = useAppSelector(AUDIO_PLAYER_SELECTORS.allSongs);
   const playlist = useAppSelector(PLAYLIST_SELECTORS.selectPlaylist);
-  const playlistSongs = useAppSelector(PLAYLIST_SELECTORS.selectPlaylistSongs);
-  const allSongs = useAppSelector(PLAYLIST_SELECTORS.selectAllSongs);
+  const audioPlayerSongQueue = useAppSelector(AUDIO_PLAYER_SELECTORS.songQueue);
   const query = useAppSelector(PLAYLIST_SELECTORS.selectQuery);
   const isLoading = useAppSelector(PLAYLIST_SELECTORS.selectIsLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
@@ -103,20 +99,19 @@ export const Playlist = () => {
   // TODO: move these async loads into redux with a thunk, or saga or something
   const loadPlaylist = async () => {
     const p = await getPlaylistByID(playlistID);
-    if (!p || !p.name) {
-      return false;
-    }
-    dispatch(PLAYLIST_ACTIONS.setPlaylist(p));
-    return true;
-  };
+    const songs = await getSongs(playlistID);
 
-  const loadPlaylistSongs = async () => {
-    const s = await getSongs(playlistID);
-    if (!s || s.length === 0) {
+    if (!p || !p.name || !songs || songs.length === 0) {
       return false;
     }
-    dispatch(PLAYLIST_ACTIONS.setPlaylistSongs(s));
-    dispatch(PLAYLIST_ACTIONS.setIsLoading(false));
+
+    p.songs = songs;
+    dispatch(PLAYLIST_ACTIONS.setPlaylist(p));
+
+    if (!audioPlayerSongQueue) {
+      dispatch(AUDIO_PLAYER_ACTIONS.setSongQueue(songs));
+    }
+
     return true;
   };
 
@@ -148,7 +143,7 @@ export const Playlist = () => {
   const loadAllSongs = async () => {
     const songs = filterSongs(await getSongs(), '', null);
     if (songs) {
-      dispatch(PLAYLIST_ACTIONS.setAllSongs(songs));
+      dispatch(AUDIO_PLAYER_ACTIONS.setAllSongs(songs));
       return true;
     }
     return false;
@@ -161,35 +156,7 @@ export const Playlist = () => {
       return false;
     }
     await addSongToPlaylist(id, playlist.id);
-    loadPlaylistSongs();
-    return true;
-  };
-
-  // Change the song that is playing in the AudioPlayer
-  const changeSong = (song: Song, isChild = false) => {
-    if (mode.current === 'editing') {
-      return false;
-    }
-
-    if (!song.id) {
-      console.log('Failed to change song!');
-      return false;
-    }
-
-    if (appContext?.song?.id !== song.id) {
-      appContext?.setSong(song);
-    }
-
-    // If song is in different playlist than the one playing, update songs in context
-    if (playlist?.id !== appContext?.playlistID) {
-      appContext?.setPlaylistID(playlistID);
-      appContext?.setSongs(playlistSongs);
-    }
-
-    if (!isChild) {
-      dispatch(PLAYLIST_ACTIONS.setSelectedSongID(song.id));
-    }
-
+    loadPlaylist();
     return true;
   };
 
@@ -212,10 +179,10 @@ export const Playlist = () => {
   };
 
   const saveChangesToSongPositions = () => {
-    if (!playlistSongs) { return; }
-    for (let i = 0; i < playlistSongs.length; i += 1) {
-      if (playlistSongs[i].id) {
-        const song = playlistSongs[i];
+    if (!playlist || !playlist.songs) { return; }
+    for (let i = 0; i < playlist.songs.length; i += 1) {
+      if (playlist.songs[i].id) {
+        const song = playlist.songs[i];
         if (song.id && playlist) {
           const success = updateSongPlaylist({
             songID: song.id,
@@ -235,11 +202,11 @@ export const Playlist = () => {
   // Function to update list order on drop
   const handleDrop = (droppedItem: any) => {
     // Ignore drop outside droppable container
-    if (!playlistSongs || !droppedItem.destination) {
+    if (!playlist || !playlist.songs || !droppedItem.destination) {
       return false;
     }
 
-    const updatedPlaylistSongs = [...playlistSongs];
+    const updatedPlaylistSongs = [...playlist.songs];
     // Remove dragged item
     const [reorderedItem] = updatedPlaylistSongs.splice(droppedItem.source.index, 1);
 
@@ -264,33 +231,23 @@ export const Playlist = () => {
     dispatch(PLAYLIST_ACTIONS.setIsLoading(true));
     dispatch(PLAYLIST_ACTIONS.setCurrentMode('normal'));
     loadPlaylist();
-    loadPlaylistSongs();
     loadAllSongs();
   }, []);
 
-  useEffect(() => {
-    // If there is no song currently being played, play the first one in the playlist
-    const isFirstSong = appContext?.song === null;
-    if (isFirstSong && playlistSongs && playlistSongs[0].id) {
-      changeSong(playlistSongs[0]);
-    }
-  }, [playlistSongs]);
-
   let songs = null;
-  if (playlistSongs) {
+  if (playlist && playlist.songs) {
     if (mode.current === 'adding' && allSongs) {
-      songs = filterSongs(allSongs, query, playlistSongs);
+      songs = filterSongs(allSongs, query, playlist.songs);
     } else {
-      songs = playlistSongs;
+      songs = playlist.songs;
     }
   }
 
   return (
     <PlaylistCtx.Provider
       value={{
-        loadPlaylistSongs,
+        loadPlaylist,
         addSongToCurrentPlaylist,
-        changeSong,
         userID,
       }}
     >

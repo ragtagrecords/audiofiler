@@ -12,11 +12,8 @@ type Mode = {
 
 interface PlaylistState {
   playlist: Playlist | null;
-  playlistSongs: Song[] | null;
-  allSongs: Song[] | null;
   selectedSongID: number | null;
   query: string;
-  bodyType: BodyType;
   uploadedFiles: File[] | null;
   isLoading: boolean;
   mode: Mode;
@@ -24,11 +21,8 @@ interface PlaylistState {
 
 const initialState: PlaylistState = {
   playlist: null,
-  playlistSongs: null,
-  allSongs: null,
   selectedSongID: null,
   query: '',
-  bodyType: 'info',
   uploadedFiles: null,
   isLoading: true,
   mode: { current: 'normal', previous: 'normal' },
@@ -40,30 +34,26 @@ export const playlistSlice = createSlice({
   reducers: {
     setPlaylist: (state, action: PayloadAction<Playlist>) => {
       state.playlist = action.payload;
+      state.isLoading = false;
     },
     setPlaylistSongs: (state, action: PayloadAction<Song[]>) => {
-      state.playlistSongs = action.payload;
+      if (!state.playlist) { return; }
+      state.playlist.songs = action.payload;
     },
     // Updates position property based on new index in state
     setSongPlaylistPositions: (state) => {
-      if (state.playlistSongs) {
-        state.playlistSongs = state.playlistSongs.map((song, index) => {
+      if (state.playlist && state.playlist.songs) {
+        state.playlist.songs = state.playlist.songs.map((song, index) => {
           song.position = index;
           return song;
         });
       }
-    },
-    setAllSongs: (state, action: PayloadAction<Song[]>) => {
-      state.allSongs = action.payload;
     },
     setSelectedSongID: (state, action: PayloadAction<number>) => {
       state.selectedSongID = action.payload;
     },
     setQuery: (state, action: PayloadAction<string>) => {
       state.query = action.payload;
-    },
-    setBodyType: (state, action: PayloadAction<BodyType>) => {
-      state.bodyType = action.payload;
     },
     setUploadedFiles: (state, action: PayloadAction<File[]>) => {
       state.uploadedFiles = action.payload;
@@ -90,11 +80,8 @@ export const PLAYLIST_ACTIONS = {
 // Selectors are used for checking the current state
 export const PLAYLIST_SELECTORS = {
   selectPlaylist: (state: RootState) => state.playlist.playlist,
-  selectPlaylistSongs: (state: RootState) => state.playlist.playlistSongs,
-  selectAllSongs: (state: RootState) => state.playlist.allSongs,
   selectSelectedSongID: (state: RootState) => state.playlist.selectedSongID,
   selectQuery: (state: RootState) => state.playlist.query,
-  selectBodyType: (state: RootState) => state.playlist.bodyType,
   selectUploadedFiles: (state: RootState) => state.playlist.uploadedFiles,
   selectIsLoading: (state: RootState) => state.playlist.isLoading,
   selectMode: (state: RootState) => state.playlist.mode,

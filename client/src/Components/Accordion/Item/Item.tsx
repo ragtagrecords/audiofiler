@@ -2,18 +2,21 @@ import React, { createContext, useContext, useState } from 'react';
 import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { useAppSelector } from 'Hooks/hooks';
-import { Song } from 'Types';
+import { BodyType, Playlist, Song } from 'Types';
 import { updateSong } from 'Services';
 import { Draggable } from 'react-beautiful-dnd';
 import './Item.scss';
 
 interface ItemContextInterface {
   song: Song,
+  playlist: Playlist,
   isSelected: boolean,
   isEdited: any;
   isOpen: boolean;
+  bodyType: BodyType;
   setIsOpen: any;
   setEditedSong: any,
+  setBodyType: any,
   saveEditedSongToDB: any,
   discardEdits: any,
 }
@@ -33,18 +36,19 @@ export const Item = ({
 }: ItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [editedSong, setEditedSong] = useState<Song>(song);
+  const [bodyType, setBodyType] = useState<BodyType>('info');
+  const playlist = useAppSelector(PLAYLIST_SELECTORS.selectPlaylist);
+  const selectedSongID = useAppSelector(PLAYLIST_SELECTORS.selectSelectedSongID);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
 
   const playlistContext = useContext(PlaylistCtx);
-  if (!playlistContext) {
+  if (!playlistContext || !playlist || !playlist.songs) {
     return null;
   }
 
   const {
-    loadPlaylistSongs,
+    loadPlaylist,
   } = playlistContext;
-
-  const selectedSongID = useAppSelector(PLAYLIST_SELECTORS.selectSelectedSongID);
-  const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
 
   const wereEditsMade = () => {
     let wasTempoChanged = null;
@@ -75,7 +79,7 @@ export const Item = ({
     const success = await updateSong({ ...editedSong });
 
     if (!success) { return false; }
-    loadPlaylistSongs();
+    loadPlaylist();
     return true;
   };
 
@@ -100,11 +104,14 @@ export const Item = ({
           <ItemCtx.Provider
             value={{
               song: mode.current === 'editing' ? editedSong : song,
+              playlist,
               isSelected,
               isEdited,
               isOpen: (mode.current === 'editing' && isSelected)
                 || (mode.current !== 'adding' && isOpen && isSelected),
+              bodyType,
               setEditedSong,
+              setBodyType,
               setIsOpen,
               saveEditedSongToDB,
               discardEdits,

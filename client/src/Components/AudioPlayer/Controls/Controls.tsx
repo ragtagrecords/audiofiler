@@ -11,19 +11,15 @@ import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from '../audioPlayerSlic
 import './Controls.scss';
 
 type ControlsProps = {
-  skipSong: any;
-  prevSong: any;
   isLooping: boolean;
   setIsLooping: any;
 }
 
 export const Controls = ({
-  skipSong,
-  prevSong,
   isLooping,
   setIsLooping,
 }: ControlsProps) => {
-  const isPlaying = useAppSelector(AUDIO_PLAYER_SELECTORS.selectIsPlaying);
+  const isPlaying = useAppSelector(AUDIO_PLAYER_SELECTORS.isPlaying);
   const dispatch = useAppDispatch();
 
   return (
@@ -31,7 +27,14 @@ export const Controls = ({
       <div style={{ width: 80, color: 'transparent' }}>
         shuffle
       </div>
-      <button type="button" className="forwardBackward" id="backward" onClick={prevSong}>
+      <button
+        type="button"
+        className="forwardBackward"
+        id="backward"
+        onClick={() => {
+          dispatch(AUDIO_PLAYER_ACTIONS.changeSongByRelativeIndex(-1));
+        }}
+      >
         <BsArrowLeftCircle />
       </button>
       <button
@@ -43,7 +46,14 @@ export const Controls = ({
       >
         {isPlaying ? <BsPauseCircle /> : <BsPlayCircle />}
       </button>
-      <button type="button" className="forwardBackward" id="forward" onClick={skipSong}>
+      <button
+        type="button"
+        className="forwardBackward"
+        id="forward"
+        onClick={() => {
+          dispatch(AUDIO_PLAYER_ACTIONS.changeSongByRelativeIndex(1));
+        }}
+      >
         <BsArrowRightCircle />
       </button>
       <button

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import {
   UploadArea, DownloadOptions, UploadOptions, SongVersions,
 } from 'Components';
@@ -15,17 +16,14 @@ export const ItemBody = () => {
     return null;
   }
 
-  const {
-    changeSong,
-  } = playlistContext;
-
   const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
-  const bodyType = useAppSelector(PLAYLIST_SELECTORS.selectBodyType);
   const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.selectUploadedFiles);
   const dispatch = useAppDispatch();
 
   const {
     song,
+    playlist,
+    bodyType,
     isSelected,
     isOpen,
     setEditedSong,
@@ -107,7 +105,7 @@ export const ItemBody = () => {
     );
   } else if (bodyType === 'versions') {
     if (song.id && song.isParent) {
-      body = <SongVersions parentID={song.id} changeSong={changeSong} />;
+      body = <SongVersions parentID={song.id} />;
     } else {
       body = <span>No additional versions found</span>;
     }
@@ -118,7 +116,12 @@ export const ItemBody = () => {
       type="button"
       className={`accordionBody ${(isSelected && isOpen) ? 'open' : ''} ${bodyType}`}
       onClick={() => {
-        if (bodyType === 'info') { changeSong(song); }
+        if (bodyType === 'info' && song.id && playlist.songs) {
+          dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+            songID: song.id,
+            playlistSongs: playlist.songs,
+          }));
+        }
       }}
     >
       {body}

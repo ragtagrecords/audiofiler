@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Song } from 'Types';
 import { getSongs } from 'Services';
 import './SongVersions.scss';
+import { useAppDispatch } from 'Hooks/hooks';
+import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
+import { ItemCtx } from '../../Item';
 
 type SongVersionsProps = {
   parentID: number;
-  changeSong: any;
 }
 
-export const SongVersions = ({ parentID, changeSong }: SongVersionsProps) => {
+export const SongVersions = ({ parentID }: SongVersionsProps) => {
   const [songs, setSongs] = useState<Song[] | null>(null);
+  const itemContext = useContext(ItemCtx);
+  const dispatch = useAppDispatch();
+  if (!itemContext) {
+    return null;
+  }
+
+  const { playlist } = itemContext;
 
   const getSongVersions = async () => {
     const tempSongs = await getSongs(null, parentID.toString(10));
@@ -34,7 +43,12 @@ export const SongVersions = ({ parentID, changeSong }: SongVersionsProps) => {
               <button
                 type="button"
                 onClick={() => {
-                  changeSong(song, true);
+                  if (song.id && playlist.songs) {
+                    dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+                      songID: song.id,
+                      playlistSongs: playlist.songs,
+                    }));
+                  }
                 }}
                 className="songVersionButton"
                 key={`version-link-${song.id}`}

@@ -20,11 +20,12 @@ export const ItemHeader = () => {
     return null;
   }
   const {
-    changeSong,
     addSongToCurrentPlaylist,
   } = playlistContext;
   const {
     song,
+    playlist,
+    setBodyType,
     isSelected,
     isEdited,
     setIsOpen,
@@ -34,7 +35,7 @@ export const ItemHeader = () => {
   } = itemContext;
 
   const mode = useAppSelector(PLAYLIST_SELECTORS.selectMode);
-  const isPlaying = useAppSelector(AUDIO_PLAYER_SELECTORS.selectIsPlaying);
+  const audioPlayerSongID = useAppSelector(AUDIO_PLAYER_SELECTORS.currentSongID);
   const dispatch = useAppDispatch();
 
   // Either show the add button or the upload button
@@ -48,7 +49,7 @@ export const ItemHeader = () => {
         <IconButton
           type="add"
           onClick={() => {
-            addSongToCurrentPlaylist(song.id);
+            addSongToCurrentPlaylist(song?.id);
           }}
         />
       );
@@ -59,7 +60,7 @@ export const ItemHeader = () => {
         <IconButton
           type="upload"
           onClick={() => {
-            dispatch(PLAYLIST_ACTIONS.setBodyType('upload'));
+            setBodyType('upload');
             setIsOpen(true);
           }}
         />
@@ -76,21 +77,29 @@ export const ItemHeader = () => {
   // Song name and a button to select the song and toggle body section
   const center = () => {
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!song.id) {
+      if (!song?.id) {
         return false;
       }
       switch (e.detail) {
         case 1: // click
-          dispatch(PLAYLIST_ACTIONS.setBodyType('info'));
-          dispatch(PLAYLIST_ACTIONS.setSelectedSongID(song.id));
+          setBodyType('info');
           setIsOpen(true);
-          if (isSelected) {
-            changeSong(song);
+          dispatch(PLAYLIST_ACTIONS.setSelectedSongID(song.id));
+          if (playlist.songs) {
+            dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+              songID: song.id,
+              playlistSongs: playlist.songs,
+            }));
           }
           return true;
         case 2: // double click
-          changeSong(song);
-          if (appContext?.song?.id === song.id) {
+          if (playlist.songs) {
+            dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+              songID: song.id,
+              playlistSongs: playlist.songs,
+            }));
+          }
+          if (song.id === audioPlayerSongID) {
             setIsOpen(false);
           }
           dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(true));
@@ -134,7 +143,7 @@ export const ItemHeader = () => {
             type="download"
             key={`download-song-${song.id}`}
             onClick={() => {
-              dispatch(PLAYLIST_ACTIONS.setBodyType('download'));
+              setBodyType('download');
               setIsOpen(true);
             }}
           />
@@ -142,7 +151,7 @@ export const ItemHeader = () => {
             type="options"
             size="40px"
             onClick={() => {
-              dispatch(PLAYLIST_ACTIONS.setBodyType('versions'));
+              setBodyType('versions');
               setIsOpen(true);
             }}
           />

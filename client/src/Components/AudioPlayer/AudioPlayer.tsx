@@ -1,25 +1,21 @@
 import React, { useState } from 'react';
 import { Player, Controls, CurrentPosition } from 'Components';
 import { Song } from 'Types';
-import './AudioPlayer.scss';
 import { fileServerURL } from 'env';
-import { useAppSelector } from 'Hooks/hooks';
-import { AUDIO_PLAYER_SELECTORS } from './audioPlayerSlice';
+import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
+import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from './audioPlayerSlice';
+import './AudioPlayer.scss';
 
-type AudioPlayerProps = {
-    song: Song | null,
-    skipSong: any,
-    prevSong: any,
-}
-
-export const AudioPlayer = ({ song, skipSong, prevSong }: AudioPlayerProps) => {
+export const AudioPlayer = () => {
   // Time is tracked in seconds
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0); // controlled by audio player
   const [seekTime, setSeekTime] = useState<number>(0);
   const [isLooping, setIsLooping] = useState<boolean>(false);
 
-  const isPlaying = useAppSelector(AUDIO_PLAYER_SELECTORS.selectIsPlaying);
+  const dispatch = useAppDispatch();
+  const isPlaying = useAppSelector(AUDIO_PLAYER_SELECTORS.isPlaying);
+  const song = useAppSelector(AUDIO_PLAYER_SELECTORS.currentSong);
 
   return (
     <div className="audioPlayer">
@@ -28,7 +24,9 @@ export const AudioPlayer = ({ song, skipSong, prevSong }: AudioPlayerProps) => {
           <Player
             src={`${fileServerURL()}/songs/${song.path}`}
             isPlaying={isPlaying}
-            skipSong={skipSong}
+            skipSong={() => {
+              dispatch(AUDIO_PLAYER_ACTIONS.changeSongByRelativeIndex(-1));
+            }}
             seekTime={seekTime}
             onTimeUpdate={(e: React.ChangeEvent<HTMLAudioElement>) => {
               setCurrentTime(e.target.currentTime);
@@ -51,8 +49,6 @@ export const AudioPlayer = ({ song, skipSong, prevSong }: AudioPlayerProps) => {
       />
 
       <Controls
-        prevSong={prevSong}
-        skipSong={skipSong}
         isLooping={isLooping}
         setIsLooping={setIsLooping}
       />

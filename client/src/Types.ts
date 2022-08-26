@@ -1,8 +1,3 @@
-export type Playlist = {
-  id: number;
-  name: string;
-};
-
 export interface Song {
   id?: number;
   name: string;
@@ -20,6 +15,12 @@ export interface Song {
   position?: number;
   notes?: string | null;
 }
+
+export type Playlist = {
+  id: number;
+  name: string;
+  songs?: Song[];
+};
 
 export interface SongPlaylist {
   id?: number;
