@@ -41,18 +41,19 @@ async function getUserByUsername(db, username) {
         allColumns,
         'WHERE username = ?',
         [username],
+        true
     );
 }
-function addUser(db, username, hash, salt) {
+async function addUser(db, username, hash, salt) {
     if(!db || !username || !hash || !salt) {
         console.log('ERROR: Username, hash, and salt are required');
         return false;
     }
-  
+
     return sqlInsert(
         db,
         'users',
-        defaultColumns
+        defaultColumns,
         [username, hash, salt]
     );
 }

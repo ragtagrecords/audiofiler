@@ -49,12 +49,13 @@ function getSQLStringToUpdateColumns(cols) {
 }
 
 // Template for INSERT queries on our database
-async function sqlInsert(db, table, cols, args = null) {
+async function sqlInsert(db, table, cols, args) {
 
   if (!db || !table || !cols || !args) {
     return false;
   }
-
+  
+  console.log('test');
   try {
     const [result] = await db.execute(
       `INSERT INTO ${table} (${cols}) VALUES (${getQuestionMarks(args.length)})`,
@@ -69,7 +70,7 @@ async function sqlInsert(db, table, cols, args = null) {
 }
 
 // Template for SELECT queries on our database
-async function sqlSelect(db, table, cols, whereClause, whereVals, multipleRows = false) {
+async function sqlSelect(db, table, cols, whereClause, whereVals, fetchOne = false) {
 
     if (!db || !table || !cols) {
         console.log('ERROR: Necessary params not provided for sqlSelect()');
@@ -88,7 +89,7 @@ async function sqlSelect(db, table, cols, whereClause, whereVals, multipleRows =
             whereVals ?? [],
         );
         Logger.logSuccess('sqlSelect()', `Returned rows from ${table}`);
-        return rows;
+        return fetchOne ? rows[0] : rows;
     } catch (err) {
         Logger.logError(`sqlSelect() on table: ${table}`, err.sqlMessage ?? "Database Error, No message found");
         return false;

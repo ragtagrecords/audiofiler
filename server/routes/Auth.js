@@ -8,7 +8,7 @@ exports.authorize = (async function (req, res) {
     
     const db = await DbSvc.connectToDB();
     const user = await UserSvc.getUserByUsername(db, username);
-    const token = await AuthSvc.validateUser(db, username, password, user);
+    const token = await AuthSvc.validateUser(username, password, user);
     db.end();
 
     if (!token) {

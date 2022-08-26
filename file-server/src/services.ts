@@ -18,13 +18,13 @@ export async function hasAccess(path: string, mode: any) {
   return true;
 }
 
-export function addFile(file: any, dir: string) {
+export function addFile(file: any, folder: string) {
   return new Promise(resolve => {
-    const dirPath = rootDir + dir + '/';
+    const dirPath = `${rootDir}/${folder}`;
     const fileName = file.name;
     const fileSizeMB = file.size / 1e6;
 
-    file.mv(`${dirPath}${fileName}`, (err: any) => {
+    file.mv(`${dirPath}/${fileName}`, (err: any) => {
       if (err) {
         logError('addFile()', err.message);
         resolve(false);

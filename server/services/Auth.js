@@ -13,6 +13,7 @@ function hashPassword(password){
 }
 
 function validatePassword(password, user){
+  console.log('in validatePassword');
     if(!password || !user || !user.salt || !user.hashedPassword) {
         return false;
     }
@@ -20,7 +21,7 @@ function validatePassword(password, user){
     return hashedPassword === user.hashedPassword ? user : false;
 }
 
-async function validateUser(db, username, password, user){
+async function validateUser(username, password, user){
     const validUser = validatePassword(password, user);
 
     if (!validUser) {

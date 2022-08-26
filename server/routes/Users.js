@@ -44,21 +44,18 @@ exports.createUser = (async function (req, res) {
     }
 
     const user = await UserSvc.getUserByUsername(db, username);
-    const token = await AuthSvc.validateUser(db, username, password, user);
+    const token = await AuthSvc.validateUser(username, password, user);
+    console.log(user);
+    console.log(token);
+    const success = user && token;
+    const status = success ? 200 : 404;
 
-    if (!token) {
-        res.status(404).json({
-            auth: false,
-            added: true,
-        });
-        return false;
-    } else {
-        res.status(200).json({
-            auth: true,
-            token: token,
-            result: user,
-            added: true,
-        });
-        return true;
-    }
+    res.status(status).json({
+      auth: success,
+      token: success ? token : null,
+      result: success ? user : null,
+      added: true,
+    });
+
+   return success;
 })
