@@ -12,6 +12,7 @@ services:
     volumes:
       - "./config/createTables.sql:/docker-entrypoint-initdb.d/createTables.sql"
       - "./config/insertData.sql:/docker-entrypoint-initdb.d/insertData.sql"
+      - "mysql-data:/var/lib/mysql"
     ports:
       - "${MYSQL_DB_PORT}:${MYSQL_DB_PORT}"
     environment:
@@ -89,3 +90,6 @@ services:
       PORT: ${CLIENT_PORT}
       REACT_APP_DB_SERVER_BASE_URL: ${DB_SERVER_BASE_URL}
       REACT_APP_FILE_SERVER_BASE_URL: ${FILE_SERVER_BASE_URL}
+
+volumes:
+  mysql-data:
