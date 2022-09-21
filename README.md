@@ -1,12 +1,34 @@
 # Audiofiler
 
-## Run the app locally
-Download [Docker](https://docs.docker.com/get-docker/) then run these commands in a linux-based terminal
+## Install Docker
+
+### Linux
+[Install Docker](https://docs.docker.com/engine/install/ubuntu/)
+
+[Install Docker Compose](https://docs.docker.com/compose/install/linux/#install-using-the-repository)
+
+If you see `The repository does not have a Release file` when running `sudo apt-get update`
 ```
-git clone git@github.com:ragtagrecords/audiofiler.git
-cd audiofiler
-sh setup.sh
-docker-compose --env-file=./config/.dev.env up --build
+# check UBUNTU_CODENAME here
+grep CODENAME /etc/os-release
+
+# change name here to match
+nano /etc/apt/sources.list.d/docker.list
+
+# try again
+sudo apt-get update
+```
+
+## Run the app locally
+
+Clone the repo
+`git clone git@github.com:ragtagrecords/audiofiler.git`
+
+Enter the repo and run the setup script
+`cd audiofiler && sh setup.sh`
+
+Build the docker containers
+`docker-compose --env-file=./config/.dev.env up --build`
 ```
 
 ## Test in browser
