@@ -4,8 +4,7 @@ COPY package.json ./
 COPY package-lock.json ./
 COPY ./ ./
 RUN npm ci --legacy-peer-deps
+RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 ARG DB_SERVER_BASE_URL
 ARG FILE_SERVER_BASE_URL
-# ENV REACT_APP_DB_SERVER_BASE_URL $DB_SERVER_BASE_URL
-# ENV REACT_APP_FILE_SERVER_BASE_URL $FILE_SERVER_BASE_URL
 CMD ["npm", "run", "start"]
