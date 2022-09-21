@@ -33,7 +33,7 @@ Build the docker containers
 
 `docker-compose --env-file=./config/.dev.env up --build`
 
-# Test in browser
+### Test in browser
 _Ports and base URL's for different environments defined in /config/*.env_
 - [Client](http://localhost:3000/)
 - [Database Server](http://localhost:3001/songs)
