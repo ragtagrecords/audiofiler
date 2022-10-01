@@ -28,7 +28,6 @@ Clone the repo
 Enter the repo and run the setup script
 
 `cd audiofiler && sh setup.sh`
-
 Build the docker containers
 
 `docker-compose --env-file=./config/.dev.env up --build`
@@ -41,17 +40,19 @@ _Ports and base URL's for different environments defined in /config/*.env_
 - [mySQL interface](http://localhost:8080)
 
 ## Manually deploy to production
+Deployments to production occur automatically when the `main` branch is updated, but here are the instructions for how to do it manually.
+
 Connect to the server
 
 `ssh user@68.101.73.99`
 
-Update to new code
-
-`cd ~/Apps/audiofiler && git fetch origin main && git reset origin/main`
-
 Stop the containers
 
 `sudo docker-compose --env-file=./config/.prod.env down`
+
+Update to new code
+
+`cd ~/Apps/audiofiler && git fetch origin main && git reset origin/main --hard`
 
 Build and start the docker containers
 
