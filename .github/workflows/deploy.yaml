@@ -1,0 +1,46 @@
+name: Build, deploy, and start audiofiler in prod environment
+
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the containers
+        run: docker-compose --env-file=./config/.prod.env up --build -d
+      - name: Wait for client
+        uses: ifaxity/wait-on-action@v1
+        with:
+          resource: http://localhost:3000
+      - name: Test Client
+        run: curl localhost:3000
+      - name: Test Database API
+        run: curl localhost:3001
+      - name: Test File API
+        run: curl localhost:3002
+      - name: Test mySQL Server
+        run: nc -z -w1 localhost 3306
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy to production
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_SSH_HOST }}
+          username: ${{ secrets.SERVER_SSH_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd ~/Apps/audiofiler &&
+            echo ${{ secrets.SERVER_USER_PASSWORD }} | sudo -S docker-compose --env-file=./config/.prod.env down &&
+            git fetch origin main &&
+            git reset origin/main --hard &&
+            echo ${{ secrets.SERVER_USER_PASSWORD }} | sudo -S sudo docker-compose --env-file=./config/.prod.env up --build -d
+            
+      - run: echo "Deployed successfully!"
+        
