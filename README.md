@@ -28,6 +28,7 @@ Clone the repo
 Enter the repo and run the setup script
 
 `cd audiofiler && sh setup.sh`
+
 Build the docker containers
 
 `docker-compose --env-file=./config/.dev.env up --build`
