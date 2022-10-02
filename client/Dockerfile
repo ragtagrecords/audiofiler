@@ -1,10 +1,7 @@
 FROM node:18.2.0
-WORKDIR /app
-COPY package.json ./
-COPY package-lock.json ./
+WORKDIR /usr/src/app
 COPY ./ ./
-RUN npm ci --legacy-peer-deps
-RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
+RUN mkdir -p /usr/src/app/node_modules/.cache && chmod -R 777 /usr/src/app/node_modules/.cache && npm ci --legacy-peer-deps
 ARG DB_SERVER_BASE_URL
 ARG FILE_SERVER_BASE_URL
 CMD ["npm", "run", "start"]
