@@ -1,5 +1,5 @@
-# Download and extract zip containing mp3s and zips for local file-server
-curl https://files.ragtagrecords.com/zips/audio-files.zip -O -J -L
-unzip audio-files.zip
-rm audio-files.zip
+# Download and extract archive containing mp3s and zips for local file-server
+curl https://files.ragtagrecords.com/zips/audio-files.tar.gz -O -J -L 
+tar -xzvf audio-files.tar.gz
+rm audio-files.tar.gz
 mv audio-files file-server
