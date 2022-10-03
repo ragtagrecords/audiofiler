@@ -1,0 +1,24 @@
+name: Making sure the code builds correctly
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the containers
+        run: docker-compose --env-file=./config/.prod.env up --build -d
+      - name: Wait for client
+        uses: ifaxity/wait-on-action@v1
+        with:
+          resource: http://localhost:3000
+      - name: Test Client
+        run: curl localhost:3000
+      - name: Test Database API
+        run: curl localhost:3001
+      - name: Test File API
+        run: curl localhost:3002
+      - name: Test mySQL Server
+        run: nc -z -w1 localhost 3306
