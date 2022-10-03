@@ -25,9 +25,25 @@ export const filterSongs = (
 
   // Remove songs that are excluded or don't match query
   const filteredSongs = songs.filter((song) => {
-    const matchesQuery = query === '' || song.name.toLowerCase().includes(query.toLowerCase());
-    const excluded = excludedSongs && excludedSongIDs.includes(song.id);
-    return matchesQuery && !excluded;
+    if (excludedSongs && excludedSongIDs.includes(song.id)) {
+      return false;
+    }
+
+    // Check if song name contains query
+    const exactlyMatchesQuery = query === '' || song.name.toLowerCase().includes(query.toLowerCase());
+
+    // Check if song name contains any 3 char phrases from query
+    let kindaMatchesQuery = false;
+    if (!exactlyMatchesQuery && query.length > 2) {
+      for (let i = 0; i < query.length - 2; i += 1) {
+        if (song.name.includes(query.slice(i, i + 3))) {
+          kindaMatchesQuery = true;
+          break;
+        }
+      }
+    }
+
+    return exactlyMatchesQuery || kindaMatchesQuery;
   });
 
   return filteredSongs;
