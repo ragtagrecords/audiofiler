@@ -158,19 +158,30 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
     // Asynchronously attempt to add all the songs to DB and file server
     const results = [];
     for (let i = 0; i < songsToSubmit.length; i += 1) {
-      results.push(addSong(songsToSubmit[i]));
+      results.push(addSong({ ...songsToSubmit[i] }));
     }
 
     // Array of true/false values for the success of each song
     const asyncResults = await Promise.all(results);
 
-    if (asyncResults.includes(false)) {
-      // TODO: present error to user
-      return false;
-    }
+    // use songname to identify which song failed
+    const errors = asyncResults.filter((result) => result.success !== true);
 
-    navigate(`/playlists/${globalPlaylistID ?? ''}`);
-    return true;
+    const songsThatFailed = songsToSubmit.filter((song) => {
+      const songFailed = errors.some((error) => error.songName === song.name);
+      return songFailed;
+    });
+    // Attach errors to songs in state if they were encountered
+    songsThatFailed.forEach((song) => {
+      song.error = 'Error uploading song, try with a different file name';
+    });
+
+    if (songsThatFailed.length === 0) {
+      navigate(`/playlists/${globalPlaylistID ?? ''}`);
+      return true;
+    }
+    setSongs(songsThatFailed);
+    return false;
   };
 
   if (!userID) {

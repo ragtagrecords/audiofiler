@@ -111,7 +111,7 @@ export const deleteSongFromDB = async (id: Song['id']) => {
 // Add a song to the DB and file server
 export const addSong = async (song: Song) => {
   if (!song || !song.file) {
-    return false;
+    return { success: false, songName: song.name };
   }
 
   // Store paths and remove files before turning into JSON
@@ -128,7 +128,7 @@ export const addSong = async (song: Song) => {
   const songInfoAddedToDB = await addSongToDB(song);
   if (!songInfoAddedToDB) {
     console.log('Failed to add song info to DB');
-    return false;
+    return { success: false, songName: song.name };
   }
 
   // Upload mp3/wav file to file server
@@ -136,7 +136,7 @@ export const addSong = async (song: Song) => {
   if (!songFileUploaded) {
     // TODO: to make this transactional, remove from DB when upload fails
     console.log('Failed to upload song');
-    return false;
+    return { success: false, songName: song.name };
   }
 
   // Upload zip file to file server
@@ -147,9 +147,9 @@ export const addSong = async (song: Song) => {
     // TODO: to make this transactional, remove from DB when upload fails
     if (!zipFileUploaded) {
       console.log('Failed to upload zip');
-      return false;
+      return { success: false, songName: song.name };
     }
   }
 
-  return true;
+  return { success: true, songName: song.name };
 };

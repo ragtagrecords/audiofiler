@@ -20,6 +20,9 @@ export const SongFieldset = ({
 
   return (
     <fieldset className="songInfoFieldset">
+      {song.error && (
+        <p className="errorMessage">{song.error}</p>
+      )}
       <label> Song Name
         <input
           type="text"

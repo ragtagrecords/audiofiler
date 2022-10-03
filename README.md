@@ -27,7 +27,7 @@ Clone the repo
 
 Enter the repo and run the setup script
 
-`cd audiofiler && sh setup.sh`
+`cd audiofiler && sh setup.sh && sh npm-install.sh`
 
 Build the docker containers
 

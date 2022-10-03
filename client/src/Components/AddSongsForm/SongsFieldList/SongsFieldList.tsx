@@ -13,7 +13,9 @@ export const SongsFieldList = ({
   isLoading,
   updateSongsState,
 }: SongsFieldsProps) => {
-  if (!songs || !songs[0].file) { return isLoading ? <LoadingSpinner /> : null; }
+  if (!songs || !songs[0].file) {
+    return isLoading ? <LoadingSpinner /> : null;
+  }
 
   return (
     <>

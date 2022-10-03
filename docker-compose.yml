@@ -81,8 +81,8 @@ services:
       dockerfile: Dockerfile
       context: ./client
     volumes:
-      - ./client:/usr/src/app
       - /usr/src/app/node_modules
+      - ./client:/usr/src/app
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
     environment:

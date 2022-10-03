@@ -55,10 +55,13 @@ export const UploadOptions = ({ uploadedFiles, parentSong }: UploadOptionsProps)
     const asyncResults = await Promise.all(results);
 
     // TODO: present error to user if any occured
-    if (asyncResults.includes(false)) {
-      setUploadStatus(false);
-      return false;
-    }
+    asyncResults.forEach((result) => {
+      if (!result.success) {
+        setUploadStatus(false);
+        return false;
+      }
+      return true;
+    });
 
     setUploadStatus(true);
     return true;
