@@ -14,6 +14,7 @@ export interface Song {
   playlistIDs?: Array<string> | null;
   position?: number;
   notes?: string | null;
+  error?: string;
 }
 
 export type Playlist = {
