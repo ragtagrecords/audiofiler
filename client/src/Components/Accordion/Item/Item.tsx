@@ -7,6 +7,8 @@ import { updateSong } from 'Services';
 import { Draggable } from 'react-beautiful-dnd';
 import listStyles from 'Styles/lists.module.scss';
 import './Item.scss';
+import { IconButton } from 'Components';
+import { removeSongFromPlaylist } from 'Services/PlaylistSvc';
 
 interface ItemContextInterface {
   song: Song,
@@ -119,6 +121,16 @@ export const Item = ({
             }}
           >
             {children}
+            <IconButton
+              type="remove"
+              onClick={() => {
+                if (song.id) {
+                  removeSongFromPlaylist(song.id, playlist.id);
+                } else {
+                  console.log('Failed to remove from playlist');
+                }
+              }}
+            />
           </ItemCtx.Provider>
         </div>
       )}

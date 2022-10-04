@@ -70,9 +70,11 @@ async function addPlaylist(db, name) {
 async function updatePlaylist(db, id, playlist) {
 
     if (!db || !playlist || !id) {
-        console.log('ERROR: Playlist and ID required to update playlist');
+        console.log('ERROR: Playlist and ID required to update playlist', playlist);
         return false;
     }
+
+    console.log(playlist);
 
     // ID and createTimestamp should not be updated
     if (playlist.id) { delete playlist.id }

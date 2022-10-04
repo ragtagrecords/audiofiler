@@ -36,12 +36,21 @@ export const addSongToPlaylist = async (songID: number, playlistID: number) => {
 export const updatePlaylist = async (playlist: Playlist) => {
   const formData = new FormData();
 
-  formData.append('playlist', JSON.stringify(playlist));
+  formData.append('playlist', JSON.stringify({ id: playlist.id, name: playlist.name }));
   try {
     const res = await axios.put(`${databaseServerURL()}/playlists/${playlist.id}`, formData);
     return res;
   } catch (ex) {
     console.log(ex);
+    return false;
+  }
+};
+
+export const removeSongFromPlaylist = async (songID: number, playlistID: number) => {
+  try {
+    await axios.delete(`${databaseServerURL()}/playlists/${playlistID}/song/${songID}`);
+    return true;
+  } catch (ex) {
     return false;
   }
 };

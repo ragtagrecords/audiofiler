@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { IconContext } from 'react-icons';
-import { AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineCheck, AiOutlineClose, AiOutlineMinusCircle } from 'react-icons/ai';
 import { FiDownload, FiUpload } from 'react-icons/fi';
 import { FaPlus } from 'react-icons/fa';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
@@ -8,7 +8,7 @@ import { ImArrowLeft } from 'react-icons/im';
 import styles from './styles.module.scss';
 
 type IconButtonProps = {
-  type: 'save' | 'cancel' | 'download' | 'upload' | 'add' | 'options' | 'back' | 'drag';
+  type: 'save' | 'cancel' | 'download' | 'upload' | 'add' | 'remove' | 'options' | 'back' | 'drag';
   size?: string;
   color?: string;
   className?: string;
@@ -41,6 +41,9 @@ export const IconButton = ({
       break;
     case 'add':
       icon = <FaPlus />;
+      break;
+    case 'remove':
+      icon = <AiOutlineMinusCircle />;
       break;
     case 'options':
       icon = <BiDotsVerticalRounded />;
