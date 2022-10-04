@@ -3,6 +3,7 @@ import { useAppSelector } from 'Hooks/hooks';
 import { Droppable } from 'react-beautiful-dnd';
 import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { LoadingSpinner } from 'Components/Common/LoadingSpinner/LoadingSpinner';
+import listStyles from 'Styles/lists.module.scss';
 import './Accordion.scss';
 
 type AccordionProps = {
@@ -27,7 +28,7 @@ export const Accordion = ({ children } : AccordionProps) => {
   }
 
   return (
-    <div className="accordionContainer listContainer">
+    <div className={`accordionContainer ${listStyles.listContainer}`}>
       <Droppable droppableId="list-container">
         {(provided) => (
           <div

@@ -34,33 +34,33 @@ export const SongVersions = ({ parentID }: SongVersionsProps) => {
     getSongVersions();
   }, []);
 
-  if (songs) {
-    return (
-      <>
-        <ul className="songVersionsList">
-          {songs.map((song) => {
-            return (
-              <button
-                type="button"
-                onClick={() => {
-                  if (song.id && playlist.songs) {
-                    dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
-                      songID: song.id,
-                      playlistSongs: playlist.songs,
-                    }));
-                  }
-                }}
-                className="songVersionButton"
-                key={`version-link-${song.id}`}
-              >
-                {song.name}
-              </button>
-            );
-          })}
-        </ul>
-      </>
-    );
+  if (!songs) {
+    return <div> No versions found</div>;
   }
 
-  return <div> No versions found</div>;
+  return (
+    <>
+      <ul className="songVersionsList">
+        {songs.map((song) => {
+          return (
+            <button
+              type="button"
+              onClick={() => {
+                if (song.id && playlist.songs) {
+                  dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+                    songID: song.id,
+                    playlistSongs: playlist.songs,
+                  }));
+                }
+              }}
+              className="songVersionButton"
+              key={`version-link-${song.id}`}
+            >
+              {song.name}
+            </button>
+          );
+        })}
+      </ul>
+    </>
+  );
 };

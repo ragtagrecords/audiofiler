@@ -112,19 +112,8 @@ export const ItemBody = () => {
   }
 
   return (
-    <button
-      type="button"
-      className={`accordionBody ${(isSelected && isOpen) ? 'open' : ''} ${bodyType}`}
-      onClick={() => {
-        if (bodyType === 'info' && song.id && playlist.songs) {
-          dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
-            songID: song.id,
-            playlistSongs: playlist.songs,
-          }));
-        }
-      }}
-    >
+    <div className={`accordionBody ${(isSelected && isOpen) ? 'open' : ''} ${bodyType}`}>
       {body}
-    </button>
+    </div>
   );
 };
