@@ -2,6 +2,11 @@
 
 .editableTitle {
     background: transparent;
+
+    button {
+      display: none;
+    }
+
     input {
       font-family: vars.$font;
       caret-color: vars.$tertiaryColor;

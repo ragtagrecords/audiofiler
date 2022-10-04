@@ -28,7 +28,7 @@ import {
 import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
-import './Playlist.scss';
+import styles from './styles.module.scss';
 
 interface PlaylistContextInterface {
   userID: number | null;
@@ -286,6 +286,7 @@ export const Playlist = () => {
             >
               <ItemHeader />
               <ItemBody />
+              <hr className={`${styles.songDivider}`} />
             </Item>
           ))}
         </Accordion>

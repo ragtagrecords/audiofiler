@@ -4,7 +4,6 @@
 $uiHeight: calc(vars.$footerHeight / 4);
 .audioPlayer {
   @include funcs.flexCenter();
-  background-color: vars.$primaryColor;
   z-index: vars.$floatingZ;
   height: 100%;
   pointer-events: none;

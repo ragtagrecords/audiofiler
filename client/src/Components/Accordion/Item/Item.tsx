@@ -5,7 +5,6 @@ import { useAppSelector } from 'Hooks/hooks';
 import { BodyType, Playlist, Song } from 'Types';
 import { updateSong } from 'Services';
 import { Draggable } from 'react-beautiful-dnd';
-import listStyles from 'Styles/lists.module.scss';
 import './Item.scss';
 import { IconButton } from 'Components';
 import { removeSongFromPlaylist } from 'Services/PlaylistSvc';
@@ -95,7 +94,6 @@ export const Item = ({
         <div
           className={`
             accordionItem
-            ${listStyles.item}
             ${snapshot.isDragging ? 'dragging' : ''}
             ${mode.current === 'dragging' ? 'draggable' : ''}
             ${isSelected ? 'selected' : ''}

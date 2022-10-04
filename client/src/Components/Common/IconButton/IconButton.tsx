@@ -5,10 +5,11 @@ import { FiDownload, FiUpload } from 'react-icons/fi';
 import { FaPlus } from 'react-icons/fa';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { ImArrowLeft } from 'react-icons/im';
+import { IoMdArrowDropdown } from 'react-icons/io';
 import styles from './styles.module.scss';
 
 type IconButtonProps = {
-  type: 'save' | 'cancel' | 'download' | 'upload' | 'add' | 'remove' | 'options' | 'back' | 'drag';
+  type: 'save' | 'cancel' | 'download' | 'upload' | 'add' | 'remove' | 'options' | 'back' | 'drag' | 'dropdown';
   size?: string;
   color?: string;
   className?: string;
@@ -44,12 +45,17 @@ export const IconButton = ({
       break;
     case 'remove':
       icon = <AiOutlineMinusCircle />;
+      // TODO: restore
+      return null;
       break;
     case 'options':
       icon = <BiDotsVerticalRounded />;
       break;
     case 'back':
       icon = <ImArrowLeft />;
+      break;
+    case 'dropdown':
+      icon = <IoMdArrowDropdown />;
       break;
     default:
       return null;

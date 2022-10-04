@@ -28,6 +28,7 @@ export const ItemHeader = () => {
     setBodyType,
     isSelected,
     isEdited,
+    isOpen,
     setIsOpen,
     discardEdits,
     setEditedSong,
@@ -40,6 +41,9 @@ export const ItemHeader = () => {
 
   // Either show the add button or the upload button
   const left = () => {
+    return <div>{song.position}</div>;
+    // TODO: repurpose this (buttons for discarding edits and adding songs in search)
+    /*
     if (!username) {
       return null;
     }
@@ -70,6 +74,7 @@ export const ItemHeader = () => {
     if (isSelected && isEdited && mode.current === 'editing') {
       return (<IconButton type="cancel" onClick={discardEdits} />);
     }
+    */
 
     return null;
   };
@@ -82,8 +87,6 @@ export const ItemHeader = () => {
       }
       switch (e.detail) {
         case 1: // click
-          setBodyType('info');
-          setIsOpen(true);
           dispatch(PLAYLIST_ACTIONS.setSelectedSongID(song.id));
           if (playlist.songs) {
             dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
@@ -130,6 +133,7 @@ export const ItemHeader = () => {
     );
   };
 
+  // TODO: repurpose functionality
   // If song is selected and user is authenticated, show extra options
   const right = () => {
     if (!isSelected || !song.path || !username) {
@@ -170,7 +174,7 @@ export const ItemHeader = () => {
     <div className={`accordionHeader ${isSelected ? 'selected' : ''} ${mode.current === 'adding' ? 'adding' : ''}`}>
 
       <div className="accordionHeaderSection left">
-        {left()}
+        {song.position ?? '-'}
       </div>
 
       <div className="accordionHeaderSection center">
@@ -178,7 +182,15 @@ export const ItemHeader = () => {
       </div>
 
       <div className="accordionHeaderSection right">
-        {right()}
+        <IconButton
+          type="dropdown"
+          size="30px"
+          onClick={() => {
+            console.log(isOpen);
+            setBodyType('info');
+            setIsOpen(!isOpen);
+          }}
+        />
       </div>
     </div>
   );
