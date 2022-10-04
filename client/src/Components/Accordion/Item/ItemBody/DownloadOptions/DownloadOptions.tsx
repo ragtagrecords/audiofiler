@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Song } from 'Types';
-import { downloadFile, removeExtraExtensions } from 'Services';
+import { downloadFile, getSongs, removeExtraExtensions } from 'Services';
 import './DownloadOptions.scss';
 
 type DownloadableFile = {
@@ -14,43 +14,68 @@ type DownloadOptionsProps = {
 }
 
 export const DownloadOptions = ({ song }: DownloadOptionsProps) => {
-  if (song && song.path) {
-    const files: DownloadableFile[] = [];
-    const songFileExt = `${song.path.split('.').pop()}` ?? 'mp3';
-    files.push({
-      folder: 'songs',
-      actualFileName: song.path,
-      desiredFileName: `${removeExtraExtensions(song.name)}.${songFileExt}`,
-    });
-    if (song.zipPath) {
-      files.push({
-        folder: 'zips',
-        actualFileName: song.zipPath,
-        desiredFileName: `${removeExtraExtensions(song.name)}.zip`,
-      });
+  const [childrenSongs, setChildrenSongs] = useState<Song[] | null>(null);
+
+  const getSongVersions = async () => {
+    const childrenSongs = await getSongs(null, song.id?.toString(10));
+    if (childrenSongs) {
+      setChildrenSongs([...childrenSongs]);
+      return true;
     }
+    return false;
+  };
+
+  useEffect(() => {
+    getSongVersions();
+  }, []);
+
+  if (!song || !song.path) {
     return (
-      <>
-        <ul className="downloadOptions">
-          {files.map((file: DownloadableFile) => {
-            return (
-              <li key={file.actualFileName}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    downloadFile(file.folder, file.actualFileName, file.desiredFileName);
-                  }}
-                >
-                  {file.desiredFileName}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </>
+      <div>No files found :(</div>
     );
   }
+
+  const files: DownloadableFile[] = [];
+
+  const songs = [song, ...(childrenSongs || [])];
+
+  songs.forEach((song) => {
+    if (song && song.path) {
+      console.log('path', song.path ? song.path : 'no path');
+      console.log(`${song.path.split('.').pop()}`);
+      files.push({
+        folder: 'songs',
+        actualFileName: song.path,
+        desiredFileName: `${removeExtraExtensions(song.name)}.mp3`,
+      });
+      if (song.zipPath) {
+        files.push({
+          folder: 'zips',
+          actualFileName: song.zipPath,
+          desiredFileName: `${removeExtraExtensions(song.name)}.zip`,
+        });
+      }
+    }
+  });
+
   return (
-    <div>No files found :(</div>
+    <>
+      <ul className="downloadOptions">
+        {files.map((file: DownloadableFile) => {
+          return (
+            <li key={file.actualFileName}>
+              <button
+                type="button"
+                onClick={() => {
+                  downloadFile(file.folder, file.actualFileName, file.desiredFileName);
+                }}
+              >
+                {file.desiredFileName}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 };

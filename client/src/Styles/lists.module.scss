@@ -1,9 +1,8 @@
 @use "vars";
 @use "funcs";
 
-
 .listContainer {
-  ul {
+  .list {
     padding: 20px;
     border-radius: vars.$roundCorners;
     margin: 0;
@@ -14,7 +13,7 @@
     list-style: none;
   }
   
-  .normalListItem {
+  .item {
     display: inline-block;
     padding: 0;
     text-align: center;
@@ -24,7 +23,7 @@
     width: 100%;
   }
   
-  .playlistLink {
+  .link {
     height: 80px;
     color: vars.$tertiaryColor;
     text-decoration: none;

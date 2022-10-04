@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPlaylists } from 'Services';
 import { Playlist } from 'Types';
-import './PlaylistsList.scss';
+import listStyles from 'Styles/lists.module.scss';
+import styles from './styles.module.scss';
 
 export const PlaylistsList = () => {
   const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
@@ -20,14 +21,14 @@ export const PlaylistsList = () => {
   }
 
   return (
-    <div className="playlists listContainer">
-      <ul>
+    <div className={`${listStyles.listContainer} ${styles.playlists}`}>
+      <ul className={`${listStyles.list}`}>
         {playlists && playlists[0].name
             && playlists.map((playlist: Playlist) => {
               return (
-                <li key={`playlists-${playlist.id}`} className="normalListItem">
-                  <Link to={`/playlists/${playlist.id}`} className="playlistLink">
-                    <span className="nameContainer">
+                <li key={`playlists-${playlist.id}`} className={`${listStyles.item}`}>
+                  <Link to={`/playlists/${playlist.id}`} className={`${listStyles.link}`}>
+                    <span className={`${listStyles.nameContainer}`}>
                       {playlist.name}
                     </span>
                   </Link>

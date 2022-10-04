@@ -1,7 +1,7 @@
 @use "Styles/vars";
 @use "Styles/funcs";
-@use "Styles/lists";
 @use "Styles/doc";
+@use "Styles/lists.module.scss";
 
 .playlists {
   @include funcs.flexCenter();

@@ -1,9 +1,13 @@
 @use 'Styles/vars';
+@use 'Styles/funcs';
 
 .songVersionsList {
-  button {
-    color: vars.$tertiaryColor;
-    text-decoration: underline;
-    cursor: pointer;
-  }
+    @include funcs.flexCenter();
+    flex-direction: column;
+
+    button {
+        color: vars.$tertiaryColor;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 }
