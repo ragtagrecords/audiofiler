@@ -1,5 +1,8 @@
 @use "Styles/funcs";
 @use "Styles/vars";
 
-.accordionItem {
+.item {
+  background-color: #1d1d1d;
+  border-radius: 3px;
+  margin-bottom: 20px;
 }

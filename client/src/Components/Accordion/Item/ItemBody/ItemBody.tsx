@@ -1,32 +1,32 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import {
-  UploadArea, DownloadOptions, UploadOptions, SongVersions,
+  UploadArea,
+  DownloadOptions,
+  UploadOptions,
+  SongVersions,
+  SongInfo,
 } from 'Components';
 import { ItemCtx } from '../Item';
-import './ItemBody.scss';
+import './styles.scss';
 
 export const ItemBody = () => {
   const playlistContext = useContext(PlaylistCtx);
   const itemContext = useContext(ItemCtx);
   if (!playlistContext || !itemContext) {
+    console.log('no context');
     return null;
   }
 
-  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.uploadedFiles);
   const dispatch = useAppDispatch();
 
   const {
     song,
-    playlist,
-    bodyType,
-    isSelected,
     isOpen,
-    setEditedSong,
   } = itemContext;
 
   const handleUploadedFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,77 +43,23 @@ export const ItemBody = () => {
     return true;
   };
 
-  if (bodyType === 'collapsed' || !isSelected) {
-    return null;
-  }
-
-  let body = null;
-
-  // TODO: separate this conditional into two blocks and make it a SongInfo component
-  if (bodyType === 'info' || mode.current === 'editing') {
-    body = (
-      <>
-        <p>
-          <span>tempo: </span>
-          {mode.current === 'editing' ? (
-            <input
-              value={song.tempo}
-              onChange={(e) => {
-                const editedSong = { ...song };
-                editedSong.tempo = e.target.value;
-                setEditedSong(editedSong);
-              }}
-            />
-          ) : (
-            <span> {song.tempo} </span>
-          )}
-        </p>
-        <p>
-          <span>notes: </span>
-          {mode.current === 'editing' ? (
-            <textarea
-              className="big"
-              value={song.notes ?? ''}
-              onChange={(e) => {
-                const editedSong = { ...song };
-                editedSong.notes = e.target.value;
-                setEditedSong(editedSong);
-              }}
-            />
-          ) : (
-            <span> {song.notes} </span>
-          )}
-        </p>
-      </>
-    );
-  } else if (bodyType === 'upload') {
-    if (uploadedFiles) { // After files are uploaded
-      body = (
+  return (
+    <div className={`accordionBody ${isOpen ? 'open' : ''}`}>
+      <SongInfo />
+      <hr />
+      {song.id && song.isParent ? <SongVersions parentID={song.id} /> : 'no versions'}
+      <hr />
+      {uploadedFiles ? (
         <UploadOptions
           uploadedFiles={uploadedFiles}
           parentSong={song}
         />
-      );
-    } else { // Before files are uploaded
-      body = (
+      ) : (
         <UploadArea handleUpload={handleUploadedFiles} />
-      );
-    }
-  } else if (bodyType === 'download') {
-    body = (
+      )}
+      <hr />
       <DownloadOptions song={song} />
-    );
-  } else if (bodyType === 'versions') {
-    if (song.id && song.isParent) {
-      body = <SongVersions parentID={song.id} />;
-    } else {
-      body = <span>No additional versions found</span>;
-    }
-  }
-
-  return (
-    <div className={`accordionBody ${(isSelected && isOpen) ? 'open' : ''} ${bodyType}`}>
-      {body}
+      <hr />
     </div>
   );
 };

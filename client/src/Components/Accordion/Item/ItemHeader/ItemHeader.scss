@@ -1,7 +1,7 @@
 @use "Styles/funcs";
 @use "Styles/vars";
 
-$height: 40px;
+$height: 50px;
 
 .accordionHeader {
   @include funcs.flexCenter();
@@ -9,21 +9,22 @@ $height: 40px;
 
   .accordionHeaderSection {
     
-    &.left, &.right {
+    &.left, &.right, &.center {
       height: $height;
+      @include funcs.flexCenter();
+      width: 40px;
+      font-size: 1.0rem;
     }
 
     &.left {
-      @include funcs.flexCenter();
-      justify-content: flex-start;
-      width: 15px;
-      text-align: center;
+      color: vars.$gray-light;
     }
-    &.center {
-      width: 80%;
-      text-align: center;
 
-      .accordionButton {
+    &.center {
+      width: 100%;
+      color: vars.$white;
+
+      button {
         @include funcs.flexCenter();
         justify-content: flex-start;
         height: $height;
@@ -31,21 +32,21 @@ $height: 40px;
         cursor: pointer;
         background: transparent;
         border: none;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: vars.$white;
+        font-size: 1.4rem;
+        font-weight: 400;
+      }
 
-        span {
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
-
-        span, input {
-          background: transparent;
-          color: vars.$tertiaryColor;
-          text-align: center;
-          font-size: 1.3rem;
-          border: none;
-          min-width: 0;
-        };
+      input {
+        background: transparent;
+        color: vars.$white;
+        text-align: center;
+        font-size: 1.5rem;
+        border: none;
+        min-width: 0;
       }
     }
   }

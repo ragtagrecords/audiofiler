@@ -42,6 +42,7 @@ module.exports = {
     'react/jsx-wrap-multilines': [1, { logical: 'parens-new-line' }],
     'react/no-unused-prop-types': [0],
     'react/no-array-index-key': [0],
+    'react/jsx-boolean-value': [0],
     'react/jsx-no-bind': [0],
     'arrow-body-style': [0],
     'no-console': [0],

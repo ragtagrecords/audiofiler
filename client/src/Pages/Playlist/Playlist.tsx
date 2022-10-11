@@ -286,7 +286,6 @@ export const Playlist = () => {
             >
               <ItemHeader />
               <ItemBody />
-              <hr className={`${styles.songDivider}`} />
             </Item>
           ))}
         </Accordion>

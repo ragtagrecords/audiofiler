@@ -26,7 +26,6 @@ export const ItemHeader = () => {
     song,
     playlist,
     setBodyType,
-    isSelected,
     isEdited,
     isOpen,
     setIsOpen,
@@ -85,50 +84,31 @@ export const ItemHeader = () => {
       if (!song?.id) {
         return false;
       }
-      switch (e.detail) {
-        case 1: // click
-          dispatch(PLAYLIST_ACTIONS.setSelectedSongID(song.id));
-          if (playlist.songs) {
-            dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
-              songID: song.id,
-              playlistSongs: playlist.songs,
-            }));
-          }
-          return true;
-        case 2: // double click
-          if (playlist.songs) {
-            dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
-              songID: song.id,
-              playlistSongs: playlist.songs,
-            }));
-          }
-          if (song.id === audioPlayerSongID) {
-            setIsOpen(false);
-          }
-          dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(true));
-          return true;
-        default:
-          return true;
+
+      if (playlist.songs) {
+        dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+          songID: song.id,
+          playlistSongs: playlist.songs,
+        }));
       }
+      return true;
     };
-    return (
+    return mode.current === 'editing' ? (
+      <input
+        value={song.name}
+        onChange={(e) => {
+          const editedSong = { ...song };
+          editedSong.name = e.target.value;
+          setEditedSong(editedSong);
+        }}
+      />
+    ) : (
       <button
         type="button"
         className="accordionButton"
         onClick={handleClick}
       >
-        {mode.current === 'editing' ? (
-          <input
-            value={song.name}
-            onChange={(e) => {
-              const editedSong = { ...song };
-              editedSong.name = e.target.value;
-              setEditedSong(editedSong);
-            }}
-          />
-        ) : (
-          <span>{song.name}</span>
-        )}
+        {song.name}
       </button>
     );
   };
@@ -136,7 +116,7 @@ export const ItemHeader = () => {
   // TODO: repurpose functionality
   // If song is selected and user is authenticated, show extra options
   const right = () => {
-    if (!isSelected || !song.path || !username) {
+    if (!song.path || !username) {
       return null;
     }
 
@@ -171,7 +151,7 @@ export const ItemHeader = () => {
   };
 
   return (
-    <div className={`accordionHeader ${isSelected ? 'selected' : ''} ${mode.current === 'adding' ? 'adding' : ''}`}>
+    <div className={`accordionHeader ${mode.current === 'adding' ? 'adding' : ''}`}>
 
       <div className="accordionHeaderSection left">
         {song.position ?? '-'}
@@ -185,6 +165,7 @@ export const ItemHeader = () => {
         <IconButton
           type="dropdown"
           size="30px"
+          color="white"
           onClick={() => {
             console.log(isOpen);
             setBodyType('info');

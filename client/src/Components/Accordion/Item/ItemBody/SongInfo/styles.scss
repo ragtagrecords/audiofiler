@@ -1,0 +1,8 @@
+@use 'Styles/funcs';
+@use 'Styles/vars';
+
+.song-info {
+  @include funcs.flexCenter();
+  justify-content: flex-start;
+  margin-top: 10px;
+}

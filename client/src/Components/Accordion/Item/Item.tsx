@@ -12,7 +12,6 @@ import { removeSongFromPlaylist } from 'Services/PlaylistSvc';
 interface ItemContextInterface {
   song: Song,
   playlist: Playlist,
-  isSelected: boolean,
   isEdited: any;
   isOpen: boolean;
   bodyType: BodyType;
@@ -40,7 +39,6 @@ export const Item = ({
   const [editedSong, setEditedSong] = useState<Song>(song);
   const [bodyType, setBodyType] = useState<BodyType>('info');
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
-  const selectedSongID = useAppSelector(PLAYLIST_SELECTORS.selectedSongID);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
   const playlistContext = useContext(PlaylistCtx);
@@ -86,17 +84,15 @@ export const Item = ({
   };
 
   const isEdited = mode.current === 'editing' && wereEditsMade();
-  const isSelected = mode.current !== 'adding' && selectedSongID === song.id;
 
   return (
     <Draggable key={`${song.id} `} draggableId={String(song.id)} index={index}>
       {(provided, snapshot) => (
         <div
           className={`
-            accordionItem
+            item
             ${snapshot.isDragging ? 'dragging' : ''}
             ${mode.current === 'dragging' ? 'draggable' : ''}
-            ${isSelected ? 'selected' : ''}
           `}
           ref={provided.innerRef}
           {...provided.dragHandleProps}
@@ -106,10 +102,8 @@ export const Item = ({
             value={{
               song: mode.current === 'editing' ? editedSong : song,
               playlist,
-              isSelected,
               isEdited,
-              isOpen: (mode.current === 'editing' && isSelected)
-                || (mode.current !== 'adding' && isOpen && isSelected),
+              isOpen: mode.current !== 'adding' && isOpen,
               bodyType,
               setEditedSong,
               setBodyType,

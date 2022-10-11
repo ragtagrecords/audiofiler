@@ -3,6 +3,7 @@
 
 .accordionContainer {
   @include funcs.flexCenter();
+  padding-top: 20px;
 }
 
 .accordion {

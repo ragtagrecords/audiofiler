@@ -117,7 +117,7 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
 
     // build temp array of uploaded song info
     const newSongs: Array<Song> = [];
-    let tempo = '';
+    let tempo = 0;
     for (let i = 0; i < newFiles.length; i += 1) {
       tempo = await guessTempo(newFiles[i]);
       newSongs[i] = {
