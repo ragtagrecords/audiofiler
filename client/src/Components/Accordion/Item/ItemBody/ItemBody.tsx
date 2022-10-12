@@ -8,7 +8,7 @@ import {
   DownloadOptions,
   UploadOptions,
   SongVersions,
-  SongInfo,
+  InfoCard,
 } from 'Components';
 import { ItemCtx } from '../Item';
 import './styles.scss';
@@ -22,11 +22,13 @@ export const ItemBody = () => {
   }
 
   const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.uploadedFiles);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
 
   const {
     song,
     isOpen,
+    setEditedSong,
   } = itemContext;
 
   const handleUploadedFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +46,39 @@ export const ItemBody = () => {
   };
 
   return (
-    <div className={`accordionBody ${isOpen ? 'open' : ''}`}>
-      <SongInfo />
+    <div className={`item-body ${isOpen ? 'open' : ''}`}>
+      <section className="song-info">
+        <InfoCard
+          title="Tempo"
+          info={song.tempo?.toString() ?? '???'}
+          isEditable={mode.current === 'editing'}
+          onChange={(e) => {
+            const editedSong = { ...song };
+            editedSong.tempo = parseInt(e.target.value, 10);
+            setEditedSong(editedSong);
+          }}
+        />
+        <InfoCard
+          title="Key"
+          info="???"
+          isEditable={false}
+          onChange={() => {
+            console.log('no functionality for changing key yet');
+          }}
+        />
+      </section>
+      <section className="song-info">
+        <InfoCard
+          title="Notes"
+          info={song.notes ?? 'lots and lots of noteslots and lots of noteslots and lots of noteslots and lots of notes'}
+          isEditable={false}
+          isLarge={true}
+          onChange={() => {
+            console.log('no functionality for changing key yet');
+          }}
+        />
+      </section>
+
       <hr />
       {song.id && song.isParent ? <SongVersions parentID={song.id} /> : 'no versions'}
       <hr />

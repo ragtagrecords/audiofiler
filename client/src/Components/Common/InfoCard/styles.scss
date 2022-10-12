@@ -5,22 +5,22 @@
   width: $width;
   //background-color: vars.$gray-dark;
   border-radius: 5px;
-  margin-right: 20px;
+  margin: 0px 20px 15px 0px;
   padding: 0px 5px;
 
   h1 {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 400;
     margin: 0px;
     color: vars.$gray-light;
-    padding-bottom: 5px;
+    padding-bottom: 2px;
   }
   
   p, input {
     font-size: 3rem;
     border: none;
     background: none;
-    color: vars.$white;
+    color: vars.$gray-extra-light;
     width: $width;
     margin: 0px;
   }
@@ -28,6 +28,7 @@
   &.large {
     $width: 100%;
     width: $width;
+    margin: 0px 0px 15px 0px;
     
     p, input {
       width: $width;

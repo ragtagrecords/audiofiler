@@ -6,7 +6,6 @@ import { DownloadOptions } from './Accordion/Item/ItemBody/DownloadOptions/Downl
 import { Item } from './Accordion/Item/Item';
 import { ItemBody } from './Accordion/Item/ItemBody/ItemBody';
 import { ItemHeader } from './Accordion/Item/ItemHeader/ItemHeader';
-import { SongInfo } from './Accordion/Item/ItemBody/SongInfo/SongInfo';
 import { SongVersions } from './Accordion/Item/ItemBody/SongVersions/SongVersions';
 import { UploadArea } from './Accordion/Item/ItemBody/UploadArea/UploadArea';
 import { UploadOptionFields } from './Accordion/Item/ItemBody/UploadOptions/UploadOptionFields/UploadOptionFields';
@@ -69,7 +68,6 @@ export {
   SearchBar,
   SelectPlaylists,
   SongFieldset,
-  SongInfo,
   SongsFieldList,
   SongVersions,
   TaskCard,
