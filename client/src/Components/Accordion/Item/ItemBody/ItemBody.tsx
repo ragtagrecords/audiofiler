@@ -47,7 +47,7 @@ export const ItemBody = () => {
 
   return (
     <div className={`item-body ${isOpen ? 'open' : ''}`}>
-      <section className="song-info">
+      <section>
         <InfoCard
           title="Tempo"
           info={song.tempo?.toString() ?? '???'}
@@ -67,7 +67,7 @@ export const ItemBody = () => {
           }}
         />
       </section>
-      <section className="song-info">
+      <section>
         <InfoCard
           title="Notes"
           info={song.notes ?? 'lots and lots of noteslots and lots of noteslots and lots of noteslots and lots of notes'}
@@ -78,20 +78,23 @@ export const ItemBody = () => {
           }}
         />
       </section>
+      <section className="files">
+        <div id="file-section-header">
+          <h1>Files</h1>
+          <UploadArea handleUpload={handleUploadedFiles} />
+        </div>
+        <DownloadOptions song={song} />
+      </section>
 
       <hr />
       {song.id && song.isParent ? <SongVersions parentID={song.id} /> : 'no versions'}
       <hr />
-      {uploadedFiles ? (
+      {uploadedFiles && (
         <UploadOptions
           uploadedFiles={uploadedFiles}
           parentSong={song}
         />
-      ) : (
-        <UploadArea handleUpload={handleUploadedFiles} />
       )}
-      <hr />
-      <DownloadOptions song={song} />
       <hr />
     </div>
   );

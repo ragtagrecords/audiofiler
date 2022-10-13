@@ -6,7 +6,6 @@ $height: 60px;
 .item-body {
   display: none;
   color: vars.$tertiaryColor;
-  font-size: 2.2rem;
 
   // TODO: Remove
   hr {
@@ -15,6 +14,28 @@ $height: 60px;
     padding: 0px;
     margin: auto;
   }
+
+  section {
+    @include funcs.flexCenter();
+    flex-direction: row;
+    justify-content: flex-start;
+
+    #file-section-header {
+      @include funcs.flexCenter();
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    h1 {
+      @include funcs.small-header();
+    }
+
+    &.files {
+      flex-direction: column;
+    }
+  }
+
+  
 
   &.info {
     cursor: pointer;
@@ -25,12 +46,6 @@ $height: 60px;
     justify-content: left;
     flex-direction: column;
     padding: 5px 10px 30px 10px;
-
-    section {
-      @include funcs.flexCenter();
-      flex-direction: row;
-      justify-content: flex-start;
-    }
   }
 }
 

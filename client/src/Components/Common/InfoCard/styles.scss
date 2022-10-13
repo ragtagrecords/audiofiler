@@ -1,4 +1,5 @@
 @use 'Styles/vars';
+@use 'Styles/funcs';
 
 .info-card {
   $width: 90px;
@@ -6,14 +7,10 @@
   //background-color: vars.$gray-dark;
   border-radius: 5px;
   margin: 0px 20px 15px 0px;
-  padding: 0px 5px;
+  padding: 0px 0px;
 
   h1 {
-    font-size: 0.8rem;
-    font-weight: 400;
-    margin: 0px;
-    color: vars.$gray-light;
-    padding-bottom: 2px;
+    @include funcs.small-header();
   }
   
   p, input {

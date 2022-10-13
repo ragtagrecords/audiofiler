@@ -26,7 +26,7 @@ export const InfoCard = ({
   }
   return (
     <div className={`info-card ${isLarge ? 'large' : ''}`}>
-      <h1>{title}</h1>
+      <h1 className="small-header">{title}</h1>
       {mainText}
     </div>);
 };

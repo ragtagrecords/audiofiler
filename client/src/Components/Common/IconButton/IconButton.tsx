@@ -6,10 +6,33 @@ import { FaPlus } from 'react-icons/fa';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { ImArrowLeft } from 'react-icons/im';
 import { IoMdArrowDropdown } from 'react-icons/io';
+import {
+  BsFileEarmarkFill,
+  BsFileEarmarkMusicFill,
+  BsFillFileEarmarkImageFill,
+  BsFillFileEarmarkZipFill,
+} from 'react-icons/bs';
+import { HiPhotograph } from 'react-icons/hi';
 import styles from './styles.module.scss';
 
+export type IconButtonTypes =
+  'save'
+  | 'cancel'
+  | 'download'
+  | 'upload'
+  | 'add'
+  | 'remove'
+  | 'options'
+  | 'back'
+  | 'drag'
+  | 'dropdown'
+  | 'audio-file'
+  | 'zip-file'
+  | 'image-file'
+  | 'file';
+
 type IconButtonProps = {
-  type: 'save' | 'cancel' | 'download' | 'upload' | 'add' | 'remove' | 'options' | 'back' | 'drag' | 'dropdown';
+  type: IconButtonTypes;
   size?: string;
   color?: string;
   className?: string;
@@ -56,6 +79,18 @@ export const IconButton = ({
       break;
     case 'dropdown':
       icon = <IoMdArrowDropdown />;
+      break;
+    case 'file':
+      icon = <BsFileEarmarkFill />;
+      break;
+    case 'audio-file':
+      icon = <BsFileEarmarkMusicFill />;
+      break;
+    case 'zip-file':
+      icon = <BsFillFileEarmarkZipFill />;
+      break;
+    case 'image-file':
+      icon = <BsFillFileEarmarkImageFill />;
       break;
     default:
       return null;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Song } from 'Types';
 import { downloadFile, getSongs, removeExtraExtensions } from 'Services';
 import './DownloadOptions.scss';
+import { IconButton, IconButtonTypes } from 'Components/Common/IconButton/IconButton';
 
 type DownloadableFile = {
   folder: string;
@@ -58,20 +59,71 @@ export const DownloadOptions = ({ song }: DownloadOptionsProps) => {
     }
   });
 
+  // TODO: remove
+  files.push({
+    folder: 'zips',
+    actualFileName: 'crack.zip',
+    desiredFileName: 'crack.zip',
+  });
+  files.push({
+    folder: 'images',
+    actualFileName: 'crack.jpeg',
+    desiredFileName: 'crack.jpeg',
+  });
+  files.push({
+    folder: 'zips',
+    actualFileName: 'crack.zip',
+    desiredFileName: 'crack.zip',
+  });
+  files.push({
+    folder: 'images',
+    actualFileName: 'crack.jpeg',
+    desiredFileName: 'crack.jpeg',
+  });
+  files.push({
+    folder: 'zips',
+    actualFileName: 'crack.zip',
+    desiredFileName: 'crack.zip',
+  });
+  files.push({
+    folder: 'images',
+    actualFileName: 'crack.jpeg',
+    desiredFileName: 'crack.jpeg',
+  });
+
   return (
     <>
-      <ul className="downloadOptions">
+      <ul className="download-options">
         {files.map((file: DownloadableFile) => {
+          let iconType : IconButtonTypes;
+          switch (file.folder) {
+            case 'songs':
+              iconType = 'audio-file';
+              break;
+            case 'zips':
+              iconType = 'zip-file';
+              break;
+            case 'images':
+              iconType = 'image-file';
+              break;
+            default:
+              iconType = 'file';
+          }
+
           return (
-            <li key={file.actualFileName}>
-              <button
-                type="button"
+            <li
+              key={file.actualFileName}
+            >
+              <IconButton
+                type={iconType}
+                size="60px"
                 onClick={() => {
                   downloadFile(file.folder, file.actualFileName, file.desiredFileName);
                 }}
-              >
+              />
+              <p>
                 {file.desiredFileName}
-              </button>
+              </p>
             </li>
           );
         })}
