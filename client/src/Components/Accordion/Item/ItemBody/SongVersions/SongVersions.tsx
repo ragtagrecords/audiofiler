@@ -4,6 +4,7 @@ import { getSongs } from 'Services';
 import './SongVersions.scss';
 import { useAppDispatch } from 'Hooks/hooks';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
+import { IconButton } from 'Components/Common/IconButton/IconButton';
 import { ItemCtx } from '../../Item';
 
 type SongVersionsProps = {
@@ -43,21 +44,35 @@ export const SongVersions = ({ parentID }: SongVersionsProps) => {
       <ul className="songVersionsList">
         {songs.map((song) => {
           return (
-            <button
-              type="button"
-              onClick={() => {
-                if (song.id && playlist.songs) {
-                  dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
-                    songID: song.id,
-                    playlistSongs: playlist.songs,
-                  }));
-                }
-              }}
-              className="songVersionButton"
-              key={`version-link-${song.id}`}
-            >
-              {song.name}
-            </button>
+            <>
+              <IconButton
+                type="play"
+                onClick={() => {
+                  if (song.id && playlist.songs) {
+                    dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+                      songID: song.id,
+                      playlistSongs: playlist.songs,
+                    }));
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (song.id && playlist.songs) {
+                    dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
+                      songID: song.id,
+                      playlistSongs: playlist.songs,
+                    }));
+                  }
+                }}
+                className="songVersionButton"
+                key={`version-link-${song.id}`}
+              >
+                {song.name}
+              </button>
+            </>
+
           );
         })}
       </ul>

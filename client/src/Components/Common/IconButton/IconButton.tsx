@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { IconContext } from 'react-icons';
 import { AiOutlineCheck, AiOutlineClose, AiOutlineMinusCircle } from 'react-icons/ai';
 import { FiDownload, FiUpload } from 'react-icons/fi';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaPlay } from 'react-icons/fa';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { ImArrowLeft } from 'react-icons/im';
 import { IoMdArrowDropdown } from 'react-icons/io';
@@ -18,6 +18,7 @@ import styles from './styles.module.scss';
 export type IconButtonTypes =
   'save'
   | 'cancel'
+  | 'play'
   | 'download'
   | 'upload'
   | 'add'
@@ -56,6 +57,9 @@ export const IconButton = ({
       break;
     case 'cancel':
       icon = <AiOutlineClose />;
+      break;
+    case 'play':
+      icon = <FaPlay />;
       break;
     case 'download':
       icon = <FiDownload />;
