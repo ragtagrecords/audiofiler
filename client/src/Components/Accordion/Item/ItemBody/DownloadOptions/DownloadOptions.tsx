@@ -60,36 +60,6 @@ export const DownloadOptions = ({ song }: DownloadOptionsProps) => {
   });
 
   // TODO: remove
-  files.push({
-    folder: 'zips',
-    actualFileName: 'crack.zip',
-    desiredFileName: 'crack.zip',
-  });
-  files.push({
-    folder: 'images',
-    actualFileName: 'crack.jpeg',
-    desiredFileName: 'crack.jpeg',
-  });
-  files.push({
-    folder: 'zips',
-    actualFileName: 'crack.zip',
-    desiredFileName: 'crack.zip',
-  });
-  files.push({
-    folder: 'images',
-    actualFileName: 'crack.jpeg',
-    desiredFileName: 'crack.jpeg',
-  });
-  files.push({
-    folder: 'zips',
-    actualFileName: 'crack.zip',
-    desiredFileName: 'crack.zip',
-  });
-  files.push({
-    folder: 'images',
-    actualFileName: 'crack.jpeg',
-    desiredFileName: 'crack.jpeg',
-  });
 
   return (
     <>

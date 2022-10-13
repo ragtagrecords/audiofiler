@@ -79,11 +79,9 @@ export const ItemBody = () => {
         />
       </section>
       <section className="files">
-        <div id="file-section-header">
-          <h1>Files</h1>
-          <UploadArea handleUpload={handleUploadedFiles} />
-        </div>
+        <h1>Files</h1>
         <DownloadOptions song={song} />
+        <UploadArea handleUpload={handleUploadedFiles} />
       </section>
 
       <hr />

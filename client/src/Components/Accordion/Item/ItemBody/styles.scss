@@ -28,14 +28,13 @@ $height: 60px;
 
     h1 {
       @include funcs.small-header();
+      margin-right: auto;
     }
 
     &.files {
       flex-direction: column;
     }
   }
-
-  
 
   &.info {
     cursor: pointer;
