@@ -3,24 +3,23 @@
 
 $height: 50px;
 
-.accordionHeader {
+.item-header {
   @include funcs.flexCenter();
   height: $height;
 
-  .accordionHeaderSection {
     
-    &.left, &.right, &.center {
+    .left, .right, .center {
       height: $height;
       @include funcs.flexCenter();
       width: 40px;
       font-size: 1.0rem;
     }
 
-    &.left {
+    .left {
       color: vars.$gray-light;
     }
 
-    &.center {
+    .center {
       width: 100%;
       color: vars.$white;
 
@@ -48,5 +47,4 @@ $height: 50px;
         min-width: 0;
       }
     }
-  }
 }

@@ -100,7 +100,7 @@ export const Playlist = () => {
   // TODO: move these async loads into redux with a thunk, or saga or something
   const loadPlaylist = async () => {
     const p = await getPlaylistByID(playlistID);
-    const songs = await getSongs(playlistID);
+    const songs = await getSongs(parseInt(playlistID, 10));
 
     if (!p || !p.name || !songs || songs.length === 0 || !songs[0].id) {
       return false;

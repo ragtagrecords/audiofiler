@@ -4,8 +4,13 @@
 $height: 60px;
 
 .item-body {
-  display: none;
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
   color: vars.$tertiaryColor;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
 
   // TODO: Remove
   hr {
@@ -19,6 +24,9 @@ $height: 60px;
     @include funcs.flexCenter();
     flex-direction: row;
     justify-content: flex-start;
+    padding-left: 15px;
+
+    
 
     #file-section-header {
       @include funcs.flexCenter();
@@ -41,10 +49,8 @@ $height: 60px;
   }
 
   &.open {
-    display: flex;
-    justify-content: left;
-    flex-direction: column;
-    padding: 5px 10px 30px 10px;
+    max-height: 1000px;
+    transition: max-height 0.5s ease-in;
   }
 }
 

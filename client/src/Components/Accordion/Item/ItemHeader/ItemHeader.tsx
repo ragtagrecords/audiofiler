@@ -151,17 +151,17 @@ export const ItemHeader = () => {
   };
 
   return (
-    <div className={`accordionHeader ${mode.current === 'adding' ? 'adding' : ''}`}>
+    <div className={`item-header ${mode.current === 'adding' ? 'adding' : ''}`}>
 
-      <div className="accordionHeaderSection left">
+      <div className="left">
         {song.position ?? '-'}
       </div>
 
-      <div className="accordionHeaderSection center">
+      <div className="center">
         {center()}
       </div>
 
-      <div className="accordionHeaderSection right">
+      <div className="right">
         <IconButton
           type="dropdown"
           size="30px"

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { IconContext } from 'react-icons';
 import { AiOutlineCheck, AiOutlineClose, AiOutlineMinusCircle } from 'react-icons/ai';
 import { FiDownload, FiUpload } from 'react-icons/fi';
-import { FaPlus, FaPlay } from 'react-icons/fa';
+import { FaCrown, FaPlus, FaPlay } from 'react-icons/fa';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { ImArrowLeft } from 'react-icons/im';
 import { IoMdArrowDropdown } from 'react-icons/io';
@@ -30,7 +30,8 @@ export type IconButtonTypes =
   | 'audio-file'
   | 'zip-file'
   | 'image-file'
-  | 'file';
+  | 'file'
+  | 'crown';
 
 type IconButtonProps = {
   type: IconButtonTypes;
@@ -72,8 +73,6 @@ export const IconButton = ({
       break;
     case 'remove':
       icon = <AiOutlineMinusCircle />;
-      // TODO: restore
-      return null;
       break;
     case 'options':
       icon = <BiDotsVerticalRounded />;
@@ -95,6 +94,9 @@ export const IconButton = ({
       break;
     case 'image-file':
       icon = <BsFillFileEarmarkImageFill />;
+      break;
+    case 'crown':
+      icon = <FaCrown />;
       break;
     default:
       return null;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Song } from 'Types';
 import { downloadFile, getSongs, removeExtraExtensions } from 'Services';
-import './DownloadOptions.scss';
+import './styles.scss';
 import { IconButton, IconButtonTypes } from 'Components/Common/IconButton/IconButton';
 
 type DownloadableFile = {
@@ -10,35 +10,18 @@ type DownloadableFile = {
   desiredFileName: string;
 }
 
-type DownloadOptionsProps = {
-  song: Song;
+type FileListProps = {
+  songs: Song[];
 }
 
-export const DownloadOptions = ({ song }: DownloadOptionsProps) => {
-  const [childrenSongs, setChildrenSongs] = useState<Song[] | null>(null);
-
-  const getSongVersions = async () => {
-    const childrenSongs = await getSongs(null, song.id?.toString(10));
-    if (childrenSongs) {
-      setChildrenSongs([...childrenSongs]);
-      return true;
-    }
-    return false;
-  };
-
-  useEffect(() => {
-    getSongVersions();
-  }, []);
-
-  if (!song || !song.path) {
+export const FileList = ({ songs }: FileListProps) => {
+  if (!songs || !songs[0].path) {
     return (
       <div>No files found :(</div>
     );
   }
 
   const files: DownloadableFile[] = [];
-
-  const songs = [song, ...(childrenSongs || [])];
 
   songs.forEach((song) => {
     if (song && song.path) {
@@ -60,6 +43,7 @@ export const DownloadOptions = ({ song }: DownloadOptionsProps) => {
   });
 
   // TODO: remove
+  /*
   files.push({
     folder: 'zips',
     actualFileName: 'crack.zip',
@@ -90,6 +74,7 @@ export const DownloadOptions = ({ song }: DownloadOptionsProps) => {
     actualFileName: 'crack.jpeg',
     desiredFileName: 'crack.jpeg',
   });
+  */
 
   return (
     <>

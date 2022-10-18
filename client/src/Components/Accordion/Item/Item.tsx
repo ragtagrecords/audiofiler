@@ -113,16 +113,6 @@ export const Item = ({
             }}
           >
             {children}
-            <IconButton
-              type="remove"
-              onClick={() => {
-                if (song.id) {
-                  removeSongFromPlaylist(song.id, playlist.id);
-                } else {
-                  console.log('Failed to remove from playlist');
-                }
-              }}
-            />
           </ItemCtx.Provider>
         </div>
       )}

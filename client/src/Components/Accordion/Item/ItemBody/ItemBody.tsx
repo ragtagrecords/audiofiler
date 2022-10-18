@@ -1,19 +1,23 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import {
   UploadArea,
-  DownloadOptions,
+  FileList,
   UploadOptions,
-  SongVersions,
+  SongVersionHeader,
   InfoCard,
 } from 'Components';
+import classNames from 'classnames';
+import { Song } from 'Types';
+import { getSongs } from 'Services';
 import { ItemCtx } from '../Item';
 import './styles.scss';
 
 export const ItemBody = () => {
+  const [songVersions, setSongVersions] = useState<Song[]>([]);
   const playlistContext = useContext(PlaylistCtx);
   const itemContext = useContext(ItemCtx);
   if (!playlistContext || !itemContext) {
@@ -45,8 +49,26 @@ export const ItemBody = () => {
     return true;
   };
 
+  const getSongVersions = async () => {
+    const tempSongs = song.id && song.isParent && await getSongs(null, song.id);
+    if (!tempSongs) {
+      console.log("Couldn't retrieve different versions of the parent song");
+      return false;
+    }
+    setSongVersions(tempSongs);
+    return true;
+  };
+
+  useEffect(() => {
+    getSongVersions();
+  }, []);
+
   return (
-    <div className={`item-body ${isOpen ? 'open' : ''}`}>
+    <div className={classNames({
+      'item-body': true,
+      open: isOpen,
+    })}
+    >
       <section>
         <InfoCard
           title="Tempo"
@@ -79,21 +101,27 @@ export const ItemBody = () => {
         />
       </section>
       <section className="files">
-        <h1>Files</h1>
-        <DownloadOptions song={song} />
+        <h1>Versions and Files</h1>
+        {[...songVersions, song].map((song) => {
+          if (!song.id) {
+            return null;
+          }
+          return (
+            // TODO: make this a component? or fix styling
+            <div key={`versions-and-files-${song.id}`}>
+              <SongVersionHeader song={song} />
+              <FileList songs={[song]} />
+            </div>
+          );
+        })}
         <UploadArea handleUpload={handleUploadedFiles} />
       </section>
-
-      <hr />
-      {song.id && song.isParent ? <SongVersions parentID={song.id} /> : 'no versions'}
-      <hr />
       {uploadedFiles && (
         <UploadOptions
           uploadedFiles={uploadedFiles}
           parentSong={song}
         />
       )}
-      <hr />
     </div>
   );
 };

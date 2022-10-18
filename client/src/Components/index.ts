@@ -2,11 +2,11 @@ import { App } from './App/App';
 
 // Accordion
 import { Accordion } from './Accordion/Accordion';
-import { DownloadOptions } from './Accordion/Item/ItemBody/DownloadOptions/DownloadOptions';
+import { FileList } from './Accordion/Item/ItemBody/FileList/FileList';
 import { Item } from './Accordion/Item/Item';
 import { ItemBody } from './Accordion/Item/ItemBody/ItemBody';
 import { ItemHeader } from './Accordion/Item/ItemHeader/ItemHeader';
-import { SongVersions } from './Accordion/Item/ItemBody/SongVersions/SongVersions';
+import { SongVersionHeader } from './Accordion/Item/ItemBody/SongVersionHeader/SongVersionHeader';
 import { UploadArea } from './Accordion/Item/ItemBody/UploadArea/UploadArea';
 import { UploadOptionFields } from './Accordion/Item/ItemBody/UploadOptions/UploadOptionFields/UploadOptionFields';
 import { UploadOptions } from './Accordion/Item/ItemBody/UploadOptions/UploadOptions';
@@ -51,7 +51,7 @@ export {
   AudioPlayer,
   Controls,
   CurrentPosition,
-  DownloadOptions,
+  FileList,
   DragIconPortal,
   EditableTitle,
   Header,
@@ -69,7 +69,7 @@ export {
   SelectPlaylists,
   SongFieldset,
   SongsFieldList,
-  SongVersions,
+  SongVersionHeader,
   TaskCard,
   TaskColumn,
   UploadArea,
