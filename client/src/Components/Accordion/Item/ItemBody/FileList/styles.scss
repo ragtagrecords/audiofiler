@@ -11,11 +11,18 @@
 
   li {
     @include funcs.flexCenter();
-    flex-direction: column;
-    height: 80px;
-    width: 95px;
+    justify-content: flex-start;
+    height: 15px;
+    width: 150px;
     margin: 10px 5px;
     cursor: pointer;
+    opacity: 80%;
+    transition: transform 0.3s;
+
+    &:hover {
+      opacity: 100%;
+      transform: scale(0.97);
+    }
 
     p {
       margin: 0px;

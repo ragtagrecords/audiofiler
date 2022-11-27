@@ -63,65 +63,76 @@ export const ItemBody = () => {
     getSongVersions();
   }, []);
 
+  // Only show upload options after files are uploaded
+  const bodyContents = () => {
+    if (uploadedFiles) {
+      return (
+        <UploadOptions
+          uploadedFiles={uploadedFiles}
+          parentSong={song}
+        />
+      );
+    }
+    return (
+      <>
+        <section>
+          <InfoCard
+            title="Tempo"
+            info={song.tempo?.toString() ?? '???'}
+            isEditable={mode.current === 'editing'}
+            onChange={(e) => {
+              const editedSong = { ...song };
+              editedSong.tempo = parseInt(e.target.value, 10);
+              setEditedSong(editedSong);
+            }}
+          />
+          <InfoCard
+            title="Key"
+            info="???"
+            isEditable={false}
+            onChange={() => {
+              console.log('no functionality for changing key yet');
+            }}
+          />
+        </section>
+        <section>
+          <InfoCard
+            title="Notes"
+            info={song.notes ?? 'lots and lots of noteslots and lots of noteslots and lots of noteslots and lots of notes'}
+            isEditable={false}
+            isLarge={true}
+            onChange={() => {
+              console.log('no functionality for changing key yet');
+            }}
+          />
+        </section>
+        <section className="files">
+          <h1>Versions and Files</h1>
+          {[song, ...songVersions].map((song) => {
+            if (!song.id) {
+              return null;
+            }
+            return (
+            // TODO: fix alignment and colors
+              <div key={`versions-and-files-${song.id}`}>
+                <SongVersionHeader song={song} />
+                <FileList songs={[song]} />
+              </div>
+            );
+          })}
+          <UploadArea handleUpload={handleUploadedFiles} />
+        </section>
+      </>
+    );
+  };
+
   return (
     <div className={classNames({
       'item-body': true,
       open: isOpen,
     })}
     >
-      <section>
-        <InfoCard
-          title="Tempo"
-          info={song.tempo?.toString() ?? '???'}
-          isEditable={mode.current === 'editing'}
-          onChange={(e) => {
-            const editedSong = { ...song };
-            editedSong.tempo = parseInt(e.target.value, 10);
-            setEditedSong(editedSong);
-          }}
-        />
-        <InfoCard
-          title="Key"
-          info="???"
-          isEditable={false}
-          onChange={() => {
-            console.log('no functionality for changing key yet');
-          }}
-        />
-      </section>
-      <section>
-        <InfoCard
-          title="Notes"
-          info={song.notes ?? 'lots and lots of noteslots and lots of noteslots and lots of noteslots and lots of notes'}
-          isEditable={false}
-          isLarge={true}
-          onChange={() => {
-            console.log('no functionality for changing key yet');
-          }}
-        />
-      </section>
-      <section className="files">
-        <h1>Versions and Files</h1>
-        {[...songVersions, song].map((song) => {
-          if (!song.id) {
-            return null;
-          }
-          return (
-            // TODO: make this a component? or fix styling
-            <div key={`versions-and-files-${song.id}`}>
-              <SongVersionHeader song={song} />
-              <FileList songs={[song]} />
-            </div>
-          );
-        })}
-        <UploadArea handleUpload={handleUploadedFiles} />
-      </section>
-      {uploadedFiles && (
-        <UploadOptions
-          uploadedFiles={uploadedFiles}
-          parentSong={song}
-        />
-      )}
+      {bodyContents()}
     </div>
   );
 };

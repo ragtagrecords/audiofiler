@@ -4,4 +4,9 @@
 .item {
   border-radius: 3px;
   margin-bottom: 0px;
+  border-bottom: 1px solid #424242;
+      
+  &:last-child {
+    border-bottom: none;
+  }
 }

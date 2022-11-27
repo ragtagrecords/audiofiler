@@ -19,32 +19,26 @@ $height: 50px;
       color: vars.$gray-light;
     }
 
+    $font-size: 1.5rem;
     .center {
       width: 100%;
       color: vars.$white;
+      justify-content: flex-start;
 
-      button {
+      button, input {
         @include funcs.flexCenter();
         justify-content: flex-start;
         height: $height;
-        padding: 0px 20px;
+        padding: 0px 20px 7px 20px;
         cursor: pointer;
         border: none;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         color: vars.$white;
-        font-size: 1.8rem;
+        font-size: $font-size;
         font-weight: 400;
-      }
-
-      input {
-        background: transparent;
-        color: vars.$white;
-        text-align: center;
-        font-size: 1.5rem;
-        border: none;
-        min-width: 0;
+        background: none;
       }
     }
 }

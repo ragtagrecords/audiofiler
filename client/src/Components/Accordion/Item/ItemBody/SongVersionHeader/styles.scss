@@ -2,9 +2,12 @@
 @use 'Styles/funcs';
 
 .song-version-header {
-    @include funcs.flexCenter();
-    flex-direction: row;
-    justify-content: flex-start;
+    display: inline-block;
+    color: vars.$white;
+    background-color: vars.$gray-dark;
+    border-radius: 10px;
+    width: auto;
+    padding: 6px;
 
     button {
         color: vars.$tertiaryColor;

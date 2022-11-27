@@ -52,37 +52,37 @@ async function updateSongVersions(db, newSongID, parentID, isParent) {
 
 	  // Because it is a new parent, we need to replace the existing parent song in each of its playlists
 	  for (let i = 0; i < playlists.length; i++) {
-		// Remove parent song from playlists
-		const playlist = playlists[i];
-		const songRemoved = await deleteSongFromPlaylist(db, parentID, playlist.id);
+      // Remove parent song from playlists
+      const playlist = playlists[i];
+      const songRemoved = await deleteSongFromPlaylist(db, parentID, playlist.id);
 
-		if (!songRemoved) {
-			return {
-				success: 0,
-				message: `ERROR: Could not remove parentID(${parentID}) from playlist(${playlist.id})`,
-			};
-		}
+      if (!songRemoved) {
+        return {
+          success: 0,
+          message: `ERROR: Could not remove parentID(${parentID}) from playlist(${playlist.id})`,
+        };
+      }
 
-		// Add new song to playlists
-		const newSongAdded = await addSongToPlaylist(db, newSongID, playlist.id);
+      // Add new song to playlists
+      const newSongAdded = await addSongToPlaylist(db, newSongID, playlist.id);
 
-		if (!newSongAdded) {
-		  return {
-			  success: 0,
-			  message: `ERROR: Could not add song(${newSongID}) to playlist(${playlist.id})`,
-		  };
-		}
+      if (!newSongAdded) {
+        return {
+          success: 0,
+          message: `ERROR: Could not add song(${newSongID}) to playlist(${playlist.id})`,
+        };
+      }
 	  }
 
 	  // If there were other existing children, we need to update their parentID as well
 	  const childrenSongs = await SongSvc.getSongsByParentID(db, parentID);
 	  if (childrenSongs) {
-		childrenSongs.forEach((child) => {
-		  if(child.id != newSongID) {
-			  child.parentID = newSongID;
-			  songsToUpdate.push(child);
-		  }
-		})
+      childrenSongs.forEach((child) => {
+        if (child.id != newSongID) {
+          child.parentID = newSongID;
+          songsToUpdate.push(child);
+        }
+      })
 	  }
 	}
 

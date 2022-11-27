@@ -5,14 +5,12 @@ import { AppCtx } from 'Components/App/App';
 import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { ItemCtx } from 'Components/Accordion/Item/Item';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
-import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { IconButton } from 'Components';
 import './ItemHeader.scss';
-import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
+import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 
 export const ItemHeader = () => {
-  const username = localStorage.getItem('username');
-
   const appContext = useContext(AppCtx);
   const playlistContext = useContext(PlaylistCtx);
   const itemContext = useContext(ItemCtx);
@@ -35,16 +33,15 @@ export const ItemHeader = () => {
   } = itemContext;
 
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
-  const audioPlayerSongID = useAppSelector(AUDIO_PLAYER_SELECTORS.currentSongID);
   const dispatch = useAppDispatch();
 
-  // Either show the add button or the upload button
+  // By default show the position of the song in the playlist
+  // If in editing mode, show the discard changes button
+  // If in adding mode, show the add button
   const left = () => {
-    return <div>{song.position}</div>;
-    // TODO: repurpose this (buttons for discarding edits and adding songs in search)
-    /*
-    if (!username) {
-      return null;
+    const defaultLeft = <> {song.position ?? '-'} </>;
+    if (mode.current === 'normal') {
+      return defaultLeft;
     }
 
     if (mode.current === 'adding') {
@@ -58,29 +55,19 @@ export const ItemHeader = () => {
       );
     }
 
-    if (isSelected && mode.current !== 'editing') {
-      return (
-        <IconButton
-          type="upload"
-          onClick={() => {
-            setBodyType('upload');
-            setIsOpen(true);
-          }}
-        />
-      );
+    if (mode.current === 'editing') {
+      if (isEdited) {
+        return (<IconButton type="cancel" onClick={discardEdits} />);
+      }
+      return defaultLeft;
     }
-
-    if (isSelected && isEdited && mode.current === 'editing') {
-      return (<IconButton type="cancel" onClick={discardEdits} />);
-    }
-    */
 
     return null;
   };
 
-  // Song name and a button to select the song and toggle body section
+  // Center is a button with the song name, plays the song on click
   const center = () => {
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = () => {
       if (!song?.id) {
         return false;
       }
@@ -89,6 +76,7 @@ export const ItemHeader = () => {
         dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
           songID: song.id,
           playlistSongs: playlist.songs,
+          shouldPlay: true,
         }));
       }
       return true;
@@ -113,38 +101,30 @@ export const ItemHeader = () => {
     );
   };
 
-  // TODO: repurpose functionality
-  // If song is selected and user is authenticated, show extra options
+  // In normal mode, show dropdown caret in normal mode
+  // In editing mode, show save button after edits are made
   const right = () => {
-    if (!song.path || !username) {
-      return null;
+    const defaultRight = (
+      <IconButton
+        type="dropdown"
+        size="30px"
+        color="#5ae7ff"
+        onClick={() => {
+          console.log(isOpen);
+          setBodyType('info');
+          setIsOpen(!isOpen);
+        }}
+      />
+    );
+    if (mode.current === 'normal') {
+      return defaultRight;
     }
 
-    if (mode.current !== 'editing') {
-      return (
-        <>
-          <IconButton
-            type="download"
-            key={`download-song-${song.id}`}
-            onClick={() => {
-              setBodyType('download');
-              setIsOpen(true);
-            }}
-          />
-          <IconButton
-            type="options"
-            size="40px"
-            onClick={() => {
-              setBodyType('versions');
-              setIsOpen(true);
-            }}
-          />
-        </>
-      );
-    }
-
-    if (isEdited) {
-      return (<IconButton type="save" onClick={saveEditedSongToDB} />);
+    if (mode.current === 'editing') {
+      if (isEdited) {
+        return (<IconButton type="save" onClick={saveEditedSongToDB} />);
+      }
+      return defaultRight;
     }
 
     return null;
@@ -154,7 +134,7 @@ export const ItemHeader = () => {
     <div className={`item-header ${mode.current === 'adding' ? 'adding' : ''}`}>
 
       <div className="left">
-        {song.position ?? '-'}
+        {left()}
       </div>
 
       <div className="center">
@@ -162,16 +142,7 @@ export const ItemHeader = () => {
       </div>
 
       <div className="right">
-        <IconButton
-          type="dropdown"
-          size="30px"
-          color="white"
-          onClick={() => {
-            console.log(isOpen);
-            setBodyType('info');
-            setIsOpen(!isOpen);
-          }}
-        />
+        {right()}
       </div>
     </div>
   );

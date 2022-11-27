@@ -9,7 +9,7 @@ type UploadAreaProps = {
 
 export const UploadArea = ({ handleUpload }: UploadAreaProps) => {
   const iconStyles = useMemo(() => ({
-    color: '#1d1d1d', // this is tertiaryColor from Styles/vars.. couldnt figure out how to import it
+    color: '#1d1d1d',
     size: '25px',
   }), []);
 
@@ -18,7 +18,7 @@ export const UploadArea = ({ handleUpload }: UploadAreaProps) => {
       <IconContext.Provider value={iconStyles}>
         <AiOutlineCloudUpload />
       </IconContext.Provider>
-      Upload
+      Add new version
       <input type="file" onChange={handleUpload} multiple />
     </label>
   );

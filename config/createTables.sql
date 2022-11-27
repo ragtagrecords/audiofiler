@@ -5,7 +5,7 @@ CREATE TABLE `songs` (
   `tempo` int(11) DEFAULT NULL,
   `artist` varchar(255) DEFAULT NULL,
   `createTimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `isParent` tinyint(4) DEFAULT '0',
+  `isParent` tinyint(4) NOT NULL DEFAULT '0',
   `parentID` int(11) DEFAULT NULL,
   `zipPath` varchar(255) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,

@@ -21,6 +21,7 @@ const initialState: AudioPlayerState = {
 type songIDAndPlaylist = {
   songID: number;
   playlistSongs: Song[];
+  shouldPlay?: boolean;
 }
 
 export const audioPlayerSlice = createSlice({
@@ -31,16 +32,15 @@ export const audioPlayerSlice = createSlice({
       state.songQueue = action.payload;
     },
     setCurrentSongID: (state, action: PayloadAction<songIDAndPlaylist>) => {
-      const { songID, playlistSongs } = action.payload;
+      const { songID, playlistSongs, shouldPlay } = action.payload;
       if (!songID) { return; }
-      const isFirstSong = !state.currentSongID;
       const isSongInQueue = state.songQueue
         && state.songQueue.some((s) => s.id === songID);
       if (!state.songQueue || !isSongInQueue) {
         state.songQueue = playlistSongs;
       }
       state.currentSongID = songID;
-      if (isFirstSong) {
+      if (shouldPlay) {
         state.isPlaying = true;
       }
     },

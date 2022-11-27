@@ -6,14 +6,21 @@ $width: 25px;
 label.uploadArea {
     @include funcs.flexCenter;
     flex-direction: row;
-    width: 100%;
+    width: 200px;
     height: 30px;
     border-radius: 20px;
     font-size: 1rem;
     cursor: pointer;
     background-color: vars.$tertiaryColor;
     color: vars.$black;
-    margin-top: 10px;
+    margin: 10px 0px;
+    opacity: 80%;
+    transition: transform 0.3s;
+
+    &:hover {
+        opacity: 100%;
+        transform: scale(0.97);
+    }
     
     input {
         display: none;

@@ -83,7 +83,7 @@ export const Playlist = () => {
     },
     {
       href: '/',
-      text: 'Edit songs',
+      text: 'Edit song info',
       onClick: () => dispatch(
         PLAYLIST_ACTIONS.setCurrentMode(mode.current === 'editing' ? 'normal' : 'editing'),
       ),
@@ -115,7 +115,6 @@ export const Playlist = () => {
         playlistSongs: songs,
       }));
     }
-
     return true;
   };
 
@@ -211,6 +210,7 @@ export const Playlist = () => {
     dispatch(PLAYLIST_ACTIONS.setCurrentMode('normal'));
     loadPlaylist();
     loadAllSongs();
+    dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(false));
   }, []);
 
   let songs = null;
@@ -221,6 +221,8 @@ export const Playlist = () => {
       songs = playlist.songs;
     }
   }
+
+  console.log(mode.current);
 
   return (
     <PlaylistCtx.Provider

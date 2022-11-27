@@ -24,9 +24,8 @@ $height: 60px;
     @include funcs.flexCenter();
     flex-direction: row;
     justify-content: flex-start;
+    align-items: flex-start;
     padding-left: 15px;
-
-    
 
     #file-section-header {
       @include funcs.flexCenter();

@@ -25,8 +25,6 @@ export const FileList = ({ songs }: FileListProps) => {
 
   songs.forEach((song) => {
     if (song && song.path) {
-      console.log('path', song.path ? song.path : 'no path');
-      console.log(`${song.path.split('.').pop()}`);
       files.push({
         folder: 'songs',
         actualFileName: song.path,
@@ -46,32 +44,32 @@ export const FileList = ({ songs }: FileListProps) => {
   /*
   files.push({
     folder: 'zips',
-    actualFileName: 'crack.zip',
+    actualFileName: 'crack1.zip',
     desiredFileName: 'crack.zip',
   });
   files.push({
     folder: 'images',
-    actualFileName: 'crack.jpeg',
+    actualFileName: 'crack1.jpeg',
     desiredFileName: 'crack.jpeg',
   });
   files.push({
     folder: 'zips',
-    actualFileName: 'crack.zip',
+    actualFileName: 'crack2.zip',
     desiredFileName: 'crack.zip',
   });
   files.push({
     folder: 'images',
-    actualFileName: 'crack.jpeg',
+    actualFileName: 'crack2.jpeg',
     desiredFileName: 'crack.jpeg',
   });
   files.push({
     folder: 'zips',
-    actualFileName: 'crack.zip',
+    actualFileName: 'crack3.zip',
     desiredFileName: 'crack.zip',
   });
   files.push({
     folder: 'images',
-    actualFileName: 'crack.jpeg',
+    actualFileName: 'crack3.jpeg',
     desiredFileName: 'crack.jpeg',
   });
   */
@@ -98,13 +96,14 @@ export const FileList = ({ songs }: FileListProps) => {
           return (
             <li
               key={file.actualFileName}
+              onClick={() => {
+                downloadFile(file.folder, file.actualFileName, file.desiredFileName);
+              }}
             >
               <IconButton
                 type={iconType}
-                size="60px"
-                onClick={() => {
-                  downloadFile(file.folder, file.actualFileName, file.desiredFileName);
-                }}
+                size="20px"
+                onClick={() => { return null; }}
               />
               <p>
                 {file.desiredFileName}
