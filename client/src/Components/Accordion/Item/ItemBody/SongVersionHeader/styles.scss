@@ -2,16 +2,25 @@
 @use 'Styles/funcs';
 
 .song-version-header {
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    flex-basis: 1;
+    justify-content: flex-start;
+    vertical-align: middle;
     color: vars.$white;
-    background-color: vars.$gray-dark;
-    border-radius: 10px;
-    width: auto;
+    background-color: vars.$gray;
     padding: 6px;
+    font-size: 1.1rem;
+    border: 2px vars.$gray solid;
+    border-top: none;
+    border-radius: 0px 0px 10px 0px;
+    margin-bottom: 10px;
 
-    button {
-        color: vars.$tertiaryColor;
-        text-decoration: underline;
-        cursor: pointer;
+    .title {
+      padding: 0px;
+      border-right: 2px vars.$gray-light solid;
+      padding-right: 6px;
+      margin-right: 4px;
     }
 }

@@ -9,6 +9,7 @@ type InfoCardProps = {
   onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };
 
+// TODO: fix the input , its showing NaN
 export const InfoCard = ({
   title,
   info,

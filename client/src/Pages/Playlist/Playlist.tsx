@@ -1,7 +1,7 @@
 import React, {
   createContext, useEffect, useState,
 } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { MenuOption, Playlist as PlaylistT, Song } from 'Types';
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -61,6 +61,8 @@ export const Playlist = () => {
   const isLoading = useAppSelector(PLAYLIST_SELECTORS.isLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
 
   const auth = async () => {
     const userID = await authenticate();
@@ -213,6 +215,23 @@ export const Playlist = () => {
     dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(false));
   }, []);
 
+  /*
+  // TODO: this is a template for adding hotkeys
+  // Need to find a way to remove them when you leave the page
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      // Redirect to upload page if user presses 'u'
+      if (e.key === 'u') {
+        navigate('/songs/add', {
+          state: { playlist },
+        });
+      }
+    },
+    false,
+  );
+  */
+
   let songs = null;
   if (playlist && playlist.songs) {
     if (mode.current === 'adding' && allSongs) {
@@ -221,8 +240,6 @@ export const Playlist = () => {
       songs = playlist.songs;
     }
   }
-
-  console.log(mode.current);
 
   return (
     <PlaylistCtx.Provider

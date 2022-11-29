@@ -110,7 +110,6 @@ export const ItemHeader = () => {
         size="30px"
         color="#5ae7ff"
         onClick={() => {
-          console.log(isOpen);
           setBodyType('info');
           setIsOpen(!isOpen);
         }}

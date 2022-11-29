@@ -14,10 +14,11 @@
   }
   
   p, input {
+    font-family: monospace;
     font-size: 3rem;
     border: none;
     background: none;
-    color: vars.$gray-extra-light;
+    color: vars.$gray-light;
     width: $width;
     margin: 0px;
     padding: 0px;

@@ -12,7 +12,7 @@ import {
   BsFillFileEarmarkImageFill,
   BsFillFileEarmarkZipFill,
 } from 'react-icons/bs';
-import { HiPhotograph } from 'react-icons/hi';
+import ReactTooltip from 'react-tooltip';
 import styles from './styles.module.scss';
 
 export type IconButtonTypes =
@@ -33,11 +33,49 @@ export type IconButtonTypes =
   | 'file'
   | 'crown';
 
+const iconSwitch = (type: IconButtonTypes) => {
+  switch (type) {
+    case 'save':
+      return <AiOutlineCheck />;
+    case 'cancel':
+      return <AiOutlineClose />;
+    case 'play':
+      return <FaPlay />;
+    case 'download':
+      return <FiDownload />;
+    case 'upload':
+      return <FiUpload />;
+    case 'add':
+      return <FaPlus />;
+    case 'remove':
+      return <AiOutlineMinusCircle />;
+    case 'options':
+      return <BiDotsVerticalRounded />;
+    case 'back':
+      return <ImArrowLeft />;
+    case 'dropdown':
+      return <IoMdArrowDropdown />;
+    case 'file':
+      return <BsFileEarmarkFill />;
+    case 'audio-file':
+      return <BsFileEarmarkMusicFill />;
+    case 'zip-file':
+      return <BsFillFileEarmarkZipFill />;
+    case 'image-file':
+      return <BsFillFileEarmarkImageFill />;
+    case 'crown':
+      return <FaCrown />;
+    default:
+      return null;
+  }
+};
+
 type IconButtonProps = {
   type: IconButtonTypes;
   size?: string;
   color?: string;
   className?: string;
+  tooltipText?: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -46,72 +84,35 @@ export const IconButton = ({
   size,
   color,
   className,
+  tooltipText,
   onClick,
 }: IconButtonProps) => {
   const iconStyles = useMemo(() => ({ color, size }), []);
 
-  let icon = null;
-
-  switch (type) {
-    case 'save':
-      icon = <AiOutlineCheck />;
-      break;
-    case 'cancel':
-      icon = <AiOutlineClose />;
-      break;
-    case 'play':
-      icon = <FaPlay />;
-      break;
-    case 'download':
-      icon = <FiDownload />;
-      break;
-    case 'upload':
-      icon = <FiUpload />;
-      break;
-    case 'add':
-      icon = <FaPlus />;
-      break;
-    case 'remove':
-      icon = <AiOutlineMinusCircle />;
-      break;
-    case 'options':
-      icon = <BiDotsVerticalRounded />;
-      break;
-    case 'back':
-      icon = <ImArrowLeft />;
-      break;
-    case 'dropdown':
-      icon = <IoMdArrowDropdown />;
-      break;
-    case 'file':
-      icon = <BsFileEarmarkFill />;
-      break;
-    case 'audio-file':
-      icon = <BsFileEarmarkMusicFill />;
-      break;
-    case 'zip-file':
-      icon = <BsFillFileEarmarkZipFill />;
-      break;
-    case 'image-file':
-      icon = <BsFillFileEarmarkImageFill />;
-      break;
-    case 'crown':
-      icon = <FaCrown />;
-      break;
-    default:
-      return null;
-  }
+  const icon = iconSwitch(type);
+  if (!icon) return null;
 
   return (
-    <button
-      type="button"
-      className={`${styles.iconButton} ${className}`}
-      onClick={onClick}
-    >
-      <IconContext.Provider value={iconStyles}>
-        {icon}
-      </IconContext.Provider>
-    </button>
+    <>
+      <button
+        type="button"
+        className={`${styles.iconButton} ${className}`}
+        onClick={onClick}
+        data-tip={tooltipText}
+      >
+        <IconContext.Provider value={iconStyles}>
+          {icon}
+        </IconContext.Provider>
+      </button>
+      {tooltipText && (
+        <ReactTooltip
+          place="right"
+          type="dark"
+          effect="solid"
+          delayShow={200}
+        />
+      )}
+    </>
   );
 };
 
@@ -119,4 +120,5 @@ IconButton.defaultProps = {
   size: '26px',
   color: '#5ae7ff', // this is tertiaryColor from Styles/vars.. couldnt figure out how to import it
   className: '',
+  tooltipText: '',
 };

@@ -51,11 +51,12 @@ export const ItemBody = () => {
 
   const getSongVersions = async () => {
     const tempSongs = song.id && song.isParent && await getSongs(null, song.id);
-    if (!tempSongs) {
+    if (tempSongs) {
+      setSongVersions(tempSongs);
+    } else if (song.isParent) {
       console.log("Couldn't retrieve different versions of the parent song");
       return false;
     }
-    setSongVersions(tempSongs);
     return true;
   };
 
@@ -106,7 +107,7 @@ export const ItemBody = () => {
             }}
           />
         </section>
-        <section className="files">
+        <section className="versions-and-files">
           <h1>Versions and Files</h1>
           {[song, ...songVersions].map((song) => {
             if (!song.id) {
@@ -114,12 +115,15 @@ export const ItemBody = () => {
             }
             return (
             // TODO: fix alignment and colors
-              <div key={`versions-and-files-${song.id}`}>
+              <div className="version-and-files" key={`version-and-files-${song.id}`}>
+                <hr />
                 <SongVersionHeader song={song} />
                 <FileList songs={[song]} />
               </div>
             );
           })}
+        </section>
+        <section>
           <UploadArea handleUpload={handleUploadedFiles} />
         </section>
       </>

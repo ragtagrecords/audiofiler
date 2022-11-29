@@ -20,8 +20,8 @@ $height: 60px;
     margin: auto;
   }
 
-  section {
-    @include funcs.flexCenter();
+  > section {
+    display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
@@ -36,10 +36,28 @@ $height: 60px;
     h1 {
       @include funcs.small-header();
       margin-right: auto;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: vars.$white;
     }
 
-    &.files {
+    &.versions-and-files {
       flex-direction: column;
+
+      h1 {
+        margin-bottom: 10px;
+      }
+      .version-and-files {
+        width: 99%;
+        padding-bottom: 20px;
+      }
+
+      hr {
+        background-color: vars.$gray;
+        width: 80%;
+        margin-left: 0px;
+        margin-right: auto;
+      }
     }
   }
 
