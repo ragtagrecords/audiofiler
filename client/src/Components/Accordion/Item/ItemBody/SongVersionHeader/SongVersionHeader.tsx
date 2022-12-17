@@ -9,9 +9,10 @@ import { ItemCtx } from '../../Item';
 
 type SongVersionHeaderProps = {
   song: Song;
+  hasVersions: boolean;
 }
 
-export const SongVersionHeader = ({ song }: SongVersionHeaderProps) => {
+export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps) => {
   // const [songs, setSongs] = useState<Song[] | null>(null);
   const itemContext = useContext(ItemCtx);
   const dispatch = useAppDispatch();
@@ -46,7 +47,7 @@ export const SongVersionHeader = ({ song }: SongVersionHeaderProps) => {
             }
           }}
         />
-        {!song.isParent
+        {!song.isParent && hasVersions
           && (
           <>
             <IconButton

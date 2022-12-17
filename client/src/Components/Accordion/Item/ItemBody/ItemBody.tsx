@@ -120,7 +120,10 @@ export const ItemBody = () => {
             // TODO: fix alignment and colors
               <div className="version-and-files" key={`version-and-files-${song.id}`}>
                 <hr />
-                <SongVersionHeader song={song} />
+                <SongVersionHeader
+                  song={song}
+                  hasVersions={songVersions.length > 0}
+                />
                 <FileList songs={[song]} />
               </div>
             );
