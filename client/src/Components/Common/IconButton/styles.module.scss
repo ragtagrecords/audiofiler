@@ -2,8 +2,10 @@
     border: none;
     cursor: pointer;
     opacity: 80%;
-
+    transition: transform 0.3s;
+    
     &:hover {
-        opacity: 100%;
+      opacity: 100%;
+      transform: scale(0.97);
     }
 }

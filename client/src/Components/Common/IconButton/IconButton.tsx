@@ -76,7 +76,7 @@ type IconButtonProps = {
   color?: string;
   className?: string;
   tooltipText?: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export const IconButton = ({
@@ -121,4 +121,5 @@ IconButton.defaultProps = {
   color: '#5ae7ff', // this is tertiaryColor from Styles/vars.. couldnt figure out how to import it
   className: '',
   tooltipText: '',
+  onClick: () => {},
 };

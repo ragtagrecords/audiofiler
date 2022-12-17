@@ -108,7 +108,10 @@ export const ItemBody = () => {
           />
         </section>
         <section className="versions-and-files">
-          <h1>Versions and Files</h1>
+          <div className="header">
+            <h1>Versions and Files</h1>
+            <UploadArea handleUpload={handleUploadedFiles} />
+          </div>
           {[song, ...songVersions].map((song) => {
             if (!song.id) {
               return null;
@@ -122,9 +125,6 @@ export const ItemBody = () => {
               </div>
             );
           })}
-        </section>
-        <section>
-          <UploadArea handleUpload={handleUploadedFiles} />
         </section>
       </>
     );
