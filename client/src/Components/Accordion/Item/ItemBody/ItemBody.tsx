@@ -99,11 +99,13 @@ export const ItemBody = () => {
         <section>
           <InfoCard
             title="Notes"
-            info={song.notes ?? 'lots and lots of noteslots and lots of noteslots and lots of noteslots and lots of notes'}
-            isEditable={false}
-            isLarge={true}
-            onChange={() => {
-              console.log('no functionality for changing key yet');
+            info={song.notes ?? '-'}
+            isEditable={mode.current === 'editing'}
+            size="large"
+            onChange={(e) => {
+              const editedSong = { ...song };
+              editedSong.notes = e.target.value;
+              setEditedSong(editedSong);
             }}
           />
         </section>

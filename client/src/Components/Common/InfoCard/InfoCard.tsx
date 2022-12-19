@@ -1,11 +1,13 @@
 import React from 'react';
 import './styles.scss';
 
+type InfoCardSizes = 'large' | 'small';
+
 type InfoCardProps = {
   title: string;
   info: string;
   isEditable: boolean;
-  isLarge?: boolean;
+  size?: InfoCardSizes;
   onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };
 
@@ -14,24 +16,24 @@ export const InfoCard = ({
   title,
   info,
   isEditable,
-  isLarge,
+  size,
   onChange,
 }: InfoCardProps) => {
   let mainText;
-  if (isEditable && isLarge) {
+  if (isEditable && size === 'large') {
     mainText = <textarea value={info} onChange={onChange} />;
-  } else if (isEditable) {
+  } else if (isEditable && size === 'small') {
     mainText = <input value={info} onChange={onChange} />;
   } else {
     mainText = <p> {info} </p>;
   }
   return (
-    <div className={`info-card ${isLarge ? 'large' : ''}`}>
+    <div className={`info-card ${size === 'large' ? 'large' : ''}`}>
       <h1 className="small-header">{title}</h1>
       {mainText}
     </div>);
 };
 
 InfoCard.defaultProps = {
-  isLarge: false,
+  size: 'small',
 };

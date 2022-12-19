@@ -16,12 +16,14 @@
   p, input {
     font-family: monospace;
     font-size: 3rem;
-    border: none;
-    background: none;
     color: vars.$gray-light;
     width: $width;
     margin: 0px;
     padding: 0px;
+  }
+
+  input {
+    background: vars.$gray-extra-light;
   }
 
   &.large {
@@ -29,10 +31,14 @@
     width: $width;
     margin: 0px 0px 15px 0px;
     
-    p, input {
+    p, textarea {
       width: $width;
       font-size: 1rem;
       font-weight: 400;
+    }
+
+    textarea {
+      background: vars.$gray-extra-light;
     }
   }
 
