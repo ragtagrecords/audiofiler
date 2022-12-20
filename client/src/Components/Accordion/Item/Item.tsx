@@ -86,13 +86,17 @@ export const Item = ({
   const isEdited = mode.current === 'editing' && wereEditsMade();
 
   return (
-    <Draggable key={`${song.id} `} draggableId={String(song.id)} index={index}>
+    <Draggable
+      key={`${song.id} `}
+      draggableId={String(song.id)}
+      index={index}
+      isDragDisabled={mode.current !== 'dragging'}
+    >
       {(provided, snapshot) => (
         <div
           className={`
             item
             ${snapshot.isDragging ? 'dragging' : ''}
-            ${mode.current === 'dragging' ? 'draggable' : ''}
           `}
           ref={provided.innerRef}
           {...provided.dragHandleProps}
