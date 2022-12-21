@@ -6,6 +6,7 @@ import { FaCrown, FaPlus, FaPlay } from 'react-icons/fa';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { ImArrowLeft } from 'react-icons/im';
 import { IoMdArrowDropdown } from 'react-icons/io';
+import { MdDragIndicator } from 'react-icons/md';
 import {
   BsFileEarmarkFill,
   BsFileEarmarkMusicFill,
@@ -65,6 +66,8 @@ const iconSwitch = (type: IconButtonTypes) => {
       return <BsFillFileEarmarkImageFill />;
     case 'crown':
       return <FaCrown />;
+    case 'drag':
+      return <MdDragIndicator />;
     default:
       return null;
   }

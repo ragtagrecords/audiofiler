@@ -31,14 +31,25 @@ $height: 50px;
         height: $height;
         padding: 0px 20px 7px 20px;
         cursor: pointer;
-        border: none;
+
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         color: vars.$white;
         font-size: $font-size;
         font-weight: 400;
+      }
+
+      button {
+        border: none;
         background: none;
+      }
+      
+      input {
+        background: vars.$gray-extra-light;
+        color: black;
+        padding: 0px;
+        height: 35px;
       }
     }
 }

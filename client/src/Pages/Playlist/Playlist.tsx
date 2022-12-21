@@ -92,7 +92,7 @@ export const Playlist = () => {
     },
     {
       href: '/',
-      text: 'Reorder songs',
+      text: 'Reorder/remove songs',
       onClick: () => dispatch(
         PLAYLIST_ACTIONS.setCurrentMode(mode.current === 'dragging' ? 'normal' : 'dragging'),
       ),

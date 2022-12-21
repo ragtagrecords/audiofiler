@@ -9,6 +9,7 @@ import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { IconButton } from 'Components';
 import './ItemHeader.scss';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
+import { removeSongFromPlaylist } from 'Services/PlaylistSvc';
 
 export const ItemHeader = () => {
   const appContext = useContext(AppCtx);
@@ -35,9 +36,10 @@ export const ItemHeader = () => {
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
 
-  // By default show the position of the song in the playlist
+  // By default show the # position of the song in the playlist
   // If in editing mode, show the discard changes button
   // If in adding mode, show the add button
+  // If in reorder mode, show the drag handle
   const left = () => {
     const defaultLeft = <> {song.position ?? '-'} </>;
     if (mode.current === 'normal') {
@@ -60,6 +62,10 @@ export const ItemHeader = () => {
         return (<IconButton type="cancel" onClick={discardEdits} />);
       }
       return defaultLeft;
+    }
+
+    if (mode.current === 'dragging') {
+      return <IconButton type="drag" />;
     }
 
     return null;
@@ -103,6 +109,7 @@ export const ItemHeader = () => {
 
   // In normal mode, show dropdown caret in normal mode
   // In editing mode, show save button after edits are made
+  // In reorder mode, show remove from playlist button
   const right = () => {
     const defaultRight = (
       <IconButton
@@ -124,6 +131,20 @@ export const ItemHeader = () => {
         return (<IconButton type="save" onClick={saveEditedSongToDB} />);
       }
       return defaultRight;
+    }
+
+    if (mode.current === 'dragging') {
+      return (
+        <IconButton
+          type="remove"
+          onClick={async () => {
+            if (song.id && playlist.id) {
+              await removeSongFromPlaylist(song.id, playlist.id);
+              window.location.reload();
+            }
+          }}
+        />
+      );
     }
 
     return null;
