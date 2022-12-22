@@ -54,8 +54,9 @@ export const Playlist = () => {
 
   // State from redux
   const allSongs = useAppSelector(AUDIO_PLAYER_SELECTORS.allSongs);
-  const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const audioPlayerSongQueue = useAppSelector(AUDIO_PLAYER_SELECTORS.songQueue);
+  const currentSongID = useAppSelector(AUDIO_PLAYER_SELECTORS.currentSongID);
+  const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const query = useAppSelector(PLAYLIST_SELECTORS.query);
   const isLoading = useAppSelector(PLAYLIST_SELECTORS.isLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
@@ -209,7 +210,9 @@ export const Playlist = () => {
     dispatch(PLAYLIST_ACTIONS.setCurrentMode('normal'));
     loadPlaylist();
     loadAllSongs();
-    dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(false));
+    if (!currentSongID) {
+      dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(false));
+    }
   }, []);
 
   /*
