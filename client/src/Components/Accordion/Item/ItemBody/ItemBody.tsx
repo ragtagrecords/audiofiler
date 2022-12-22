@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
-import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import {
   UploadArea,
   FileList,

@@ -1,7 +1,7 @@
 import React, {
   createContext, useEffect, useState,
 } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { MenuOption, Playlist as PlaylistT, Song } from 'Types';
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -28,7 +28,6 @@ import {
 import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
-import styles from './styles.module.scss';
 
 interface PlaylistContextInterface {
   userID: number | null;
@@ -61,8 +60,6 @@ export const Playlist = () => {
   const isLoading = useAppSelector(PLAYLIST_SELECTORS.isLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
-
-  const navigate = useNavigate();
 
   const auth = async () => {
     const userID = await authenticate();

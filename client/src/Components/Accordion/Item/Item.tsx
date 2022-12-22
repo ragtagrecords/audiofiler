@@ -6,8 +6,6 @@ import { BodyType, Playlist, Song } from 'Types';
 import { updateSong } from 'Services';
 import { Draggable } from 'react-beautiful-dnd';
 import './Item.scss';
-import { IconButton } from 'Components';
-import { removeSongFromPlaylist } from 'Services/PlaylistSvc';
 
 interface ItemContextInterface {
   song: Song,
