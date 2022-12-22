@@ -31,7 +31,7 @@ async function addSongToPlaylist(db, songID, playlistID)
         [
             songID,
             playlistID,
-            position ?? 0
+            position + 1 ?? 0
         ]
     );
 }
