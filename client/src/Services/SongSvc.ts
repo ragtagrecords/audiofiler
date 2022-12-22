@@ -5,8 +5,8 @@ import { Song } from 'Types';
 
 // Returns null if there are no results or an error
 export const getSongs = async (
-  playlistID: string | null = null,
-  parentID: string | null = null,
+  playlistID: number | null = null,
+  parentID: number | null = null,
 ): Promise<Song[]> => {
   // By default, gets all the songs
   let endpoint = '/songs';

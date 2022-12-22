@@ -3,10 +3,12 @@
 
 #header {
   @include funcs.flexCenter();
+  @include funcs.borderBox();
   min-height: 80px;
   z-index: vars.$floatingZ;
   width: 100%;
   justify-content: flex-start;
+  background-color: vars.$black;
 
   #header-left {
     width: 50px;
@@ -19,10 +21,6 @@
     width: 50px;
   }
 
-  /* transition */
-
-  background: rgb(18, 31, 38);
-  
   .noClickThru 
   {
     width: 100%;

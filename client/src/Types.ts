@@ -6,7 +6,7 @@ export interface Song {
   zipFile?: File;
   zipFileName?: string;
   path?: string;
-  tempo?: string | number;
+  tempo?: number;
   artist?: string;
   zipPath?: string;
   isParent?: boolean;

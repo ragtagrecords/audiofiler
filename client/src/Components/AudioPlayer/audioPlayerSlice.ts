@@ -21,6 +21,7 @@ const initialState: AudioPlayerState = {
 type songIDAndPlaylist = {
   songID: number;
   playlistSongs: Song[];
+  shouldPlay?: boolean;
 }
 
 export const audioPlayerSlice = createSlice({
@@ -31,16 +32,15 @@ export const audioPlayerSlice = createSlice({
       state.songQueue = action.payload;
     },
     setCurrentSongID: (state, action: PayloadAction<songIDAndPlaylist>) => {
-      const { songID, playlistSongs } = action.payload;
+      const { songID, playlistSongs, shouldPlay } = action.payload;
       if (!songID) { return; }
-      const isFirstSong = !state.currentSongID;
       const isSongInQueue = state.songQueue
         && state.songQueue.some((s) => s.id === songID);
       if (!state.songQueue || !isSongInQueue) {
         state.songQueue = playlistSongs;
       }
       state.currentSongID = songID;
-      if (isFirstSong) {
+      if (shouldPlay) {
         state.isPlaying = true;
       }
     },
@@ -76,13 +76,16 @@ export const AUDIO_PLAYER_SELECTORS = {
   songQueue: (state: RootState) => state.audioPlayer.songQueue,
   currentSongID: (state: RootState) => state.audioPlayer.currentSongID,
   currentSong: (state: RootState) => {
-    const { allSongs } = state.audioPlayer;
-    if (!allSongs) {
+    const { allSongs, currentSongID } = state.audioPlayer;
+    if (currentSongID && allSongs) {
+      const songsByID = allSongs.filter((song) => song.id === state.audioPlayer.currentSongID);
+      return songsByID.length > 0 ? songsByID[0] : null;
+    }
+    if (currentSongID && !allSongs) {
       console.log('ERROR: no songs in state');
       return null;
     }
-    const songsByID = allSongs.filter((song) => song.id === state.audioPlayer.currentSongID);
-    return songsByID.length > 0 ? songsByID[0] : null;
+    return null;
   },
   allSongs: (state: RootState) => state.audioPlayer.allSongs,
   isPlaying: (state: RootState) => state.audioPlayer.isPlaying,

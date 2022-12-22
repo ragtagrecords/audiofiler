@@ -1,0 +1,47 @@
+@use 'Styles/vars';
+@use 'Styles/funcs';
+
+.info-card {
+  $width: 90px;
+  width: $width;
+  //background-color: vars.$gray-dark;
+  border-radius: 5px;
+  margin: 0px 20px 15px 0px;
+  padding: 0px 0px;
+
+  h1 {
+    @include funcs.small-header();
+  }
+  
+  p, input {
+    font-family: monospace;
+    font-size: 3rem;
+    color: vars.$gray-light;
+    width: $width;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  input {
+    background: vars.$gray-extra-light;
+    color: black;
+  }
+
+  &.large {
+    $width: 100%;
+    width: $width;
+    margin: 0px 0px 15px 0px;
+    
+    p, textarea {
+      width: $width;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    textarea {
+      background: vars.$gray-extra-light;
+      color: black;
+    }
+  }
+
+}

@@ -6,3 +6,17 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin borderBox {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+@mixin small-header {
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin: 0px;
+  color: vars.$gray-light;
+  padding-bottom: 2px;
+}

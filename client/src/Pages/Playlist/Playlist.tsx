@@ -28,7 +28,6 @@ import {
 import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
-import './Playlist.scss';
 
 interface PlaylistContextInterface {
   userID: number | null;
@@ -83,14 +82,14 @@ export const Playlist = () => {
     },
     {
       href: '/',
-      text: 'Edit songs',
+      text: 'Edit song info',
       onClick: () => dispatch(
         PLAYLIST_ACTIONS.setCurrentMode(mode.current === 'editing' ? 'normal' : 'editing'),
       ),
     },
     {
       href: '/',
-      text: 'Reorder songs',
+      text: 'Reorder/remove songs',
       onClick: () => dispatch(
         PLAYLIST_ACTIONS.setCurrentMode(mode.current === 'dragging' ? 'normal' : 'dragging'),
       ),
@@ -100,7 +99,7 @@ export const Playlist = () => {
   // TODO: move these async loads into redux with a thunk, or saga or something
   const loadPlaylist = async () => {
     const p = await getPlaylistByID(playlistID);
-    const songs = await getSongs(playlistID);
+    const songs = await getSongs(parseInt(playlistID, 10));
 
     if (!p || !p.name || !songs || songs.length === 0 || !songs[0].id) {
       return false;
@@ -115,7 +114,6 @@ export const Playlist = () => {
         playlistSongs: songs,
       }));
     }
-
     return true;
   };
 
@@ -211,7 +209,25 @@ export const Playlist = () => {
     dispatch(PLAYLIST_ACTIONS.setCurrentMode('normal'));
     loadPlaylist();
     loadAllSongs();
+    dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(false));
   }, []);
+
+  /*
+  // TODO: this is a template for adding hotkeys
+  // Need to find a way to remove them when you leave the page
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      // Redirect to upload page if user presses 'u'
+      if (e.key === 'u') {
+        navigate('/songs/add', {
+          state: { playlist },
+        });
+      }
+    },
+    false,
+  );
+  */
 
   let songs = null;
   if (playlist && playlist.songs) {

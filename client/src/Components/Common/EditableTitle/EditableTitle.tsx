@@ -18,7 +18,7 @@ export const EditableTitle = ({
         onChange={onChange}
         disabled={!isEditable}
       />
-      <button aria-label="submit" type="submit" className="submit" />
+      <button aria-label="submit" type="submit" />
     </form>
   );
 };

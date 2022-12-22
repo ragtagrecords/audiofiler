@@ -2,17 +2,84 @@ import React, { useMemo } from 'react';
 import { IconContext } from 'react-icons';
 import { AiOutlineCheck, AiOutlineClose, AiOutlineMinusCircle } from 'react-icons/ai';
 import { FiDownload, FiUpload } from 'react-icons/fi';
-import { FaPlus } from 'react-icons/fa';
+import { FaCrown, FaPlus, FaPlay } from 'react-icons/fa';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { ImArrowLeft } from 'react-icons/im';
+import { IoMdArrowDropdown } from 'react-icons/io';
+import { MdDragIndicator } from 'react-icons/md';
+import {
+  BsFileEarmarkFill,
+  BsFileEarmarkMusicFill,
+  BsFillFileEarmarkImageFill,
+  BsFillFileEarmarkZipFill,
+} from 'react-icons/bs';
+import ReactTooltip from 'react-tooltip';
 import styles from './styles.module.scss';
 
+export type IconButtonTypes =
+  'save'
+  | 'cancel'
+  | 'play'
+  | 'download'
+  | 'upload'
+  | 'add'
+  | 'remove'
+  | 'options'
+  | 'back'
+  | 'drag'
+  | 'dropdown'
+  | 'audio-file'
+  | 'zip-file'
+  | 'image-file'
+  | 'file'
+  | 'crown';
+
+const iconSwitch = (type: IconButtonTypes) => {
+  switch (type) {
+    case 'save':
+      return <AiOutlineCheck />;
+    case 'cancel':
+      return <AiOutlineClose />;
+    case 'play':
+      return <FaPlay />;
+    case 'download':
+      return <FiDownload />;
+    case 'upload':
+      return <FiUpload />;
+    case 'add':
+      return <FaPlus />;
+    case 'remove':
+      return <AiOutlineMinusCircle />;
+    case 'options':
+      return <BiDotsVerticalRounded />;
+    case 'back':
+      return <ImArrowLeft />;
+    case 'dropdown':
+      return <IoMdArrowDropdown />;
+    case 'file':
+      return <BsFileEarmarkFill />;
+    case 'audio-file':
+      return <BsFileEarmarkMusicFill />;
+    case 'zip-file':
+      return <BsFillFileEarmarkZipFill />;
+    case 'image-file':
+      return <BsFillFileEarmarkImageFill />;
+    case 'crown':
+      return <FaCrown />;
+    case 'drag':
+      return <MdDragIndicator />;
+    default:
+      return null;
+  }
+};
+
 type IconButtonProps = {
-  type: 'save' | 'cancel' | 'download' | 'upload' | 'add' | 'remove' | 'options' | 'back' | 'drag';
+  type: IconButtonTypes;
   size?: string;
   color?: string;
   className?: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  tooltipText?: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export const IconButton = ({
@@ -20,51 +87,35 @@ export const IconButton = ({
   size,
   color,
   className,
+  tooltipText,
   onClick,
 }: IconButtonProps) => {
   const iconStyles = useMemo(() => ({ color, size }), []);
 
-  let icon = null;
-
-  switch (type) {
-    case 'save':
-      icon = <AiOutlineCheck />;
-      break;
-    case 'cancel':
-      icon = <AiOutlineClose />;
-      break;
-    case 'download':
-      icon = <FiDownload />;
-      break;
-    case 'upload':
-      icon = <FiUpload />;
-      break;
-    case 'add':
-      icon = <FaPlus />;
-      break;
-    case 'remove':
-      icon = <AiOutlineMinusCircle />;
-      break;
-    case 'options':
-      icon = <BiDotsVerticalRounded />;
-      break;
-    case 'back':
-      icon = <ImArrowLeft />;
-      break;
-    default:
-      return null;
-  }
+  const icon = iconSwitch(type);
+  if (!icon) return null;
 
   return (
-    <button
-      type="button"
-      className={`${styles.iconButton} ${className}`}
-      onClick={onClick}
-    >
-      <IconContext.Provider value={iconStyles}>
-        {icon}
-      </IconContext.Provider>
-    </button>
+    <>
+      <button
+        type="button"
+        className={`${styles.iconButton} ${className}`}
+        onClick={onClick}
+        data-tip={tooltipText}
+      >
+        <IconContext.Provider value={iconStyles}>
+          {icon}
+        </IconContext.Provider>
+      </button>
+      {tooltipText && (
+        <ReactTooltip
+          place="right"
+          type="dark"
+          effect="solid"
+          delayShow={200}
+        />
+      )}
+    </>
   );
 };
 
@@ -72,4 +123,6 @@ IconButton.defaultProps = {
   size: '26px',
   color: '#5ae7ff', // this is tertiaryColor from Styles/vars.. couldnt figure out how to import it
   className: '',
+  tooltipText: '',
+  onClick: () => {},
 };

@@ -39,7 +39,7 @@ async function addSong(db, song) {
             name,
             tempo ? tempo : null,
             artist ? artist : null,
-            isParent ? isParent : null,
+            isParent ? 1 : 0,
             parentID ? parentID: null,
             zipPath ? zipPath : null,
             notes ? notes : null,

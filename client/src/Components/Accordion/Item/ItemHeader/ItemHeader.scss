@@ -1,67 +1,55 @@
 @use "Styles/funcs";
 @use "Styles/vars";
 
-$height: 60px;
+$height: 50px;
 
-.accordionHeader {
-    @include funcs.flexCenter();
-    height: $height;
+.item-header {
+  @include funcs.flexCenter();
+  height: $height;
 
-    .accordionHeaderSection {
-      button {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0px;
-      }
-      
-      &.left, &.right {
-        width: 0%;
-        height: $height;
-      }
-      &.center {
-        width: 100%;
-
-        .accordionButton {
-          @include funcs.flexCenter();
-          height: $height;
-          padding: 0px 20px;
-          cursor: pointer;
-
-          span {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-          }
-
-          span, input {
-            background: transparent;
-            color: vars.$tertiaryColor;
-            text-align: center;
-            font-size: 1.5rem;
-            border: none;
-            min-width: 0;
-          };
-        }
-      }
+    
+    .left, .right, .center {
+      height: $height;
+      @include funcs.flexCenter();
+      width: 40px;
+      font-size: 1.0rem;
     }
 
-	&.selected, &.adding {
-		.accordionHeaderSection {
-			&.left, &.right {
-				width: 15%;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-        flex-shrink: 0;
-			}
-			&.center {
-				width: 70%;
+    .left {
+      color: vars.$gray-light;
+    }
 
-				.accordionButton {
-					width: 100%;
-				}
-			}
-		}
-	}
+    $font-size: 1.5rem;
+    .center {
+      width: 100%;
+      color: vars.$white;
+      justify-content: flex-start;
+
+      button, input {
+        @include funcs.flexCenter();
+        justify-content: flex-start;
+        height: $height;
+        padding: 0px 20px 7px 20px;
+        cursor: pointer;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: vars.$white;
+        font-size: $font-size;
+        font-weight: 400;
+      }
+
+      button {
+        border: none;
+        background: none;
+      }
+      
+      input {
+        background: vars.$gray-extra-light;
+        color: black;
+        padding: 0px;
+        height: 35px;
+      }
+    }
 }

@@ -5,15 +5,11 @@ import { useAppSelector } from 'Hooks/hooks';
 import { BodyType, Playlist, Song } from 'Types';
 import { updateSong } from 'Services';
 import { Draggable } from 'react-beautiful-dnd';
-import listStyles from 'Styles/lists.module.scss';
 import './Item.scss';
-import { IconButton } from 'Components';
-import { removeSongFromPlaylist } from 'Services/PlaylistSvc';
 
 interface ItemContextInterface {
   song: Song,
   playlist: Playlist,
-  isSelected: boolean,
   isEdited: any;
   isOpen: boolean;
   bodyType: BodyType;
@@ -41,7 +37,6 @@ export const Item = ({
   const [editedSong, setEditedSong] = useState<Song>(song);
   const [bodyType, setBodyType] = useState<BodyType>('info');
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
-  const selectedSongID = useAppSelector(PLAYLIST_SELECTORS.selectedSongID);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
   const playlistContext = useContext(PlaylistCtx);
@@ -87,18 +82,19 @@ export const Item = ({
   };
 
   const isEdited = mode.current === 'editing' && wereEditsMade();
-  const isSelected = mode.current !== 'adding' && selectedSongID === song.id;
 
   return (
-    <Draggable key={`${song.id} `} draggableId={String(song.id)} index={index}>
+    <Draggable
+      key={`${song.id} `}
+      draggableId={String(song.id)}
+      index={index}
+      isDragDisabled={mode.current !== 'dragging'}
+    >
       {(provided, snapshot) => (
         <div
           className={`
-            accordionItem
-            ${listStyles.item}
+            item
             ${snapshot.isDragging ? 'dragging' : ''}
-            ${mode.current === 'dragging' ? 'draggable' : ''}
-            ${isSelected ? 'selected' : ''}
           `}
           ref={provided.innerRef}
           {...provided.dragHandleProps}
@@ -108,10 +104,8 @@ export const Item = ({
             value={{
               song: mode.current === 'editing' ? editedSong : song,
               playlist,
-              isSelected,
               isEdited,
-              isOpen: (mode.current === 'editing' && isSelected)
-                || (mode.current !== 'adding' && isOpen && isSelected),
+              isOpen: mode.current !== 'adding' && isOpen,
               bodyType,
               setEditedSong,
               setBodyType,
@@ -121,16 +115,6 @@ export const Item = ({
             }}
           >
             {children}
-            <IconButton
-              type="remove"
-              onClick={() => {
-                if (song.id) {
-                  removeSongFromPlaylist(song.id, playlist.id);
-                } else {
-                  console.log('Failed to remove from playlist');
-                }
-              }}
-            />
           </ItemCtx.Provider>
         </div>
       )}

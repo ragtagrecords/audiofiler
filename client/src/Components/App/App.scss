@@ -23,6 +23,7 @@
   .footer {
     width: 100%;
     height: vars.$footerHeight;
+    background-color: #1d1d1d;
   }
 
   @media screen and (max-width: vars.$tabletBreakpoint) {

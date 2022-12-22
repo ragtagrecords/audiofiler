@@ -1,0 +1,32 @@
+@use 'Styles/vars';
+@use 'Styles/funcs';
+
+.download-options {
+  list-style-type: none;
+  @include funcs.flexCenter();
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin: 0px 0px;
+
+  li {
+    @include funcs.flexCenter();
+    justify-content: flex-start;
+    height: 15px;
+    width: 150px;
+    margin: 10px 5px;
+    cursor: pointer;
+    opacity: 80%;
+    transition: transform 0.3s;
+
+    &:hover {
+      opacity: 100%;
+      transform: scale(0.97);
+    }
+
+    p {
+      margin: 0px;
+      font-size: 0.9rem;
+    }
+  }
+}

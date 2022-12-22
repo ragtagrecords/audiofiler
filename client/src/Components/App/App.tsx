@@ -23,7 +23,7 @@ type AppProps = {
 export const App = ({ children }: AppProps) => {
   // State is empty until song is selected
   const [arePortalsOpen, setArePortalsOpen] = useState<boolean>(false);
-  const [backgroundColor, setBackgroundColor] = useState<string>('#1e5c93');
+  const [backgroundColor, setBackgroundColor] = useState<string>('#121212');
 
   const pageContentRef: React.RefObject<HTMLDivElement> = useRef(null);
 

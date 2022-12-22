@@ -1,0 +1,76 @@
+@use "Styles/funcs";
+@use "Styles/vars";
+
+$height: 60px;
+
+.item-body {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  color: vars.$tertiaryColor;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+
+  hr {
+    width: 95%;
+    border: 1px solid vars.$gray;
+    margin: auto;
+  }
+
+  > section {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-left: 15px;
+
+    #file-section-header {
+      @include funcs.flexCenter();
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    h1 {
+      @include funcs.small-header();
+      margin-right: auto;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: vars.$white;
+    }
+
+    &.versions-and-files {
+      flex-direction: column;
+      
+      .header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .version-and-files {
+        width: 99%;
+        padding-bottom: 20px;
+      }
+
+      hr {
+        background-color: vars.$gray;
+        width: 80%;
+        margin-left: 0px;
+        margin-right: auto;
+        height:0.5px;
+      }
+    }
+  }
+
+  &.info {
+    cursor: pointer;
+  }
+
+  &.open {
+    max-height: 1000px;
+    transition: max-height 0.5s ease-in;
+  }
+}
+

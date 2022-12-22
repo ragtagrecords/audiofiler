@@ -3,14 +3,15 @@
 
 .accordionContainer {
   @include funcs.flexCenter();
-  background-color: #1e5c93;
+  padding-top: 20px;
 }
 
 .accordion {
   width: 100%;
-  max-width: 450px;
+  max-width: 750px;
   border-radius: vars.$roundCorners;
   padding: 0 30px;
+  background-color: vars.$black;
 }
 
 /* -------------

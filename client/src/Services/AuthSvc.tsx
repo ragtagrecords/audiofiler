@@ -4,7 +4,6 @@ import { databaseServerURL } from 'env';
 export const authenticate = async (): Promise<number> => {
   const accessToken = localStorage.getItem('token');
   if (!accessToken) {
-    console.log('No access token found in local storage, try logging in again');
     return 0;
   }
 
@@ -25,6 +24,8 @@ export const authenticate = async (): Promise<number> => {
   if (res.data.auth) {
     return res.data.userID;
   }
+
+  console.log('Token failed to authenticate');
   localStorage.clear();
   return 0;
 };

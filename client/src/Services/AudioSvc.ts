@@ -18,10 +18,10 @@ export const guessTempo = async (audioFile: File) => {
     } else if (bpm > 140) {
       bpm /= 2;
     }
-    return bpm.toString();
+    return bpm;
   } catch (err) {
     console.log(err);
-    return '';
+    return 0;
   }
 
   // This works, but seems to be less accurate than guess

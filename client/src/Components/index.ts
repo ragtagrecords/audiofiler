@@ -2,19 +2,19 @@ import { App } from './App/App';
 
 // Accordion
 import { Accordion } from './Accordion/Accordion';
+import { FileList } from './Accordion/Item/ItemBody/FileList/FileList';
 import { Item } from './Accordion/Item/Item';
 import { ItemBody } from './Accordion/Item/ItemBody/ItemBody';
-import { DownloadOptions } from './Accordion/Item/ItemBody/DownloadOptions/DownloadOptions';
-import { SongVersions } from './Accordion/Item/ItemBody/SongVersions/SongVersions';
-import { UploadArea } from './Accordion/Item/ItemBody/UploadArea/UploadArea';
-import { UploadOptions } from './Accordion/Item/ItemBody/UploadOptions/UploadOptions';
-import { UploadOptionFields } from './Accordion/Item/ItemBody/UploadOptions/UploadOptionFields/UploadOptionFields';
 import { ItemHeader } from './Accordion/Item/ItemHeader/ItemHeader';
+import { SongVersionHeader } from './Accordion/Item/ItemBody/SongVersionHeader/SongVersionHeader';
+import { UploadArea } from './Accordion/Item/ItemBody/UploadArea/UploadArea';
+import { UploadOptionFields } from './Accordion/Item/ItemBody/UploadOptions/UploadOptionFields/UploadOptionFields';
+import { UploadOptions } from './Accordion/Item/ItemBody/UploadOptions/UploadOptions';
 
 // AddSongsForm
 import { AddSongsForm } from './AddSongsForm/AddSongsForm';
-import { SongsFieldList } from './AddSongsForm/SongsFieldList/SongsFieldList';
 import { SongFieldset } from './AddSongsForm/SongsFieldList/SongFieldset/SongFieldset';
+import { SongsFieldList } from './AddSongsForm/SongsFieldList/SongsFieldList';
 
 // AudioPlayer
 import { AudioPlayer } from './AudioPlayer/AudioPlayer';
@@ -23,18 +23,19 @@ import { CurrentPosition } from './AudioPlayer/CurrentPosition/CurrentPosition';
 import { Player } from './AudioPlayer/Player/Player';
 
 // Common
-import { IconButton } from './Common/IconButton/IconButton';
+import { DragIconPortal } from './Common/DragIconPortal/DragIconPortal';
 import { EditableTitle } from './Common/EditableTitle/EditableTitle';
 import { Header } from './Common/Header/Header';
 import { HeaderPortal } from './Common/Header/HeaderPortal/HeaderPortal';
+import { IconButton } from './Common/IconButton/IconButton';
+import { InfoCard } from './Common/InfoCard/InfoCard';
 import { LoadingSpinner } from './Common/LoadingSpinner/LoadingSpinner';
+import { LoginOptions } from './Common/UserMenu/LoginOptions/LoginOptions';
 import { SearchBar } from './Common/SearchBar/SearchBar';
 import { SelectPlaylists } from './Common/SelectPlaylists/SelectPlaylists';
 import { UploadButton } from './Common/UploadButton/UploadButton';
 import { UserMenu } from './Common/UserMenu/UserMenu';
 import { UserOptions } from './Common/UserMenu/UserOptions/UserOptions';
-import { LoginOptions } from './Common/UserMenu/LoginOptions/LoginOptions';
-import { DragIconPortal } from './Common/DragIconPortal/DragIconPortal';
 
 // PlaylistList
 import { PlaylistsList } from './PlaylistsList/PlaylistsList';
@@ -44,36 +45,37 @@ import { TaskColumn } from './Tasks/TaskColumn/TaskColumn';
 import { TaskCard } from './Tasks/TaskCard/TaskCard';
 
 export {
-  App,
   Accordion,
-  Item,
-  ItemBody,
-  DownloadOptions,
-  SongVersions,
-  UploadArea,
-  UploadOptions,
-  UploadOptionFields,
-  ItemHeader,
-  IconButton,
-  UploadButton,
   AddSongsForm,
-  SongsFieldList,
-  SongFieldset,
+  App,
   AudioPlayer,
   Controls,
   CurrentPosition,
-  Player,
+  FileList,
+  DragIconPortal,
   EditableTitle,
   Header,
   HeaderPortal,
+  IconButton,
+  InfoCard,
+  Item,
+  ItemBody,
+  ItemHeader,
   LoadingSpinner,
+  LoginOptions,
+  Player,
+  PlaylistsList,
   SearchBar,
   SelectPlaylists,
+  SongFieldset,
+  SongsFieldList,
+  SongVersionHeader,
+  TaskCard,
+  TaskColumn,
+  UploadArea,
+  UploadButton,
+  UploadOptionFields,
+  UploadOptions,
   UserMenu,
   UserOptions,
-  LoginOptions,
-  DragIconPortal,
-  PlaylistsList,
-  TaskColumn,
-  TaskCard,
 };

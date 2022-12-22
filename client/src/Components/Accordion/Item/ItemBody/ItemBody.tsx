@@ -1,30 +1,35 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
-import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import {
-  UploadArea, DownloadOptions, UploadOptions, SongVersions,
+  UploadArea,
+  FileList,
+  UploadOptions,
+  SongVersionHeader,
+  InfoCard,
 } from 'Components';
+import classNames from 'classnames';
+import { Song } from 'Types';
+import { getSongs } from 'Services';
 import { ItemCtx } from '../Item';
-import './ItemBody.scss';
+import './styles.scss';
 
 export const ItemBody = () => {
+  const [songVersions, setSongVersions] = useState<Song[]>([]);
   const playlistContext = useContext(PlaylistCtx);
   const itemContext = useContext(ItemCtx);
   if (!playlistContext || !itemContext) {
+    console.log('no context');
     return null;
   }
 
-  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.uploadedFiles);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
 
   const {
     song,
-    playlist,
-    bodyType,
-    isSelected,
     isOpen,
     setEditedSong,
   } = itemContext;
@@ -43,77 +48,98 @@ export const ItemBody = () => {
     return true;
   };
 
-  if (bodyType === 'collapsed' || !isSelected) {
-    return null;
-  }
+  const getSongVersions = async () => {
+    const tempSongs = song.id && song.isParent && await getSongs(null, song.id);
+    if (tempSongs) {
+      setSongVersions(tempSongs);
+    } else if (song.isParent) {
+      console.log("Couldn't retrieve different versions of the parent song");
+      return false;
+    }
+    return true;
+  };
 
-  let body = null;
+  useEffect(() => {
+    getSongVersions();
+  }, []);
 
-  // TODO: separate this conditional into two blocks and make it a SongInfo component
-  if (bodyType === 'info' || mode.current === 'editing') {
-    body = (
-      <>
-        <p>
-          <span>tempo: </span>
-          {mode.current === 'editing' ? (
-            <input
-              value={song.tempo}
-              onChange={(e) => {
-                const editedSong = { ...song };
-                editedSong.tempo = e.target.value;
-                setEditedSong(editedSong);
-              }}
-            />
-          ) : (
-            <span> {song.tempo} </span>
-          )}
-        </p>
-        <p>
-          <span>notes: </span>
-          {mode.current === 'editing' ? (
-            <textarea
-              className="big"
-              value={song.notes ?? ''}
-              onChange={(e) => {
-                const editedSong = { ...song };
-                editedSong.notes = e.target.value;
-                setEditedSong(editedSong);
-              }}
-            />
-          ) : (
-            <span> {song.notes} </span>
-          )}
-        </p>
-      </>
-    );
-  } else if (bodyType === 'upload') {
-    if (uploadedFiles) { // After files are uploaded
-      body = (
+  // Only show upload options after files are uploaded
+  const bodyContents = () => {
+    if (uploadedFiles) {
+      return (
         <UploadOptions
           uploadedFiles={uploadedFiles}
           parentSong={song}
         />
       );
-    } else { // Before files are uploaded
-      body = (
-        <UploadArea handleUpload={handleUploadedFiles} />
-      );
     }
-  } else if (bodyType === 'download') {
-    body = (
-      <DownloadOptions song={song} />
+    return (
+      <>
+        <section>
+          <InfoCard
+            title="Tempo"
+            info={song.tempo?.toString()}
+            isEditable={mode.current === 'editing'}
+            onChange={(e) => {
+              const editedSong = { ...song };
+              editedSong.tempo = e.target.value ? parseInt(e.target.value, 10) : undefined;
+              setEditedSong(editedSong);
+            }}
+          />
+          <InfoCard
+            title="Key"
+            info="???"
+            isEditable={false}
+            onChange={() => {
+              console.log('no functionality for changing key yet');
+            }}
+          />
+        </section>
+        <section>
+          <InfoCard
+            title="Notes"
+            info={song.notes ?? ''}
+            isEditable={mode.current === 'editing'}
+            size="large"
+            onChange={(e) => {
+              const editedSong = { ...song };
+              editedSong.notes = e.target.value;
+              setEditedSong(editedSong);
+            }}
+          />
+        </section>
+        <section className="versions-and-files">
+          <div className="header">
+            <h1>Versions and Files</h1>
+            <UploadArea handleUpload={handleUploadedFiles} />
+          </div>
+          {[song, ...songVersions].map((song) => {
+            if (!song.id) {
+              return null;
+            }
+            return (
+              <div className="version-and-files" key={`version-and-files-${song.id}`}>
+                <hr />
+                <SongVersionHeader
+                  song={song}
+                  hasVersions={songVersions.length > 0}
+                />
+                <FileList songs={[song]} />
+              </div>
+            );
+          })}
+        </section>
+      </>
     );
-  } else if (bodyType === 'versions') {
-    if (song.id && song.isParent) {
-      body = <SongVersions parentID={song.id} />;
-    } else {
-      body = <span>No additional versions found</span>;
-    }
-  }
+  };
 
   return (
-    <div className={`accordionBody ${(isSelected && isOpen) ? 'open' : ''} ${bodyType}`}>
-      {body}
+    <div className={classNames({
+      'item-body': true,
+      open: isOpen,
+    })}
+    >
+      {bodyContents()}
     </div>
   );
 };

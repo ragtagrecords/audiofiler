@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
-import { IconContext } from 'react-icons';
-import { AiOutlineCloudUpload } from 'react-icons/ai';
+import { IconButton } from 'Components/Common/IconButton/IconButton';
+import React, { useRef } from 'react';
 import './UploadArea.scss';
 
 type UploadAreaProps = {
@@ -8,18 +7,25 @@ type UploadAreaProps = {
 }
 
 export const UploadArea = ({ handleUpload }: UploadAreaProps) => {
-  const iconStyles = useMemo(() => ({
-    color: '#5ae7ff', // this is tertiaryColor from Styles/vars.. couldnt figure out how to import it
-    size: '50px',
-  }), []);
+  const ref: React.RefObject<HTMLInputElement> = useRef(null);
 
   return (
-    <label className="uploadArea">
-      click, or drag files to upload!
-      <IconContext.Provider value={iconStyles}>
-        <AiOutlineCloudUpload />
-      </IconContext.Provider>
-      <input type="file" onChange={handleUpload} multiple />
-    </label>
+    <div className="upload-area">
+      <IconButton
+        type="upload"
+        tooltipText="Upload a new version"
+        size="25px"
+        onClick={() => {
+          if (ref.current) ref.current.click();
+        }}
+      />
+      <input
+        id="file-input"
+        ref={ref}
+        type="file"
+        onChange={handleUpload}
+        multiple
+      />
+    </div>
   );
 };

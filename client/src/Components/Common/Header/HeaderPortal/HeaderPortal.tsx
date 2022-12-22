@@ -27,24 +27,38 @@ export const HeaderPortal = ({
     }
   }, []);
 
+  if (!left) {
+    if (showBackButton) {
+      left = (
+        <IconButton
+          type="back"
+          size="40px"
+          onClick={() => { navigate('/'); }}
+        />
+      );
+    } else {
+      left = <div />;
+    }
+  }
+
+  if (!center) {
+    center = <img src={Logo} alt="Audiofiler Logo" width="60px" />;
+  }
+
+  if (!right) {
+    right = <div />;
+  }
+
   return (
     <>
       <Portal node={document && document.getElementById('header-left')}>
-        {left ?? showBackButton ? (
-          <IconButton
-            type="back"
-            size="40px"
-            onClick={() => { navigate('/'); }}
-          />
-        ) : <div />}
+        {left}
       </Portal>
       <Portal node={document && document.getElementById('header-center')}>
-        {center ?? (
-          <img src={Logo} alt="Audiofiler Logo" width="60px" />
-        )}
+        {center}
       </Portal>
       <Portal node={document && document.getElementById('header-right')}>
-        {right ?? <div />}
+        {right}
       </Portal>
     </>
   );
