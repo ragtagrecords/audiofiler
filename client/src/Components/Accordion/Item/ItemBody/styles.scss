@@ -12,11 +12,9 @@ $height: 60px;
   overflow: hidden;
   transition: max-height 0.5s ease;
 
-  // TODO: Remove
   hr {
     width: 95%;
     border: 1px solid vars.$gray;
-    padding: 0px;
     margin: auto;
   }
 

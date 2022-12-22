@@ -40,40 +40,6 @@ export const FileList = ({ songs }: FileListProps) => {
     }
   });
 
-  // TODO: remove
-  /*
-  files.push({
-    folder: 'zips',
-    actualFileName: 'crack1.zip',
-    desiredFileName: 'crack.zip',
-  });
-  files.push({
-    folder: 'images',
-    actualFileName: 'crack1.jpeg',
-    desiredFileName: 'crack.jpeg',
-  });
-  files.push({
-    folder: 'zips',
-    actualFileName: 'crack2.zip',
-    desiredFileName: 'crack.zip',
-  });
-  files.push({
-    folder: 'images',
-    actualFileName: 'crack2.jpeg',
-    desiredFileName: 'crack.jpeg',
-  });
-  files.push({
-    folder: 'zips',
-    actualFileName: 'crack3.zip',
-    desiredFileName: 'crack.zip',
-  });
-  files.push({
-    folder: 'images',
-    actualFileName: 'crack3.jpeg',
-    desiredFileName: 'crack.jpeg',
-  });
-  */
-
   return (
     <>
       <ul className="download-options">

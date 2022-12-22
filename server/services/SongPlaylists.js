@@ -71,8 +71,7 @@ async function updateSongPlaylist(db, playlistID, songID, songPlaylist, reorder 
         return false;
     }
     
-    // TODO: move prop removal to sqlUpdate
-    // ID cannot be updated
+    // Remove these fields before hitting DB, they cannot be updated
     if (songPlaylist.id) { delete songPlaylist.id }
     if (songPlaylist.playlistID) { delete songPlaylist.playlistID }
     if (songPlaylist.songID) { delete songPlaylist.songID }

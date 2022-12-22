@@ -78,11 +78,11 @@ export const ItemBody = () => {
         <section>
           <InfoCard
             title="Tempo"
-            info={song.tempo?.toString() ?? '???'}
+            info={song.tempo?.toString()}
             isEditable={mode.current === 'editing'}
             onChange={(e) => {
               const editedSong = { ...song };
-              editedSong.tempo = parseInt(e.target.value, 10);
+              editedSong.tempo = e.target.value ? parseInt(e.target.value, 10) : undefined;
               setEditedSong(editedSong);
             }}
           />
@@ -98,7 +98,7 @@ export const ItemBody = () => {
         <section>
           <InfoCard
             title="Notes"
-            info={song.notes ?? '-'}
+            info={song.notes ?? ''}
             isEditable={mode.current === 'editing'}
             size="large"
             onChange={(e) => {
@@ -118,7 +118,6 @@ export const ItemBody = () => {
               return null;
             }
             return (
-            // TODO: fix alignment and colors
               <div className="version-and-files" key={`version-and-files-${song.id}`}>
                 <hr />
                 <SongVersionHeader

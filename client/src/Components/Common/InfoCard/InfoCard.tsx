@@ -5,13 +5,12 @@ type InfoCardSizes = 'large' | 'small';
 
 type InfoCardProps = {
   title: string;
-  info: string;
+  info?: string;
   isEditable: boolean;
   size?: InfoCardSizes;
   onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };
 
-// TODO: fix the input , its showing NaN
 export const InfoCard = ({
   title,
   info,
@@ -20,6 +19,7 @@ export const InfoCard = ({
   onChange,
 }: InfoCardProps) => {
   let mainText;
+  info = info ?? '';
   if (isEditable && size === 'large') {
     mainText = <textarea value={info} onChange={onChange} />;
   } else if (isEditable && size === 'small') {
@@ -36,4 +36,5 @@ export const InfoCard = ({
 
 InfoCard.defaultProps = {
   size: 'small',
+  info: '',
 };
