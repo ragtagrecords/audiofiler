@@ -100,14 +100,20 @@ export const Playlist = () => {
   // TODO: move these async loads into redux with a thunk, or saga or something
   const loadPlaylist = async () => {
     const p = await getPlaylistByID(playlistID);
-    const songs = await getSongs(parseInt(playlistID, 10));
 
-    if (!p || !p.name || !songs || songs.length === 0 || !songs[0].id) {
+    if (!p || !p.name) {
       return false;
     }
 
-    p.songs = songs;
-    dispatch(PLAYLIST_ACTIONS.setPlaylist(p));
+    dispatch(PLAYLIST_ACTIONS.setPlaylist({ ...p }));
+    const songs = await getSongs(parseInt(playlistID, 10));
+
+    if (!songs || songs.length === 0 || !songs[0].id) {
+      dispatch(PLAYLIST_ACTIONS.setIsLoading(false));
+      return false;
+    }
+
+    dispatch(PLAYLIST_ACTIONS.setPlaylist({ ...p, songs: [...songs] }));
 
     if (!audioPlayerSongQueue) {
       dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
@@ -233,10 +239,10 @@ export const Playlist = () => {
   */
 
   let songs = null;
-  if (playlist && playlist.songs) {
+  if (playlist) {
     if (mode.current === 'adding' && allSongs) {
-      songs = filterSongs(allSongs, query, playlist.songs);
-    } else {
+      songs = filterSongs(allSongs, query, playlist.songs ?? []);
+    } else if (playlist.songs) {
       songs = playlist.songs;
     }
   }
