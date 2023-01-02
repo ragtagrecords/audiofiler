@@ -23,7 +23,7 @@ export const Accordion = ({ children } : AccordionProps) => {
     );
   }
 
-  if (playlist === null && mode.current !== 'adding') {
+  if (!playlist?.songs && mode.current !== 'adding') {
     return <div className="accordionContainer"> No songs in this playlist yet, use three dots in upper right to add some</div>;
   }
 

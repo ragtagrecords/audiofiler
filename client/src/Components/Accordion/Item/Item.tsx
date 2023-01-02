@@ -40,7 +40,7 @@ export const Item = ({
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
   const playlistContext = useContext(PlaylistCtx);
-  if (!playlistContext || !playlist || !playlist.songs) {
+  if (!playlistContext || !playlist) {
     return null;
   }
 
