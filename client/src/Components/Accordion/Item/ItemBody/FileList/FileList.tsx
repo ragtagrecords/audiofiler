@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Song } from 'Types';
-import { downloadFile, getSongs, removeExtraExtensions } from 'Services';
+import { downloadFile, removeExtraExtensions } from 'Services';
 import './styles.scss';
 import { IconButton, IconButtonTypes } from 'Components/Common/IconButton/IconButton';
 
