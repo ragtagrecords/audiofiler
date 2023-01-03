@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { Song } from 'Types';
-import { deleteSongFromDB, getSongs, updateSong } from 'Services';
+import { deleteSongFromDB, updateSong } from 'Services';
 import './styles.scss';
 import { useAppDispatch } from 'Hooks/hooks';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
