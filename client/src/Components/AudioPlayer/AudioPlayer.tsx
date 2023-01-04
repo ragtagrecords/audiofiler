@@ -24,7 +24,7 @@ export const AudioPlayer = () => {
             src={`${fileServerURL()}/songs/${song.path}`}
             isPlaying={isPlaying}
             skipSong={() => {
-              dispatch(AUDIO_PLAYER_ACTIONS.changeSongByRelativeIndex(-1));
+              dispatch(AUDIO_PLAYER_ACTIONS.changeSongByRelativeIndex(1));
             }}
             seekTime={seekTime}
             onTimeUpdate={(e: React.ChangeEvent<HTMLAudioElement>) => {
