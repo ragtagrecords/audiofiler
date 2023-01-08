@@ -2,9 +2,10 @@ import React, { useContext } from 'react';
 import { Song } from 'Types';
 import { deleteSongFromDB, updateSong } from 'Services';
 import './styles.scss';
-import { useAppDispatch } from 'Hooks/hooks';
+import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { IconButton } from 'Components/Common/IconButton/IconButton';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { ItemCtx } from '../../Item';
 
 type SongVersionHeaderProps = {
@@ -13,14 +14,8 @@ type SongVersionHeaderProps = {
 }
 
 export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps) => {
-  // const [songs, setSongs] = useState<Song[] | null>(null);
-  const itemContext = useContext(ItemCtx);
   const dispatch = useAppDispatch();
-  if (!itemContext) {
-    return null;
-  }
-
-  const { playlist } = itemContext;
+  const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
 
   if (!song || !song.id) {
     console.log('ERROR: No song found');
@@ -38,10 +33,10 @@ export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps)
           type="play"
           size="20px"
           onClick={() => {
-            if (song.id && playlist.songs) {
+            if (song.id && songs) {
               dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
                 songID: song.id,
-                playlistSongs: playlist.songs,
+                playlistSongs: songs,
                 shouldPlay: true,
               }));
             }

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { databaseServerURL } from 'env';
 import { Playlist } from 'Types';
 
+// TODO: Add error handling to all these funcs
 export const getPlaylists = async () => {
   try {
     const res = await axios.get(`${databaseServerURL()}/playlists`);

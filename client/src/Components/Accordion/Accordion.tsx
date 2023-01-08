@@ -11,11 +11,11 @@ type AccordionProps = {
 }
 
 export const Accordion = ({ children } : AccordionProps) => {
-  const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
-  const isLoading = useAppSelector(PLAYLIST_SELECTORS.isLoading);
+  const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
+  const isSongsLoading = useAppSelector(PLAYLIST_SELECTORS.isSongsLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
-  if (isLoading) {
+  if (isSongsLoading) {
     return (
       <div className="accordionContainer">
         <LoadingSpinner />
@@ -23,7 +23,7 @@ export const Accordion = ({ children } : AccordionProps) => {
     );
   }
 
-  if (!playlist?.songs && mode.current !== 'adding') {
+  if (!songs && mode.current !== 'adding') {
     return <div className="accordionContainer"> No songs in this playlist yet, use three dots in upper right to add some</div>;
   }
 

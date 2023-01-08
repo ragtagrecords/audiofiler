@@ -28,6 +28,7 @@ import {
 import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
+import { PlaylistLoader } from './playlistLoaders';
 
 interface PlaylistContextInterface {
   userID: number | null;
@@ -44,10 +45,10 @@ type PlaylistParams = {
 export const Playlist = () => {
   // Get playlistID from query params
   const { playlistID } = useParams<PlaylistParams>();
-
   if (!playlistID) {
     return (<div>No playlistID found</div>);
   }
+  const playlistLoader = new PlaylistLoader(playlistID);
 
   // TODO: move userID to redux
   const [userID, setUserID] = useState<number | null>(null);
@@ -57,8 +58,9 @@ export const Playlist = () => {
   const audioPlayerSongQueue = useAppSelector(AUDIO_PLAYER_SELECTORS.songQueue);
   const currentSongID = useAppSelector(AUDIO_PLAYER_SELECTORS.currentSongID);
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
+  const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
   const query = useAppSelector(PLAYLIST_SELECTORS.query);
-  const isLoading = useAppSelector(PLAYLIST_SELECTORS.isLoading);
+  const isPlaylistLoading = useAppSelector(PLAYLIST_SELECTORS.isPlaylistLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
 
@@ -109,7 +111,7 @@ export const Playlist = () => {
     const songs = await getSongs(parseInt(playlistID, 10));
 
     if (!songs || songs.length === 0 || !songs[0].id) {
-      dispatch(PLAYLIST_ACTIONS.setIsLoading(false));
+      dispatch(PLAYLIST_ACTIONS.setIsPlaylistLoading(false));
       return false;
     }
 
@@ -140,7 +142,7 @@ export const Playlist = () => {
       return false;
     }
     await addSongToPlaylist(id, playlist.id);
-    loadPlaylist();
+    playlistLoader.loadSongs();
     return true;
   };
 
@@ -163,10 +165,10 @@ export const Playlist = () => {
   };
 
   const saveChangesToSongPositions = () => {
-    if (!playlist || !playlist.songs) { return; }
-    for (let i = 0; i < playlist.songs.length; i += 1) {
-      if (playlist.songs[i].id) {
-        const song = playlist.songs[i];
+    if (!playlist || !songs) { return; }
+    for (let i = 0; i < songs.length; i += 1) {
+      if (songs[i].id) {
+        const song = songs[i];
         if (song.id && playlist) {
           const success = updateSongPlaylist({
             songID: song.id,
@@ -186,11 +188,11 @@ export const Playlist = () => {
   // Function to update list order on drop
   const handleDrop = (droppedItem: any) => {
     // Ignore drop outside droppable container
-    if (!playlist || !playlist.songs || !droppedItem.destination) {
+    if (!playlist || !songs || !droppedItem.destination) {
       return false;
     }
 
-    const updatedPlaylistSongs = [...playlist.songs];
+    const updatedPlaylistSongs = [...songs];
     // Remove dragged item
     const [reorderedItem] = updatedPlaylistSongs.splice(droppedItem.source.index, 1);
 
@@ -203,7 +205,7 @@ export const Playlist = () => {
 
     // Update State
     if (reorderedItem.id) {
-      dispatch(PLAYLIST_ACTIONS.setPlaylistSongs(updatedPlaylistSongs));
+      dispatch(PLAYLIST_ACTIONS.setSongs(updatedPlaylistSongs));
       dispatch(PLAYLIST_ACTIONS.setSongPlaylistPositions());
     }
     return true;
@@ -212,9 +214,10 @@ export const Playlist = () => {
   // When component is initally loaded
   useEffect(() => {
     auth();
-    dispatch(PLAYLIST_ACTIONS.setIsLoading(true));
     dispatch(PLAYLIST_ACTIONS.setCurrentMode('normal'));
-    loadPlaylist();
+
+    playlistLoader.loadPlaylist();
+    playlistLoader.loadSongs();
     loadAllSongs();
     if (!currentSongID) {
       dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(false));
@@ -238,12 +241,12 @@ export const Playlist = () => {
   );
   */
 
-  let songs = null;
+  let songsToShow = null;
   if (playlist) {
     if (mode.current === 'adding' && allSongs) {
-      songs = filterSongs(allSongs, query, playlist.songs ?? []);
-    } else if (playlist.songs) {
-      songs = playlist.songs;
+      songsToShow = filterSongs(allSongs, query, songs ?? []);
+    } else if (songs) {
+      songsToShow = songs;
     }
   }
 
@@ -271,7 +274,7 @@ export const Playlist = () => {
               onClick={saveChangesToSongPositions}
             />)
           : (<UserMenu options={menuOptions} />)}
-        center={isLoading
+        center={isPlaylistLoading
           ? (null)
           : (
             <EditableTitle
@@ -303,7 +306,7 @@ export const Playlist = () => {
       <DragDropContext onDragEnd={handleDrop}>
         {/* <SearchBar /> */}
         <Accordion>
-          {songs && songs.map((song: Song, index) => (
+          {songsToShow && songsToShow.map((song: Song, index) => (
             <Item
               key={song.id}
               index={index}

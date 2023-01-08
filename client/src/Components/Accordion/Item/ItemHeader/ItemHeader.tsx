@@ -34,6 +34,7 @@ export const ItemHeader = () => {
   } = itemContext;
 
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
+  const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
   const dispatch = useAppDispatch();
 
   // By default show the # position of the song in the playlist
@@ -78,10 +79,10 @@ export const ItemHeader = () => {
         return false;
       }
 
-      if (playlist.songs) {
+      if (songs) {
         dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
           songID: song.id,
-          playlistSongs: playlist.songs,
+          playlistSongs: songs,
           shouldPlay: true,
         }));
       }
