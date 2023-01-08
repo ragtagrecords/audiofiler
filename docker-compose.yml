@@ -91,5 +91,21 @@ services:
       REACT_APP_DB_SERVER_BASE_URL: ${DB_SERVER_BASE_URL}
       REACT_APP_FILE_SERVER_BASE_URL: ${FILE_SERVER_BASE_URL}
 
+  # New next version of the app
+  next:
+    container_name: next
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./next
+    volumes:
+      - /usr/src/app/node_modules
+      - ./next:/usr/src/app
+    ports:
+      - "${NEXT_PORT}:${NEXT_PORT}"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      PORT: ${NEXT_PORT}
+
 volumes:
   mysql-data:
