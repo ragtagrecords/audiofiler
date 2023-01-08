@@ -24,7 +24,7 @@ import {
 import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
-import { PlaylistLoader } from './playlistLoaders';
+import { PlaylistLoader } from './playlistLoader';
 
 type PlaylistParams = {
   playlistID: string;

@@ -5,7 +5,7 @@ import { BodyType, Playlist, Song } from 'Types';
 import { updateSong } from 'Services';
 import { Draggable } from 'react-beautiful-dnd';
 import './Item.scss';
-import { PlaylistLoader } from 'Pages/Playlist/playlistLoaders';
+import { PlaylistLoader } from 'Pages/Playlist/playlistLoader';
 
 interface ItemContextInterface {
   song: Song,

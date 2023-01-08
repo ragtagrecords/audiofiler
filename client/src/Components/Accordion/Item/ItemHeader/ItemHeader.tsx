@@ -9,7 +9,7 @@ import { IconButton } from 'Components';
 import './ItemHeader.scss';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { addSongToPlaylist, removeSongFromPlaylist } from 'Services/PlaylistSvc';
-import { PlaylistLoader } from 'Pages/Playlist/playlistLoaders';
+import { PlaylistLoader } from 'Pages/Playlist/playlistLoader';
 
 export const ItemHeader = () => {
   const appContext = useContext(AppCtx);

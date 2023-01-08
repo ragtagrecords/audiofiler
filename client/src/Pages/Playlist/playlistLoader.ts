@@ -1,3 +1,5 @@
+// This class can be used to fetch data and store it in the redux state
+// It's main purpose is to separate the data fetching logic from the component
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { AppDispatch } from 'Hooks/store';
