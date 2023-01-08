@@ -2,25 +2,21 @@ import React, { useContext } from 'react';
 
 // Context
 import { AppCtx } from 'Components/App/App';
-import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { ItemCtx } from 'Components/Accordion/Item/Item';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { IconButton } from 'Components';
 import './ItemHeader.scss';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
-import { removeSongFromPlaylist } from 'Services/PlaylistSvc';
+import { addSongToPlaylist, removeSongFromPlaylist } from 'Services/PlaylistSvc';
+import { PlaylistLoader } from 'Pages/Playlist/playlistLoaders';
 
 export const ItemHeader = () => {
   const appContext = useContext(AppCtx);
-  const playlistContext = useContext(PlaylistCtx);
   const itemContext = useContext(ItemCtx);
-  if (appContext === null || itemContext === null || !playlistContext) {
+  if (appContext === null || itemContext === null) {
     return null;
   }
-  const {
-    addSongToCurrentPlaylist,
-  } = playlistContext;
   const {
     song,
     playlist,
@@ -36,6 +32,18 @@ export const ItemHeader = () => {
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
   const dispatch = useAppDispatch();
+  const playlistLoader = new PlaylistLoader(playlist.id.toString());
+
+  // When add button is clicked for a particular item
+  const addSongToCurrentPlaylist = async (id: number) => {
+    if (!playlist) {
+      console.log("Couldn't add song");
+      return false;
+    }
+    await addSongToPlaylist(id, playlist.id);
+    playlistLoader.loadSongs();
+    return true;
+  };
 
   // By default show the # position of the song in the playlist
   // If in editing mode, show the discard changes button
@@ -52,7 +60,9 @@ export const ItemHeader = () => {
         <IconButton
           type="add"
           onClick={() => {
-            addSongToCurrentPlaylist(song?.id);
+            if (song && song.id) {
+              addSongToCurrentPlaylist(song.id);
+            }
           }}
         />
       );

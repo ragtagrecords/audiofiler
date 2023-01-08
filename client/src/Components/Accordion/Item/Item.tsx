@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
-import { PlaylistCtx } from 'Pages/Playlist/Playlist';
+import React, { createContext, useState } from 'react';
 import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import { useAppSelector } from 'Hooks/hooks';
 import { BodyType, Playlist, Song } from 'Types';
 import { updateSong } from 'Services';
 import { Draggable } from 'react-beautiful-dnd';
 import './Item.scss';
+import { PlaylistLoader } from 'Pages/Playlist/playlistLoaders';
 
 interface ItemContextInterface {
   song: Song,
@@ -39,14 +39,11 @@ export const Item = ({
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
-  const playlistContext = useContext(PlaylistCtx);
-  if (!playlistContext || !playlist) {
+  if (!playlist) {
     return null;
   }
 
-  const {
-    loadPlaylist,
-  } = playlistContext;
+  const playlistLoader = new PlaylistLoader(playlist.id.toString());
 
   const wereEditsMade = () => {
     let wasTempoChanged = null;
@@ -77,7 +74,7 @@ export const Item = ({
     const success = await updateSong({ ...editedSong });
 
     if (!success) { return false; }
-    loadPlaylist();
+    await playlistLoader.loadSongs();
     return true;
   };
 

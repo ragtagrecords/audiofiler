@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
-import { PlaylistCtx } from 'Pages/Playlist/Playlist';
 import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
 import {
   UploadArea,
@@ -17,9 +16,8 @@ import './styles.scss';
 
 export const ItemBody = () => {
   const [songVersions, setSongVersions] = useState<Song[]>([]);
-  const playlistContext = useContext(PlaylistCtx);
   const itemContext = useContext(ItemCtx);
-  if (!playlistContext || !itemContext) {
+  if (!itemContext) {
     console.log('no context');
     return null;
   }

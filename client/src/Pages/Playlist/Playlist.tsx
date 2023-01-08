@@ -1,6 +1,4 @@
-import React, {
-  createContext, useEffect, useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { MenuOption, Playlist as PlaylistT, Song } from 'Types';
@@ -20,8 +18,6 @@ import {
 import {
   authenticate,
   getSongs,
-  getPlaylistByID,
-  addSongToPlaylist,
   updatePlaylist,
   updateSongPlaylist,
 } from 'Services';
@@ -29,14 +25,6 @@ import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
 import { PlaylistLoader } from './playlistLoaders';
-
-interface PlaylistContextInterface {
-  userID: number | null;
-  addSongToCurrentPlaylist: any;
-  loadPlaylist: any;
-}
-
-export const PlaylistCtx = createContext<PlaylistContextInterface | null>(null);
 
 type PlaylistParams = {
   playlistID: string;
@@ -48,14 +36,12 @@ export const Playlist = () => {
   if (!playlistID) {
     return (<div>No playlistID found</div>);
   }
-  const playlistLoader = new PlaylistLoader(playlistID);
 
   // TODO: move userID to redux
   const [userID, setUserID] = useState<number | null>(null);
 
   // State from redux
   const allSongs = useAppSelector(AUDIO_PLAYER_SELECTORS.allSongs);
-  const audioPlayerSongQueue = useAppSelector(AUDIO_PLAYER_SELECTORS.songQueue);
   const currentSongID = useAppSelector(AUDIO_PLAYER_SELECTORS.currentSongID);
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
@@ -63,6 +49,8 @@ export const Playlist = () => {
   const isPlaylistLoading = useAppSelector(PLAYLIST_SELECTORS.isPlaylistLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
+
+  const playlistLoader = new PlaylistLoader(playlistID);
 
   const auth = async () => {
     const userID = await authenticate();
@@ -99,33 +87,6 @@ export const Playlist = () => {
     },
   ];
 
-  // TODO: move these async loads into redux with a thunk, or saga or something
-  const loadPlaylist = async () => {
-    const p = await getPlaylistByID(playlistID);
-
-    if (!p || !p.name) {
-      return false;
-    }
-
-    dispatch(PLAYLIST_ACTIONS.setPlaylist({ ...p }));
-    const songs = await getSongs(parseInt(playlistID, 10));
-
-    if (!songs || songs.length === 0 || !songs[0].id) {
-      dispatch(PLAYLIST_ACTIONS.setIsPlaylistLoading(false));
-      return false;
-    }
-
-    dispatch(PLAYLIST_ACTIONS.setPlaylist({ ...p, songs: [...songs] }));
-
-    if (!audioPlayerSongQueue) {
-      dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
-        songID: songs[0].id,
-        playlistSongs: songs,
-      }));
-    }
-    return true;
-  };
-
   const loadAllSongs = async () => {
     const songs = filterSongs(await getSongs(), '', null);
     if (songs) {
@@ -133,17 +94,6 @@ export const Playlist = () => {
       return true;
     }
     return false;
-  };
-
-  // When add button is clicked for a particular item
-  const addSongToCurrentPlaylist = async (id: number) => {
-    if (!playlist) {
-      console.log("Couldn't add song");
-      return false;
-    }
-    await addSongToPlaylist(id, playlist.id);
-    playlistLoader.loadSongs();
-    return true;
   };
 
   const changePlaylistName = async (e: React.SyntheticEvent) => {
@@ -251,13 +201,7 @@ export const Playlist = () => {
   }
 
   return (
-    <PlaylistCtx.Provider
-      value={{
-        loadPlaylist,
-        addSongToCurrentPlaylist,
-        userID,
-      }}
-    >
+    <>
       <HeaderPortal
         left={mode.current === 'dragging' ? (
           <IconButton
@@ -318,6 +262,6 @@ export const Playlist = () => {
           ))}
         </Accordion>
       </DragDropContext>
-    </PlaylistCtx.Provider>
+    </>
   );
 };
