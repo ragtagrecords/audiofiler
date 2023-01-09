@@ -11,7 +11,6 @@ import {
   SongsFieldList,
 } from 'Components';
 import './AddSongsForm.scss';
-import { databaseServerURL } from 'env';
 import { useAppSelector } from 'Hooks/hooks';
 import { APP_SELECTORS } from 'Components/App/appSlice';
 
@@ -19,31 +18,14 @@ type AddSongFormProps = {
   playlist?: Playlist;
 }
 
-const defaultPlaylist: Playlist = {
-  id: 0,
-  name: '',
-};
-
 export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
   const [songs, setSongs] = useState<Array<Song> | null>(null);
-  const [playlists, setPlaylists] = useState<Array<Playlist>>([defaultPlaylist]);
   const [globalPlaylistID, setGlobalPlaylist] = useState<number>(playlist ? playlist.id : 0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const user = useAppSelector(APP_SELECTORS.user);
-
-  const getPlaylists = () => {
-    fetch(`${databaseServerURL()}/playlists`)
-      .then((response) => response.json())
-      .then((data) => setPlaylists(data));
-  };
-
-  // Authorize and load playlists when component is mounted
-  // TODO: loader
-  useEffect(() => {
-    getPlaylists();
-  }, []);
+  const playlists = useAppSelector(APP_SELECTORS.playlists);
 
   // When songs are not null, we are no longer loading
   useEffect(() => {
@@ -206,7 +188,7 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
                 value=""
               > -
               </option>
-              {playlists && playlists[0].name !== '' && playlists.map((playlist : Playlist) => {
+              {playlists.data && playlists.data[0].name !== '' && playlists.data.map((playlist : Playlist) => {
                 return (
                   <option
                     key={playlist.id}

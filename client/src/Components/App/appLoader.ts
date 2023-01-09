@@ -2,7 +2,7 @@
 // It's main purpose is to separate the data fetching logic from the component
 import { useAppDispatch } from 'Hooks/hooks';
 import { AppDispatch } from 'Hooks/store';
-import { authenticate } from 'Services';
+import { authenticate, getPlaylists } from 'Services';
 import { APP_ACTIONS } from './appSlice';
 
 export class AppLoader {
@@ -24,6 +24,20 @@ export class AppLoader {
     }
 
     this.dispatch(APP_ACTIONS.setUser({ ...user }));
+    return true;
+  }
+
+  // Attempt to fetch all playlists
+  public async loadPlaylists() {
+    this.dispatch(APP_ACTIONS.setIsPlaylistsLoading(true));
+    const playlists = await getPlaylists();
+
+    if (!playlists) {
+      this.dispatch(APP_ACTIONS.setPlaylistsError('Failed to fetch playlists'));
+      return false;
+    }
+
+    this.dispatch(APP_ACTIONS.setPlaylists([...playlists]));
     return true;
   }
 }

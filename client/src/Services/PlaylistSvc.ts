@@ -6,6 +6,7 @@ import { Playlist } from 'Types';
 export const getPlaylists = async () => {
   try {
     const res = await axios.get(`${databaseServerURL()}/playlists`);
+    console.log(res.data);
     return res.data as Playlist[];
   } catch (ex) {
     console.log(ex);

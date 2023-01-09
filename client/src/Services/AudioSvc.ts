@@ -28,12 +28,10 @@ export const guessTempo = async (audioFile: File) => {
   /*
   analyze(audioBuffer)
     .then((tempo) => {
-      console.log('Anaylze result');
-      console.log(tempo);
+      console.log('Anaylze result', tempo);
     })
     .catch((err) => {
-      console.log("Couldn't anaylze audio");
-      console.log(err);
+      console.log("Couldn't anaylze audio", err);
     });
   */
 };

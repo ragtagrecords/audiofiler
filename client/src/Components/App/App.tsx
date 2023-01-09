@@ -48,6 +48,7 @@ export const App = ({ children }: AppProps) => {
   useEffect(() => {
     appLoader.loadUser();
     audioPlayerLoader.loadAllSongs();
+    appLoader.loadPlaylists();
     setPageContentHeight();
     window.onresize = setPageContentHeight;
   }, []);
