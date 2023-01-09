@@ -4,7 +4,7 @@ import React, { useContext } from 'react';
 import { AppCtx } from 'Components/App/App';
 import { ItemCtx } from 'Components/Accordion/Item/Item';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
-import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 import { IconButton } from 'Components';
 import './ItemHeader.scss';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';

@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 import { useAppSelector } from 'Hooks/hooks';
 import { BodyType, Playlist, Song } from 'Types';
 import { updateSong } from 'Services';

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
-import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 import {
   UploadArea,
   FileList,

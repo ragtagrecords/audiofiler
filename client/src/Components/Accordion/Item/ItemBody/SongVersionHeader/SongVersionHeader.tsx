@@ -5,7 +5,7 @@ import './styles.scss';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { IconButton } from 'Components/Common/IconButton/IconButton';
-import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 
 type SongVersionHeaderProps = {
   song: Song;

@@ -94,7 +94,7 @@ export const playlistSlice = createSlice({
 
 // Actions are used for modifying the state
 // Exports all the reducer functions inside playlistSlice
-// TODO: make shorthand functions, calling dispatch is really verbose currently
+// TODO: make shorthand actionCreator functions, calling dispatch is really verbose currently
 export const PLAYLIST_ACTIONS = {
   ...playlistSlice.actions,
 };

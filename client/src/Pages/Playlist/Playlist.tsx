@@ -23,7 +23,7 @@ import {
 } from 'Services';
 import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
-import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './PlaylistSlice';
+import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './playlistSlice';
 import { PlaylistLoader } from './playlistLoader';
 
 type PlaylistParams = {
@@ -37,7 +37,7 @@ export const Playlist = () => {
     return (<div>No playlistID found</div>);
   }
 
-  // TODO: move userID to redux
+  // TODO: move userID to redux and expose to entire app
   const [userID, setUserID] = useState<number | null>(null);
 
   // State from redux
@@ -87,6 +87,7 @@ export const Playlist = () => {
     },
   ];
 
+  // TODO: loader
   const loadAllSongs = async () => {
     const songs = filterSongs(await getSongs(), '', null);
     if (songs) {

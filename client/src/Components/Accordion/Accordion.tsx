@@ -1,7 +1,7 @@
 import React, { /* useContext */ } from 'react';
 import { useAppSelector } from 'Hooks/hooks';
 import { Droppable } from 'react-beautiful-dnd';
-import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 import { LoadingSpinner } from 'Components/Common/LoadingSpinner/LoadingSpinner';
 import listStyles from 'Styles/lists.module.scss';
 import './Accordion.scss';

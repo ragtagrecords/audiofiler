@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { AppDispatch } from 'Hooks/store';
 import { getPlaylistByID, getSongs } from 'Services';
 import { Playlist, Song } from 'Types';
-import { PLAYLIST_ACTIONS } from './PlaylistSlice';
+import { PLAYLIST_ACTIONS } from './playlistSlice';
 
 export class PlaylistLoader {
   private dispatch: AppDispatch;
