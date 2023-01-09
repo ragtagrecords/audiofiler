@@ -9,7 +9,6 @@ import { TASK_SELECTORS, TASK_ACTIONS } from './taskManagerSlice';
 import styles from './styles.module.scss';
 
 export const Tasks = () => {
-  // const [allTasks, setAllTasks] = useState<Task[] | null>(null);
   const { songID } = useParams<string>();
   const appContext = useContext(AppCtx);
   const allTasks = useAppSelector(TASK_SELECTORS.allTasks);

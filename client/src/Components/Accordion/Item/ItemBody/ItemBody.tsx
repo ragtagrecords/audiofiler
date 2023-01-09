@@ -17,14 +17,14 @@ import './styles.scss';
 export const ItemBody = () => {
   const [songVersions, setSongVersions] = useState<Song[]>([]);
   const itemContext = useContext(ItemCtx);
+  const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.uploadedFiles);
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
+  const dispatch = useAppDispatch();
+
   if (!itemContext) {
     console.log('no context');
     return null;
   }
-
-  const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.uploadedFiles);
-  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
-  const dispatch = useAppDispatch();
 
   const {
     song,

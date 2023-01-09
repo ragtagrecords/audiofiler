@@ -154,23 +154,6 @@ export const Playlist = () => {
     }
   }, []);
 
-  /*
-  // TODO: this is a template for adding hotkeys
-  // Need to find a way to remove them when you leave the page
-  document.addEventListener(
-    'keydown',
-    (e) => {
-      // Redirect to upload page if user presses 'u'
-      if (e.key === 'u') {
-        navigate('/songs/add', {
-          state: { playlist },
-        });
-      }
-    },
-    false,
-  );
-  */
-
   let songsToShow: Song[] | null = null;
   if (playlist) {
     if (mode.current === 'adding' && allSongs && allSongs.songs) {
@@ -245,3 +228,20 @@ export const Playlist = () => {
     </>
   );
 };
+
+/*
+  // TODO: this is a template for adding hotkeys
+  // Need to find a way to remove them when you leave the page
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      // Redirect to upload page if user presses 'u'
+      if (e.key === 'u') {
+        navigate('/songs/add', {
+          state: { playlist },
+        });
+      }
+    },
+    false,
+  );
+*/
