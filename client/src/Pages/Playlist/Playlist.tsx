@@ -16,7 +16,6 @@ import {
   DragIconPortal,
 } from 'Components';
 import {
-  getSongs,
   updatePlaylist,
   updateSongPlaylist,
 } from 'Services';
@@ -33,9 +32,6 @@ type PlaylistParams = {
 export const Playlist = () => {
   // Get playlistID from query params
   const { playlistID } = useParams<PlaylistParams>();
-  if (!playlistID) {
-    return (<div>No playlistID found</div>);
-  }
 
   // State from redux
   const allSongs = useAppSelector(AUDIO_PLAYER_SELECTORS.allSongs);
@@ -43,10 +39,13 @@ export const Playlist = () => {
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
   const query = useAppSelector(PLAYLIST_SELECTORS.query);
-  const isPlaylistLoading = useAppSelector(PLAYLIST_SELECTORS.isPlaylistLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const user = useAppSelector(APP_SELECTORS.user);
   const dispatch = useAppDispatch();
+
+  if (!playlistID) {
+    return (<div>No playlistID found</div>);
+  }
 
   const playlistLoader = new PlaylistLoader(playlistID);
 
@@ -80,43 +79,33 @@ export const Playlist = () => {
     },
   ];
 
-  // TODO: loader
-  const loadAllSongs = async () => {
-    const songs = filterSongs(await getSongs(), '', null);
-    if (songs) {
-      dispatch(AUDIO_PLAYER_ACTIONS.setAllSongs(songs));
-      return true;
-    }
-    return false;
-  };
-
   const changePlaylistName = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!playlist || !playlist.name) { console.log("ERROR: Couldn't update playlist name"); return false; }
-    const emptyString = playlist.name === '';
-    const startsWithSpace = playlist.name.length > 0 && playlist.name[0] === ' ';
-    const endsWithSpace = playlist.name.length > 0 && playlist.name.slice(-1) === ' ';
+    if (!playlist.data || !playlist.data.name) { console.log("ERROR: Couldn't update playlist name"); return false; }
+    const emptyString = playlist.data.name === '';
+    const startsWithSpace = playlist.data.name.length > 0 && playlist.data.name[0] === ' ';
+    const endsWithSpace = playlist.data.name.length > 0 && playlist.data.name.slice(-1) === ' ';
 
     if (emptyString) {
       alert('Playlist name can not be empty.');
     } else if (startsWithSpace || endsWithSpace) {
       alert('Playlist name can not start or end with spaces.');
-    } else if (playlist) {
+    } else if (playlist.data) {
       alert('Name updated successfully.');
-      return !!updatePlaylist(playlist);
+      return !!updatePlaylist(playlist.data);
     }
     return false;
   };
 
   const saveChangesToSongPositions = () => {
-    if (!playlist || !songs) { return; }
-    for (let i = 0; i < songs.length; i += 1) {
-      if (songs[i].id) {
-        const song = songs[i];
-        if (song.id && playlist) {
+    if (!playlist || !songs.data) { return; }
+    for (let i = 0; i < songs.data.length; i += 1) {
+      if (songs.data[i].id) {
+        const song = songs.data[i];
+        if (song.id && playlist.data) {
           const success = updateSongPlaylist({
             songID: song.id,
-            playlistID: playlist.id,
+            playlistID: playlist.data.id,
             position: song.position,
           });
           if (!success) {
@@ -132,11 +121,11 @@ export const Playlist = () => {
   // Function to update list order on drop
   const handleDrop = (droppedItem: any) => {
     // Ignore drop outside droppable container
-    if (!playlist || !songs || !droppedItem.destination) {
+    if (!playlist || !songs.data || !droppedItem.destination) {
       return false;
     }
 
-    const updatedPlaylistSongs = [...songs];
+    const updatedPlaylistSongs = [...songs.data];
     // Remove dragged item
     const [reorderedItem] = updatedPlaylistSongs.splice(droppedItem.source.index, 1);
 
@@ -160,7 +149,6 @@ export const Playlist = () => {
     dispatch(PLAYLIST_ACTIONS.setCurrentMode('normal'));
     playlistLoader.loadPlaylist();
     playlistLoader.loadSongs();
-    loadAllSongs();
     if (!currentSongID) {
       dispatch(AUDIO_PLAYER_ACTIONS.setIsPlaying(false));
     }
@@ -183,12 +171,12 @@ export const Playlist = () => {
   );
   */
 
-  let songsToShow = null;
+  let songsToShow: Song[] | null = null;
   if (playlist) {
-    if (mode.current === 'adding' && allSongs) {
-      songsToShow = filterSongs(allSongs, query, songs ?? []);
+    if (mode.current === 'adding' && allSongs && allSongs.songs) {
+      songsToShow = filterSongs(allSongs.songs, query, songs.data ?? []);
     } else if (songs) {
-      songsToShow = songs;
+      songsToShow = songs.data;
     }
   }
 
@@ -210,14 +198,14 @@ export const Playlist = () => {
               onClick={saveChangesToSongPositions}
             />)
           : (<UserMenu options={menuOptions} />)}
-        center={isPlaylistLoading
+        center={playlist.isLoading
           ? (null)
           : (
             <EditableTitle
-              value={playlist?.name ?? ''}
+              value={playlist?.data?.name ?? ''}
               isEditable={!!user}
               onChange={(e) => {
-                const updatedPlaylist = { ...playlist } as PlaylistT;
+                const updatedPlaylist = { ...playlist.data } as PlaylistT;
                 updatedPlaylist.name = e.target.value;
                 if (updatedPlaylist.name && updatedPlaylist.id) {
                   dispatch(PLAYLIST_ACTIONS.setPlaylist(updatedPlaylist));

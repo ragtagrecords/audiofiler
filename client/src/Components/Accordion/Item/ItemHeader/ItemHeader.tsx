@@ -32,15 +32,21 @@ export const ItemHeader = () => {
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
   const dispatch = useAppDispatch();
-  const playlistLoader = new PlaylistLoader(playlist.id.toString());
+
+  if (!playlist.data) {
+    console.log('No playlist found');
+    return null;
+  }
+
+  const playlistLoader = new PlaylistLoader(playlist.data.id.toString());
 
   // When add button is clicked for a particular item
   const addSongToCurrentPlaylist = async (id: number) => {
-    if (!playlist) {
+    if (!playlist.data) {
       console.log("Couldn't add song");
       return false;
     }
-    await addSongToPlaylist(id, playlist.id);
+    await addSongToPlaylist(id, playlist.data.id);
     playlistLoader.loadSongs();
     return true;
   };
@@ -89,10 +95,10 @@ export const ItemHeader = () => {
         return false;
       }
 
-      if (songs) {
+      if (songs.data) {
         dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
           songID: song.id,
-          playlistSongs: songs,
+          playlistSongs: songs.data,
           shouldPlay: true,
         }));
       }
@@ -149,8 +155,8 @@ export const ItemHeader = () => {
         <IconButton
           type="remove"
           onClick={async () => {
-            if (song.id && playlist.id) {
-              await removeSongFromPlaylist(song.id, playlist.id);
+            if (song.id && playlist.data?.id) {
+              await removeSongFromPlaylist(song.id, playlist.data.id);
               window.location.reload();
             }
           }}

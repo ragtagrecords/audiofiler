@@ -34,6 +34,7 @@ export const authenticate = async (): Promise<User | null> => {
   }
 };
 
+// TODO: move this into appLoader
 export const logout = async () => {
   await localStorage.clear();
   return true;

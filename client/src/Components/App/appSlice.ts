@@ -1,18 +1,18 @@
 // This file defines the state and actions for the playlist in Redux
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from 'Hooks/store';
-import { User } from 'Types';
+import { FetchableObject, User } from 'Types';
 
 interface PlaylistState {
-  user: User | null;
-  isUserLoading: boolean;
-  userError: string | null;
+  user: FetchableObject<{data: User | null}>;
 }
 
 const initialState: PlaylistState = {
-  user: null,
-  isUserLoading: false,
-  userError: null,
+  user: {
+    data: null,
+    isLoading: false,
+    error: null,
+  },
 };
 
 export const appSlice = createSlice({
@@ -20,17 +20,17 @@ export const appSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload;
-      state.userError = null;
-      state.isUserLoading = false;
+      state.user.data = action.payload;
+      state.user.error = null;
+      state.user.isLoading = false;
     },
     setIsUserLoading: (state, action: PayloadAction<boolean>) => {
-      state.isUserLoading = action.payload;
+      state.user.isLoading = action.payload;
     },
     setUserError: (state, action: PayloadAction<string>) => {
-      state.userError = action.payload;
-      state.user = null;
-      state.isUserLoading = false;
+      state.user.error = action.payload;
+      state.user.data = null;
+      state.user.isLoading = false;
     },
   },
 });

@@ -39,10 +39,10 @@ export const UserMenu = ({ options }: UserMenuProps) => {
 
       {/* Options that show on click */}
       <div className={`optionsContainer ${isMenuOpen ? 'show' : ''}`}>
-        {user
+        {user.data
           ? (
             <>
-              <h2>{user.username}</h2>
+              <h2>{user.data.username}</h2>
               <hr />
               <UserOptions
                 options={options}

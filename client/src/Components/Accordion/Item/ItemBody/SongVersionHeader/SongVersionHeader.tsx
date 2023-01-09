@@ -32,10 +32,10 @@ export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps)
           type="play"
           size="20px"
           onClick={() => {
-            if (song.id && songs) {
+            if (song.id && songs.data) {
               dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
                 songID: song.id,
-                playlistSongs: songs,
+                playlistSongs: songs.data,
                 shouldPlay: true,
               }));
             }
@@ -63,7 +63,6 @@ export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps)
                 if (confirmDeletion) {
                   const songWasDeleted = await deleteSongFromDB(song.id);
                   if (songWasDeleted) {
-                    console.log('deleted');
                     return true;
                   }
                 }

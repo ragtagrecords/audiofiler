@@ -1,6 +1,6 @@
 // This file defines the state and actions for the playlist in Redux
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Playlist, Song } from 'Types';
+import { FetchableObject, Playlist, Song } from 'Types';
 import type { RootState } from 'Hooks/store';
 
 type Modes = 'normal' | 'editing' | 'adding' | 'dragging';
@@ -11,30 +11,26 @@ type Mode = {
 }
 
 interface PlaylistState {
-  playlist: Playlist | null;
-  isPlaylistLoading: boolean;
-  playlistError: string | null;
-
-  songs: Song[] | null;
-  isSongsLoading: boolean;
-  songsError: string | null;
+  playlist: FetchableObject<{data: Playlist | null}>;
+  songs: FetchableObject<{data: Song[] | null}>;
   selectedSongID: number | null;
-
   query: string;
   uploadedFiles: File[] | null;
   mode: Mode;
 }
 
 const initialState: PlaylistState = {
-  playlist: null,
-  isPlaylistLoading: true,
-  playlistError: null,
-
-  songs: null,
-  isSongsLoading: true,
-  songsError: null,
+  playlist: {
+    data: null,
+    isLoading: false,
+    error: null,
+  },
+  songs: {
+    data: null,
+    isLoading: false,
+    error: null,
+  },
   selectedSongID: null,
-
   query: '',
   uploadedFiles: null,
   mode: { current: 'normal', previous: 'normal' },
@@ -45,17 +41,35 @@ export const playlistSlice = createSlice({
   initialState,
   reducers: {
     setPlaylist: (state, action: PayloadAction<Playlist>) => {
-      state.playlist = action.payload;
-      state.isPlaylistLoading = false;
+      state.playlist.data = action.payload;
+      state.playlist.error = null;
+      state.playlist.isLoading = false;
+    },
+    setIsPlaylistLoading: (state, action: PayloadAction<boolean>) => {
+      state.playlist.isLoading = action.payload;
+    },
+    setPlaylistError: (state, action: PayloadAction<string>) => {
+      state.playlist.error = action.payload;
+      state.playlist.data = null;
+      state.playlist.isLoading = false;
     },
     setSongs: (state, action: PayloadAction<Song[]>) => {
-      state.songs = action.payload;
-      console.log('setSongs', action.payload);
+      state.songs.data = action.payload;
+      state.songs.error = null;
+      state.songs.isLoading = false;
+    },
+    setIsSongsLoading: (state, action: PayloadAction<boolean>) => {
+      state.songs.isLoading = action.payload;
+    },
+    setSongsError: (state, action: PayloadAction<string>) => {
+      state.songs.error = action.payload;
+      state.songs.data = null;
+      state.songs.isLoading = false;
     },
     // Updates position property based on new index in state
     setSongPlaylistPositions: (state) => {
-      if (state.playlist && state.songs) {
-        state.songs = state.songs.map((song, index) => {
+      if (state.playlist && state.songs && state.songs.data) {
+        state.songs.data = state.songs.data.map((song, index) => {
           song.position = index;
           return song;
         });
@@ -70,24 +84,12 @@ export const playlistSlice = createSlice({
     setUploadedFiles: (state, action: PayloadAction<File[]>) => {
       state.uploadedFiles = action.payload;
     },
-    setIsPlaylistLoading: (state, action: PayloadAction<boolean>) => {
-      state.isPlaylistLoading = action.payload;
-    },
-    setIsSongsLoading: (state, action: PayloadAction<boolean>) => {
-      state.isSongsLoading = action.payload;
-    },
     setMode: (state, action: PayloadAction<Mode>) => {
       state.mode = action.payload;
     },
     setCurrentMode: (state, action: PayloadAction<Modes>) => {
       state.mode.previous = state.mode.current;
       state.mode.current = action.payload;
-    },
-    setPlaylistError: (state, action: PayloadAction<string>) => {
-      state.playlistError = action.payload;
-    },
-    setSongsError: (state, action: PayloadAction<string>) => {
-      state.songsError = action.payload;
     },
   },
 });
@@ -103,8 +105,6 @@ export const PLAYLIST_ACTIONS = {
 export const PLAYLIST_SELECTORS = {
   playlist: (state: RootState) => state.playlist.playlist,
   songs: (state: RootState) => state.playlist.songs,
-  isPlaylistLoading: (state: RootState) => state.playlist.isPlaylistLoading,
-  isSongsLoading: (state: RootState) => state.playlist.isPlaylistLoading,
   selectedSongID: (state: RootState) => state.playlist.selectedSongID,
   query: (state: RootState) => state.playlist.query,
   uploadedFiles: (state: RootState) => state.playlist.uploadedFiles,

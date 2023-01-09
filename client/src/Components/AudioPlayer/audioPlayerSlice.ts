@@ -2,19 +2,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from 'Hooks/store';
 import { validIndex } from 'helpers';
-import { Song } from 'Types';
+import { FetchableObject, Song } from 'Types';
 
 interface AudioPlayerState {
   currentSongID: number | null;
   songQueue: Song[] | null;
-  allSongs: Song[] | null;
+  allSongs: FetchableObject<{songs: Song[] | null}>;
   isPlaying: boolean;
 }
 
 const initialState: AudioPlayerState = {
   currentSongID: null,
   songQueue: null,
-  allSongs: null,
+  allSongs: {
+    songs: null,
+    isLoading: false,
+    error: null,
+  },
   isPlaying: false,
 };
 
@@ -47,9 +51,21 @@ export const audioPlayerSlice = createSlice({
     setIsPlaying: (state, action: PayloadAction<boolean>) => {
       state.isPlaying = action.payload;
     },
+
     setAllSongs: (state, action: PayloadAction<Song[]>) => {
-      state.allSongs = action.payload;
+      state.allSongs.songs = action.payload;
+      state.allSongs.error = null;
+      state.allSongs.isLoading = false;
     },
+    setIsAllSongsLoading: (state, action: PayloadAction<boolean>) => {
+      state.allSongs.isLoading = action.payload;
+    },
+    setAllSongsError: (state, action: PayloadAction<string>) => {
+      state.allSongs.songs = null;
+      state.allSongs.error = action.payload;
+      state.allSongs.isLoading = false;
+    },
+
     changeSongByRelativeIndex: (state, action: PayloadAction<number>) => {
       const { songQueue } = state;
       if (!state.currentSongID || !songQueue) {
@@ -77,8 +93,8 @@ export const AUDIO_PLAYER_SELECTORS = {
   currentSongID: (state: RootState) => state.audioPlayer.currentSongID,
   currentSong: (state: RootState) => {
     const { allSongs, currentSongID } = state.audioPlayer;
-    if (currentSongID && allSongs) {
-      const songsByID = allSongs.filter((song) => song.id === state.audioPlayer.currentSongID);
+    if (currentSongID && allSongs && allSongs.songs) {
+      const songsByID = allSongs.songs.filter((song) => song.id === state.audioPlayer.currentSongID);
       return songsByID.length > 0 ? songsByID[0] : null;
     }
     if (currentSongID && !allSongs) {

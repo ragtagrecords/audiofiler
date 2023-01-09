@@ -12,10 +12,9 @@ type AccordionProps = {
 
 export const Accordion = ({ children } : AccordionProps) => {
   const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
-  const isSongsLoading = useAppSelector(PLAYLIST_SELECTORS.isSongsLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
-  if (isSongsLoading) {
+  if (songs.isLoading) {
     return (
       <div className="accordionContainer">
         <LoadingSpinner />

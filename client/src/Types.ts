@@ -58,5 +58,10 @@ export type User = {
   username: string;
 }
 
+export type FetchableObject<T extends {}> = T & {
+  isLoading: boolean;
+  error: string | null;
+}
+
 // Used for accordion body
 export type BodyType = 'info' | 'versions' | 'upload' | 'download' | 'collapsed';

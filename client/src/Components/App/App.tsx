@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { AudioPlayer, Header } from 'Components';
+import { AudioPlayerLoader } from 'Components/AudioPlayer/audioPlayerLoader';
 import { AppLoader } from './appLoader';
 import './App.scss';
 
@@ -29,6 +30,7 @@ export const App = ({ children }: AppProps) => {
   const pageContentRef: React.RefObject<HTMLDivElement> = useRef(null);
 
   const appLoader = new AppLoader();
+  const audioPlayerLoader = new AudioPlayerLoader();
 
   const setPageContentHeight = () => {
     const curr = pageContentRef.current;
@@ -45,6 +47,7 @@ export const App = ({ children }: AppProps) => {
   // use JS to set window height - more accurate than VH on mobile
   useEffect(() => {
     appLoader.loadUser();
+    audioPlayerLoader.loadAllSongs();
     setPageContentHeight();
     window.onresize = setPageContentHeight;
   }, []);
