@@ -19,9 +19,7 @@ export const UserMenu = ({ options }: UserMenuProps) => {
     size: '50px',
   }), []);
 
-  // TODO: get username from redux, store it in redux via localStorage loader
   const user = useAppSelector(APP_SELECTORS.user);
-  console.log(user);
 
   return (
     <div className="userMenuContainer">

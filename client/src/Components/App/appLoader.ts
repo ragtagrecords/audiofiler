@@ -2,7 +2,7 @@
 // It's main purpose is to separate the data fetching logic from the component
 import { useAppDispatch } from 'Hooks/hooks';
 import { AppDispatch } from 'Hooks/store';
-import { authenticate, getPlaylistByID } from 'Services';
+import { authenticate } from 'Services';
 import { User } from 'Types';
 import { APP_ACTIONS } from './appSlice';
 
@@ -30,19 +30,15 @@ export class AppLoader {
   // If successful, store in redux state
   public async loadUser() {
     this.userPending();
-    console.log('Attempting to load user');
 
     // TODO: actual auth logic
     const user = await authenticate();
 
     if (!user) {
-      console.log('User failed to load');
       this.userFailure('Failed to fetch user');
       return false;
     }
 
-    console.log('User Loaded');
-    console.log(user);
     this.userSuccess({ ...user });
     return true;
   }
