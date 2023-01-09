@@ -4,6 +4,8 @@ import { IconContext } from 'react-icons';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import './UserMenu.scss';
 import { LoginOptions, UserOptions } from 'Components';
+import { useAppSelector } from 'Hooks/hooks';
+import { APP_SELECTORS } from 'Components/App/appSlice';
 
 type UserMenuProps = {
   options: MenuOption[];
@@ -17,7 +19,9 @@ export const UserMenu = ({ options }: UserMenuProps) => {
     size: '50px',
   }), []);
 
-  const username = localStorage.getItem('username');
+  // TODO: get username from redux, store it in redux via localStorage loader
+  const user = useAppSelector(APP_SELECTORS.user);
+  console.log(user);
 
   return (
     <div className="userMenuContainer">
@@ -37,10 +41,10 @@ export const UserMenu = ({ options }: UserMenuProps) => {
 
       {/* Options that show on click */}
       <div className={`optionsContainer ${isMenuOpen ? 'show' : ''}`}>
-        {username
+        {user
           ? (
             <>
-              <h2>{username}</h2>
+              <h2>{user.username}</h2>
               <hr />
               <UserOptions
                 options={options}

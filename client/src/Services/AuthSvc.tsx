@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { databaseServerURL } from 'env';
+import { User } from 'Types';
 
-export const authenticate = async (): Promise<number> => {
+export const authenticate = async (): Promise<User | null> => {
   const accessToken = localStorage.getItem('token');
   if (!accessToken) {
-    return 0;
+    return null;
   }
 
   let res;
@@ -17,17 +18,20 @@ export const authenticate = async (): Promise<number> => {
         },
       },
     );
-  } catch (e) {
-    return 0;
-  }
+    if (!res.data.auth) {
+      throw new Error('Token failed to authenticate');
+    }
 
-  if (res.data.auth) {
-    return res.data.userID;
+    const user = {
+      id: res.data.id,
+      username: res.data.username,
+    };
+    return user;
+  } catch (e: any) {
+    console.log(e.message);
+    localStorage.clear();
+    return null;
   }
-
-  console.log('Token failed to authenticate');
-  localStorage.clear();
-  return 0;
 };
 
 export const logout = async () => {

@@ -12,9 +12,7 @@ exports.authorize = (async function (req, res) {
     db.end();
 
     if (!token) {
-        res.status(404).json({
-            auth: false,
-        });
+        res.status(404).json({ auth: false });
         return false;
     } else {
         res.status(200).json({
@@ -27,16 +25,29 @@ exports.authorize = (async function (req, res) {
 })
 
 exports.authenticate = (async function (req, res) {
+  try {
     if(!req.userID) {
-        res.status(404).send({
-            auth: false,
-        });
-        return false;
-    } else {
-        res.status(200).send({
-            auth: true,
-            userID: req.userID,
-        });
-        return true;
+        throw new Error('No userID found');
     }
+
+    // Fetch user data from DB
+    const db = await DbSvc.connectToDB();
+    const user = await UserSvc.getUserByID(db, req.userID);
+    db.end();
+
+    if (!user || !user.id) {
+      throw new Error('No user found');
+    }
+
+    res.status(200).send({
+        auth: true,
+        id: req.userID,
+        username: user.username,
+        createTimestamp: user.createTimestamp
+    });
+    return true;
+  } catch {
+    res.status(404).send({ auth: false });
+    return false;
+  }
 })

@@ -66,10 +66,6 @@ const verifyJWT = (req, res, next) => {
             }
         })
     }
-
-
-
-
 }
 
 module.exports = { hashPassword, validateUser, verifyJWT };

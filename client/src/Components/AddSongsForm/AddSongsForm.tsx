@@ -13,6 +13,8 @@ import {
 } from 'Components';
 import './AddSongsForm.scss';
 import { databaseServerURL } from 'env';
+import { useAppSelector } from 'Hooks/hooks';
+import { APP_SELECTORS } from 'Components/App/appSlice';
 
 type AddSongFormProps = {
   playlist?: Playlist;
@@ -27,9 +29,10 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
   const [songs, setSongs] = useState<Array<Song> | null>(null);
   const [playlists, setPlaylists] = useState<Array<Playlist>>([defaultPlaylist]);
   const [globalPlaylistID, setGlobalPlaylist] = useState<number>(playlist ? playlist.id : 0);
-  const [userID, setUserID] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const user = useAppSelector(APP_SELECTORS.user);
 
   const getPlaylists = () => {
     fetch(`${databaseServerURL()}/playlists`)
@@ -37,14 +40,9 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
       .then((data) => setPlaylists(data));
   };
 
-  const auth = async () => {
-    const userID = await authenticate();
-    setUserID(userID);
-  };
-
   // Authorize and load playlists when component is mounted
+  // TODO: loader
   useEffect(() => {
-    auth();
     getPlaylists();
   }, []);
 
@@ -184,7 +182,7 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
     return false;
   };
 
-  if (!userID) {
+  if (!user) {
     return (
       <div className="noUser">Must be logged in to view this page</div>
     );

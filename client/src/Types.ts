@@ -53,5 +53,10 @@ export type Column = {
   tasks: Task[];
 }
 
+export type User = {
+  id: number;
+  username: string;
+}
+
 // Used for accordion body
 export type BodyType = 'info' | 'versions' | 'upload' | 'download' | 'collapsed';

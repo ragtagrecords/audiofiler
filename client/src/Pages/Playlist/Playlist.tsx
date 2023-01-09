@@ -16,13 +16,13 @@ import {
   DragIconPortal,
 } from 'Components';
 import {
-  authenticate,
   getSongs,
   updatePlaylist,
   updateSongPlaylist,
 } from 'Services';
 import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
+import { APP_SELECTORS } from 'Components/App/appSlice';
 import { PLAYLIST_SELECTORS, PLAYLIST_ACTIONS } from './playlistSlice';
 import { PlaylistLoader } from './playlistLoader';
 
@@ -37,9 +37,6 @@ export const Playlist = () => {
     return (<div>No playlistID found</div>);
   }
 
-  // TODO: move userID to redux and expose to entire app
-  const [userID, setUserID] = useState<number | null>(null);
-
   // State from redux
   const allSongs = useAppSelector(AUDIO_PLAYER_SELECTORS.allSongs);
   const currentSongID = useAppSelector(AUDIO_PLAYER_SELECTORS.currentSongID);
@@ -48,14 +45,10 @@ export const Playlist = () => {
   const query = useAppSelector(PLAYLIST_SELECTORS.query);
   const isPlaylistLoading = useAppSelector(PLAYLIST_SELECTORS.isPlaylistLoading);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
+  const user = useAppSelector(APP_SELECTORS.user);
   const dispatch = useAppDispatch();
 
   const playlistLoader = new PlaylistLoader(playlistID);
-
-  const auth = async () => {
-    const userID = await authenticate();
-    setUserID(userID);
-  };
 
   // Used for 3 dots in upper right of page
   const menuOptions: MenuOption[] = [
@@ -164,9 +157,7 @@ export const Playlist = () => {
 
   // When component is initally loaded
   useEffect(() => {
-    auth();
     dispatch(PLAYLIST_ACTIONS.setCurrentMode('normal'));
-
     playlistLoader.loadPlaylist();
     playlistLoader.loadSongs();
     loadAllSongs();
@@ -224,7 +215,7 @@ export const Playlist = () => {
           : (
             <EditableTitle
               value={playlist?.name ?? ''}
-              isEditable={!!userID}
+              isEditable={!!user}
               onChange={(e) => {
                 const updatedPlaylist = { ...playlist } as PlaylistT;
                 updatedPlaylist.name = e.target.value;
