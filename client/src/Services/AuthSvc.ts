@@ -36,7 +36,6 @@ export const authenticate = async (): Promise<User | null> => {
   }
 };
 
-// TODO: move this into appLoader, need to clear user data fromr redux on logout
 export const logout = async () => {
   store.dispatch(APP_ACTIONS.setUser(null));
   localStorage.clear();

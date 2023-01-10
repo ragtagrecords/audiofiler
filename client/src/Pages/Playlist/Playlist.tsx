@@ -230,7 +230,7 @@ export const Playlist = () => {
 };
 
 /*
-  // TODO: this is a template for adding hotkeys
+  // this is a template for adding hotkeys
   // Need to find a way to remove them when you leave the page
   document.addEventListener(
     'keydown',

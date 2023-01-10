@@ -77,7 +77,7 @@ async function getTasksByID(db, id = null, songID = null, parentID = null) {
       whereValue,
   );
 
-  return rows ? rows[0] : false;
+  return rows ? rows : false;
 }
 
 async function updateTask(db, id, task) {
