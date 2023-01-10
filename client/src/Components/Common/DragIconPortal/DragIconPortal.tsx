@@ -1,5 +1,5 @@
 import { useAppSelector } from 'Hooks/hooks';
-import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 import React, { useMemo } from 'react';
 import { IconContext } from 'react-icons';
 import { AiOutlineDrag } from 'react-icons/ai';

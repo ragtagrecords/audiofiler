@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Song } from 'Types';
 import { deleteSongFromDB, updateSong } from 'Services';
 import './styles.scss';
-import { useAppDispatch } from 'Hooks/hooks';
+import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { AUDIO_PLAYER_ACTIONS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { IconButton } from 'Components/Common/IconButton/IconButton';
-import { ItemCtx } from '../../Item';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
+import { PlaylistLoader } from 'Pages/Playlist/playlistLoader';
 
 type SongVersionHeaderProps = {
   song: Song;
@@ -13,21 +14,23 @@ type SongVersionHeaderProps = {
 }
 
 export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps) => {
-  // const [songs, setSongs] = useState<Song[] | null>(null);
-  const itemContext = useContext(ItemCtx);
+  const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
+  const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const dispatch = useAppDispatch();
-  if (!itemContext) {
+  const playlistLoader = new PlaylistLoader();
+
+  if (!playlist.data) {
+    console.log('ERROR: No playlist found');
     return null;
   }
 
-  const { playlist } = itemContext;
+  playlistLoader.setPlaylistID(playlist.data.id.toString());
 
   if (!song || !song.id) {
     console.log('ERROR: No song found');
     return null;
   }
 
-  // TODO: Recall loadPlaylist() after promoting or removing a version
   return (
     <div className="song-version-header">
       <section className="title">
@@ -38,10 +41,10 @@ export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps)
           type="play"
           size="20px"
           onClick={() => {
-            if (song.id && playlist.songs) {
+            if (song.id && songs.data) {
               dispatch(AUDIO_PLAYER_ACTIONS.setCurrentSongID({
                 songID: song.id,
-                playlistSongs: playlist.songs,
+                playlistSongs: songs.data,
                 shouldPlay: true,
               }));
             }
@@ -54,10 +57,11 @@ export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps)
               type="crown"
               size="20px"
               tooltipText="Promote to main version"
-              onClick={() => {
+              onClick={async () => {
                 const updatedSong = { ...song };
                 updatedSong.isParent = true;
-                updateSong(updatedSong);
+                await updateSong(updatedSong);
+                await playlistLoader.loadSongs();
               }}
             />
             <IconButton
@@ -66,16 +70,12 @@ export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps)
               tooltipText="Delete version"
               onClick={async () => {
                 const confirmDeletion = confirm('Are you sure you want to delete this version?');
-                if (confirmDeletion) {
-                  const songWasDeleted = await deleteSongFromDB(song.id);
-                  if (songWasDeleted) {
-                    console.log('deleted');
-                    return true;
-                  }
+                if (!confirmDeletion) {
+                  console.log('Failed to remove version');
+                  return false;
                 }
-
-                console.log('Failed to delete song');
-                return false;
+                await deleteSongFromDB(song.id) ? playlistLoader.loadSongs() : console.log('Failed to remove version');
+                return true;
               }}
             />
           </>

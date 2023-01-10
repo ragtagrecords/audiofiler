@@ -1,15 +1,17 @@
 // This file is boilerplate for Redux state library
 // Defines the reducers used throughout the app
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import playlistReducer from 'Pages/Playlist/PlaylistSlice';
+import appReducer from 'Components/App/appSlice';
+import playlistReducer from 'Pages/Playlist/playlistSlice';
 import taskManagerReducer from 'Pages/Tasks/taskManagerSlice';
 import audioPlayerReducer from 'Components/AudioPlayer/audioPlayerSlice';
 
 export const store = configureStore({
   reducer: {
+    app: appReducer,
+    audioPlayer: audioPlayerReducer,
     playlist: playlistReducer,
     taskManager: taskManagerReducer,
-    audioPlayer: audioPlayerReducer,
   },
 });
 

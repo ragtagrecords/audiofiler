@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
-import { PlaylistCtx } from 'Pages/Playlist/Playlist';
-import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_ACTIONS, PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 import {
   UploadArea,
   FileList,
@@ -17,16 +16,15 @@ import './styles.scss';
 
 export const ItemBody = () => {
   const [songVersions, setSongVersions] = useState<Song[]>([]);
-  const playlistContext = useContext(PlaylistCtx);
   const itemContext = useContext(ItemCtx);
-  if (!playlistContext || !itemContext) {
-    console.log('no context');
-    return null;
-  }
-
   const uploadedFiles = useAppSelector(PLAYLIST_SELECTORS.uploadedFiles);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const dispatch = useAppDispatch();
+
+  if (!itemContext) {
+    console.log('no context');
+    return null;
+  }
 
   const {
     song,

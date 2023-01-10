@@ -1,6 +1,6 @@
 // This file defines the state and actions for the playlist in Redux
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Playlist, Song } from 'Types';
+import { FetchableObject, Playlist, Song } from 'Types';
 import type { RootState } from 'Hooks/store';
 
 type Modes = 'normal' | 'editing' | 'adding' | 'dragging';
@@ -11,20 +11,28 @@ type Mode = {
 }
 
 interface PlaylistState {
-  playlist: Playlist | null;
+  playlist: FetchableObject<{data: Playlist | null}>;
+  songs: FetchableObject<{data: Song[] | null}>;
   selectedSongID: number | null;
   query: string;
   uploadedFiles: File[] | null;
-  isLoading: boolean;
   mode: Mode;
 }
 
 const initialState: PlaylistState = {
-  playlist: null,
+  playlist: {
+    data: null,
+    isLoading: false,
+    error: null,
+  },
+  songs: {
+    data: null,
+    isLoading: false,
+    error: null,
+  },
   selectedSongID: null,
   query: '',
   uploadedFiles: null,
-  isLoading: true,
   mode: { current: 'normal', previous: 'normal' },
 };
 
@@ -33,17 +41,35 @@ export const playlistSlice = createSlice({
   initialState,
   reducers: {
     setPlaylist: (state, action: PayloadAction<Playlist>) => {
-      state.playlist = action.payload;
-      state.isLoading = false;
+      state.playlist.data = action.payload;
+      state.playlist.error = null;
+      state.playlist.isLoading = false;
     },
-    setPlaylistSongs: (state, action: PayloadAction<Song[]>) => {
-      if (!state.playlist) { return; }
-      state.playlist.songs = action.payload;
+    setIsPlaylistLoading: (state, action: PayloadAction<boolean>) => {
+      state.playlist.isLoading = action.payload;
+    },
+    setPlaylistError: (state, action: PayloadAction<string>) => {
+      state.playlist.error = action.payload;
+      state.playlist.data = null;
+      state.playlist.isLoading = false;
+    },
+    setSongs: (state, action: PayloadAction<Song[]>) => {
+      state.songs.data = action.payload;
+      state.songs.error = null;
+      state.songs.isLoading = false;
+    },
+    setIsSongsLoading: (state, action: PayloadAction<boolean>) => {
+      state.songs.isLoading = action.payload;
+    },
+    setSongsError: (state, action: PayloadAction<string>) => {
+      state.songs.error = action.payload;
+      state.songs.data = null;
+      state.songs.isLoading = false;
     },
     // Updates position property based on new index in state
     setSongPlaylistPositions: (state) => {
-      if (state.playlist && state.playlist.songs) {
-        state.playlist.songs = state.playlist.songs.map((song, index) => {
+      if (state.playlist && state.songs && state.songs.data) {
+        state.songs.data = state.songs.data.map((song, index) => {
           song.position = index;
           return song;
         });
@@ -58,9 +84,6 @@ export const playlistSlice = createSlice({
     setUploadedFiles: (state, action: PayloadAction<File[]>) => {
       state.uploadedFiles = action.payload;
     },
-    setIsLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
     setMode: (state, action: PayloadAction<Mode>) => {
       state.mode = action.payload;
     },
@@ -73,6 +96,7 @@ export const playlistSlice = createSlice({
 
 // Actions are used for modifying the state
 // Exports all the reducer functions inside playlistSlice
+// TODO: make shorthand actionCreator functions, calling dispatch is really verbose currently
 export const PLAYLIST_ACTIONS = {
   ...playlistSlice.actions,
 };
@@ -80,10 +104,10 @@ export const PLAYLIST_ACTIONS = {
 // Selectors are used for checking the current state
 export const PLAYLIST_SELECTORS = {
   playlist: (state: RootState) => state.playlist.playlist,
+  songs: (state: RootState) => state.playlist.songs,
   selectedSongID: (state: RootState) => state.playlist.selectedSongID,
   query: (state: RootState) => state.playlist.query,
   uploadedFiles: (state: RootState) => state.playlist.uploadedFiles,
-  isLoading: (state: RootState) => state.playlist.isLoading,
   mode: (state: RootState) => state.playlist.mode,
 };
 

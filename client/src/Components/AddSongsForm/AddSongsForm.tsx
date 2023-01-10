@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Song, Playlist } from 'Types';
 import {
-  authenticate,
   removeExtraExtensions,
   addSong,
   guessTempo,
@@ -12,41 +11,23 @@ import {
   SongsFieldList,
 } from 'Components';
 import './AddSongsForm.scss';
-import { databaseServerURL } from 'env';
+import { useAppSelector } from 'Hooks/hooks';
+import { APP_SELECTORS } from 'Components/App/appSlice';
+import { AudioPlayerLoader } from 'Components/AudioPlayer/audioPlayerLoader';
 
 type AddSongFormProps = {
   playlist?: Playlist;
 }
 
-const defaultPlaylist: Playlist = {
-  id: 0,
-  name: '',
-};
-
 export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
   const [songs, setSongs] = useState<Array<Song> | null>(null);
-  const [playlists, setPlaylists] = useState<Array<Playlist>>([defaultPlaylist]);
   const [globalPlaylistID, setGlobalPlaylist] = useState<number>(playlist ? playlist.id : 0);
-  const [userID, setUserID] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const getPlaylists = () => {
-    fetch(`${databaseServerURL()}/playlists`)
-      .then((response) => response.json())
-      .then((data) => setPlaylists(data));
-  };
-
-  const auth = async () => {
-    const userID = await authenticate();
-    setUserID(userID);
-  };
-
-  // Authorize and load playlists when component is mounted
-  useEffect(() => {
-    auth();
-    getPlaylists();
-  }, []);
+  const user = useAppSelector(APP_SELECTORS.user);
+  const playlists = useAppSelector(APP_SELECTORS.playlists);
+  const audioPlayerLoader = new AudioPlayerLoader();
 
   // When songs are not null, we are no longer loading
   useEffect(() => {
@@ -177,6 +158,7 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
     });
 
     if (songsThatFailed.length === 0) {
+      audioPlayerLoader.loadAllSongs();
       navigate(`/playlists/${globalPlaylistID ?? ''}`);
       return true;
     }
@@ -184,7 +166,7 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
     return false;
   };
 
-  if (!userID) {
+  if (!user) {
     return (
       <div className="noUser">Must be logged in to view this page</div>
     );
@@ -209,12 +191,12 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
                 value=""
               > -
               </option>
-              {playlists && playlists[0].name !== '' && playlists.map((playlist : Playlist) => {
+              {playlists.data && playlists.data[0].name !== '' && playlists.data.map((p) => {
                 return (
                   <option
-                    key={playlist.id}
-                    value={playlist.id}
-                  > {playlist.name}
+                    key={p.id}
+                    value={p.id}
+                  > {p.name}
                   </option>
                 );
               })}

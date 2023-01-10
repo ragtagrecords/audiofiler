@@ -1,15 +1,17 @@
-import React, { createContext, useContext, useState } from 'react';
-import { PlaylistCtx } from 'Pages/Playlist/Playlist';
-import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import React, { createContext, useState } from 'react';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 import { useAppSelector } from 'Hooks/hooks';
-import { BodyType, Playlist, Song } from 'Types';
+import {
+  BodyType, FetchableObject, Playlist, Song,
+} from 'Types';
 import { updateSong } from 'Services';
 import { Draggable } from 'react-beautiful-dnd';
 import './Item.scss';
+import { PlaylistLoader } from 'Pages/Playlist/playlistLoader';
 
 interface ItemContextInterface {
   song: Song,
-  playlist: Playlist,
+  playlist: FetchableObject<{data: Playlist | null}>;
   isEdited: any;
   isOpen: boolean;
   bodyType: BodyType;
@@ -38,15 +40,13 @@ export const Item = ({
   const [bodyType, setBodyType] = useState<BodyType>('info');
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
+  const playlistLoader = new PlaylistLoader();
 
-  const playlistContext = useContext(PlaylistCtx);
-  if (!playlistContext || !playlist) {
+  if (!playlist.data) {
     return null;
   }
 
-  const {
-    loadPlaylist,
-  } = playlistContext;
+  playlistLoader.setPlaylistID(playlist.data.id.toString());
 
   const wereEditsMade = () => {
     let wasTempoChanged = null;
@@ -77,7 +77,7 @@ export const Item = ({
     const success = await updateSong({ ...editedSong });
 
     if (!success) { return false; }
-    loadPlaylist();
+    await playlistLoader.loadSongs();
     return true;
   };
 

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { databaseServerURL } from 'env';
 import { Playlist } from 'Types';
 
+// TODO: Add error handling to all these funcs
 export const getPlaylists = async () => {
   try {
     const res = await axios.get(`${databaseServerURL()}/playlists`);
@@ -53,4 +54,21 @@ export const removeSongFromPlaylist = async (songID: number, playlistID: number)
   } catch (ex) {
     return false;
   }
+};
+
+export const changePlaylistName = async (playlist: Playlist) => {
+  if (!playlist || !playlist.name) { console.log("ERROR: Couldn't update playlist name"); return false; }
+  const emptyString = playlist.name === '';
+  const startsWithSpace = playlist.name.length > 0 && playlist.name[0] === ' ';
+  const endsWithSpace = playlist.name.length > 0 && playlist.name.slice(-1) === ' ';
+
+  if (emptyString) {
+    alert('Playlist name can not be empty.');
+  } else if (startsWithSpace || endsWithSpace) {
+    alert('Playlist name can not start or end with spaces.');
+  } else if (playlist) {
+    alert('Name updated successfully.');
+    return !!updatePlaylist(playlist);
+  }
+  return false;
 };

@@ -1,30 +1,36 @@
 // This file defines the state and actions for the task manager in Redux
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Column, Task } from 'Types';
+import { Column, FetchableObject, Task } from 'Types';
 import type { RootState } from 'Hooks/store';
 import { updateTasks } from 'Services';
 
 interface TaskManagerState {
-  allTasks: Task[];
+  tasks: FetchableObject<{data: Task[] | null}>;
   columns: Column[];
 }
 
+export const defaultColumns: Column[] = [
+  {
+    title: 'To Do',
+    tasks: [],
+  },
+  {
+    title: 'In Progress',
+    tasks: [],
+  },
+  {
+    title: 'Done',
+    tasks: [],
+  },
+];
+
 const initialState: TaskManagerState = {
-  allTasks: [],
-  columns: [
-    {
-      title: 'To Do',
-      tasks: [],
-    },
-    {
-      title: 'In Progress',
-      tasks: [],
-    },
-    {
-      title: 'Done',
-      tasks: [],
-    },
-  ],
+  tasks: {
+    data: null,
+    isLoading: false,
+    error: null,
+  },
+  columns: [...defaultColumns],
 };
 
 type ReorderColumnArgs = {
@@ -44,8 +50,18 @@ export const taskManagerSlice = createSlice({
   name: 'taskManager',
   initialState,
   reducers: {
-    setAllTasks: (state, action: PayloadAction<Task[]>) => {
-      state.allTasks = action.payload;
+    setTasks: (state, action: PayloadAction<Task[]>) => {
+      state.tasks.data = action.payload;
+      state.tasks.error = null;
+      state.tasks.isLoading = false;
+    },
+    setIsTasksLoading: (state, action: PayloadAction<boolean>) => {
+      state.tasks.isLoading = action.payload;
+    },
+    setTasksError: (state, action: PayloadAction<string>) => {
+      state.tasks.data = null;
+      state.tasks.error = action.payload;
+      state.tasks.isLoading = false;
     },
     setColumns: (state, action: PayloadAction<Column[]>) => {
       state.columns = action.payload;
@@ -132,7 +148,7 @@ export const TASK_ACTIONS = {
 
 // Selectors are used for checking the current state
 export const TASK_SELECTORS = {
-  allTasks: (state: RootState) => state.taskManager.allTasks,
+  allTasks: (state: RootState) => state.taskManager.tasks,
   columns: (state: RootState) => state.taskManager.columns,
 };
 

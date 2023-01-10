@@ -19,6 +19,7 @@ import {
   getPlaylistByID,
   addSongToPlaylist,
   updatePlaylist,
+  changePlaylistName,
 } from './PlaylistSvc';
 
 import { updateSongPlaylist } from './SongPlaylistSvc';
@@ -61,4 +62,5 @@ export {
   getTasks,
   updateTask,
   updateTasks,
+  changePlaylistName,
 };

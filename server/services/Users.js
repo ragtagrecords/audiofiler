@@ -14,6 +14,13 @@ const allColumns = [
     'users.createTimestamp'
 ];
 
+// Columns to be returned to frontend
+const clientColumns = [
+    'users.id',
+    'users.username',
+    'users.createTimestamp'
+];
+
 async function getAllUsers(db) {
     if (!db) {
         return false;
@@ -25,6 +32,22 @@ async function getAllUsers(db) {
         allColumns,
         null,
         null,
+        true
+    );
+}
+
+async function getUserByID(db, id, allColumns = false) {
+    if (!db || !id) {
+        console.log('ERROR: ID required');
+        return false;
+    }
+
+    return sqlSelect(
+        db,
+        'users',
+        allColumns ? allColumns : clientColumns,
+        'WHERE id = ?',
+        [id],
         true
     );
 }
@@ -60,4 +83,4 @@ async function addUser(db, username, hash, salt) {
 
 
 
-module.exports = { getAllUsers, getUserByUsername, addUser};
+module.exports = { getAllUsers, getUserByID, getUserByUsername, addUser};

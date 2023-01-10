@@ -1,7 +1,7 @@
 import React, { /* useContext */ } from 'react';
 import { useAppSelector } from 'Hooks/hooks';
 import { Droppable } from 'react-beautiful-dnd';
-import { PLAYLIST_SELECTORS } from 'Pages/Playlist/PlaylistSlice';
+import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
 import { LoadingSpinner } from 'Components/Common/LoadingSpinner/LoadingSpinner';
 import listStyles from 'Styles/lists.module.scss';
 import './Accordion.scss';
@@ -11,11 +11,10 @@ type AccordionProps = {
 }
 
 export const Accordion = ({ children } : AccordionProps) => {
-  const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
-  const isLoading = useAppSelector(PLAYLIST_SELECTORS.isLoading);
+  const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
 
-  if (isLoading) {
+  if (songs.isLoading) {
     return (
       <div className="accordionContainer">
         <LoadingSpinner />
@@ -23,7 +22,7 @@ export const Accordion = ({ children } : AccordionProps) => {
     );
   }
 
-  if (!playlist?.songs && mode.current !== 'adding') {
+  if (!songs && mode.current !== 'adding') {
     return <div className="accordionContainer"> No songs in this playlist yet, use three dots in upper right to add some</div>;
   }
 
