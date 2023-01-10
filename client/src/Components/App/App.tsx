@@ -1,32 +1,20 @@
 import React, {
-  createContext,
   useEffect,
   useRef,
-  useState,
 } from 'react';
 import { AudioPlayer, Header } from 'Components';
 import { AudioPlayerLoader } from 'Components/AudioPlayer/audioPlayerLoader';
+import { useAppSelector } from 'Hooks/hooks';
 import { AppLoader } from './appLoader';
 import './App.scss';
-
-type AppContextType = {
-  arePortalsOpen: boolean;
-  setArePortalsOpen: any;
-  backgroundColor: string;
-  setBackgroundColor: any;
-}
-
-export const AppCtx = createContext<AppContextType | null>(null);
+import { APP_SELECTORS } from './appSlice';
 
 type AppProps = {
   children: React.ReactNode;
 }
 
 export const App = ({ children }: AppProps) => {
-  // State is empty until song is selected
-  const [arePortalsOpen, setArePortalsOpen] = useState<boolean>(false);
-  const [backgroundColor, setBackgroundColor] = useState<string>('#121212');
-
+  const backgroundColor = useAppSelector(APP_SELECTORS.backgroundColor);
   const pageContentRef: React.RefObject<HTMLDivElement> = useRef(null);
 
   const appLoader = new AppLoader();
@@ -54,13 +42,7 @@ export const App = ({ children }: AppProps) => {
   }, []);
 
   return (
-    <AppCtx.Provider value={{
-      arePortalsOpen,
-      setArePortalsOpen,
-      backgroundColor,
-      setBackgroundColor,
-    }}
-    >
+    <>
       <div
         className="appContainer"
         style={{ backgroundColor }}
@@ -73,6 +55,6 @@ export const App = ({ children }: AppProps) => {
           <AudioPlayer />
         </div>
       </div>
-    </AppCtx.Provider>
+    </>
   );
 };

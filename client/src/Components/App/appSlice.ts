@@ -6,6 +6,8 @@ import { FetchableObject, Playlist, User } from 'Types';
 interface PlaylistState {
   user: FetchableObject<{data: User | null}>;
   playlists: FetchableObject<{data: Playlist[] | null}>;
+  arePortalsOpen: boolean;
+  backgroundColor: string;
 }
 
 const initialState: PlaylistState = {
@@ -19,6 +21,8 @@ const initialState: PlaylistState = {
     isLoading: false,
     error: null,
   },
+  arePortalsOpen: false,
+  backgroundColor: '#121212',
 };
 
 export const appSlice = createSlice({
@@ -51,6 +55,12 @@ export const appSlice = createSlice({
       state.playlists.error = action.payload;
       state.playlists.isLoading = false;
     },
+    setArePortalsOpen: (state, action: PayloadAction<boolean>) => {
+      state.arePortalsOpen = action.payload;
+    },
+    setBackgroundColor: (state, action: PayloadAction<string>) => {
+      state.backgroundColor = action.payload;
+    },
   },
 });
 
@@ -65,6 +75,8 @@ export const APP_ACTIONS = {
 export const APP_SELECTORS = {
   user: (state: RootState) => state.app.user,
   playlists: (state: RootState) => state.app.playlists,
+  arePortalsOpen: (state: RootState) => state.app.arePortalsOpen,
+  backgroundColor: (state: RootState) => state.app.backgroundColor,
 };
 
 export default appSlice.reducer;

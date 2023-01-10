@@ -1,18 +1,18 @@
-import React, { useContext, useEffect } from 'react';
-import { TaskColumn, TaskCard } from 'Components';
+import React, { useEffect } from 'react';
+import { TaskColumn, TaskCard, HeaderPortal } from 'Components';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { AppCtx } from 'Components/App/App';
 import { useParams } from 'react-router-dom';
-import { useAppSelector } from 'Hooks/hooks';
+import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
+import { APP_ACTIONS } from 'Components/App/appSlice';
 import { TASK_SELECTORS } from './taskManagerSlice';
 import styles from './styles.module.scss';
 import { TaskLoader } from './tasksLoader';
 
 export const Tasks = () => {
   const { songID } = useParams<string>();
-  const appContext = useContext(AppCtx);
   const allTasks = useAppSelector(TASK_SELECTORS.allTasks);
   const columns = useAppSelector(TASK_SELECTORS.columns);
+  const dispatch = useAppDispatch();
 
   if (!songID) {
     return <h1> No tasks found </h1>;
@@ -20,12 +20,13 @@ export const Tasks = () => {
   const taskLoader = new TaskLoader(songID);
 
   useEffect(() => {
-    appContext?.setBackgroundColor('#212121');
+    dispatch(APP_ACTIONS.setBackgroundColor('#212121'));
     taskLoader.loadTasksBySongID(songID);
   }, []);
 
   return (
     <>
+      <HeaderPortal />
       <h1> Tasks </h1>
       <DragDropContext onDragEnd={taskLoader.handleDrop}>
         <div className={styles.container}>

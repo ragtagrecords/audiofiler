@@ -1,9 +1,10 @@
-import { AppCtx } from 'Components/App/App';
 import { IconButton } from 'Components/Common/IconButton/IconButton';
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Portal } from 'react-portal';
 import { useNavigate } from 'react-router-dom';
 import Logo from 'Assets/audio-logo-192.webp';
+import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
+import { APP_ACTIONS, APP_SELECTORS } from 'Components/App/appSlice';
 
 type HeaderPortalProps = {
   left?: React.ReactNode;
@@ -18,12 +19,13 @@ export const HeaderPortal = ({
   showBackButton,
 }: HeaderPortalProps) => {
   // Use context to trigger header to rerender
-  const appContext = useContext(AppCtx);
+  const arePortalsOpen = useAppSelector(APP_SELECTORS.arePortalsOpen);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (appContext && !appContext.arePortalsOpen) {
-      appContext.setArePortalsOpen(true);
+    if (!arePortalsOpen) {
+      dispatch(APP_ACTIONS.setArePortalsOpen(true));
     }
   }, []);
 

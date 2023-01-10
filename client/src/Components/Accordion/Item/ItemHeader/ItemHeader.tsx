@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 
 // Context
-import { AppCtx } from 'Components/App/App';
 import { ItemCtx } from 'Components/Accordion/Item/Item';
 import { useAppDispatch, useAppSelector } from 'Hooks/hooks';
 import { PLAYLIST_SELECTORS } from 'Pages/Playlist/playlistSlice';
@@ -12,9 +11,13 @@ import { addSongToPlaylist, removeSongFromPlaylist } from 'Services/PlaylistSvc'
 import { PlaylistLoader } from 'Pages/Playlist/playlistLoader';
 
 export const ItemHeader = () => {
-  const appContext = useContext(AppCtx);
   const itemContext = useContext(ItemCtx);
-  if (appContext === null || itemContext === null) {
+
+  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
+  const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
+  const dispatch = useAppDispatch();
+
+  if (itemContext === null) {
     return null;
   }
   const {
@@ -28,10 +31,6 @@ export const ItemHeader = () => {
     setEditedSong,
     saveEditedSongToDB,
   } = itemContext;
-
-  const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
-  const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
-  const dispatch = useAppDispatch();
 
   if (!playlist.data) {
     console.log('No playlist found');
