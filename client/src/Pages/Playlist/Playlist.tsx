@@ -52,7 +52,7 @@ export const Playlist = () => {
     {
       href: '/songs/add',
       text: 'Upload songs',
-      state: { playlist },
+      state: { playlist: playlist.data },
     },
     {
       href: '/',

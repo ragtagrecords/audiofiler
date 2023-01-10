@@ -188,12 +188,12 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
                 value=""
               > -
               </option>
-              {playlists.data && playlists.data[0].name !== '' && playlists.data.map((playlist : Playlist) => {
+              {playlists.data && playlists.data[0].name !== '' && playlists.data.map((p) => {
                 return (
                   <option
-                    key={playlist.id}
-                    value={playlist.id}
-                  > {playlist.name}
+                    key={p.id}
+                    value={p.id}
+                  > {p.name}
                   </option>
                 );
               })}
