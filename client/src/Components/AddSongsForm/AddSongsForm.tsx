@@ -13,6 +13,7 @@ import {
 import './AddSongsForm.scss';
 import { useAppSelector } from 'Hooks/hooks';
 import { APP_SELECTORS } from 'Components/App/appSlice';
+import { AudioPlayerLoader } from 'Components/AudioPlayer/audioPlayerLoader';
 
 type AddSongFormProps = {
   playlist?: Playlist;
@@ -26,6 +27,7 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
 
   const user = useAppSelector(APP_SELECTORS.user);
   const playlists = useAppSelector(APP_SELECTORS.playlists);
+  const audioPlayerLoader = new AudioPlayerLoader();
 
   // When songs are not null, we are no longer loading
   useEffect(() => {
@@ -156,6 +158,7 @@ export const AddSongsForm = ({ playlist }: AddSongFormProps) => {
     });
 
     if (songsThatFailed.length === 0) {
+      audioPlayerLoader.loadAllSongs();
       navigate(`/playlists/${globalPlaylistID ?? ''}`);
       return true;
     }
