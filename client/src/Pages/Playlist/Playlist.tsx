@@ -15,10 +15,7 @@ import {
   SearchBar,
   DragIconPortal,
 } from 'Components';
-import {
-  updatePlaylist,
-  updateSongPlaylist,
-} from 'Services';
+import { changePlaylistName } from 'Services';
 import { filterSongs } from 'helpers';
 import { AUDIO_PLAYER_ACTIONS, AUDIO_PLAYER_SELECTORS } from 'Components/AudioPlayer/audioPlayerSlice';
 import { APP_SELECTORS } from 'Components/App/appSlice';
@@ -42,12 +39,13 @@ export const Playlist = () => {
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const user = useAppSelector(APP_SELECTORS.user);
   const dispatch = useAppDispatch();
+  const playlistLoader = new PlaylistLoader();
 
   if (!playlistID) {
     return (<div>No playlistID found</div>);
   }
 
-  const playlistLoader = new PlaylistLoader(playlistID);
+  playlistLoader.setPlaylistID(playlistID);
 
   // Used for 3 dots in upper right of page
   const menuOptions: MenuOption[] = [
@@ -78,71 +76,6 @@ export const Playlist = () => {
       ),
     },
   ];
-
-  const changePlaylistName = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    if (!playlist.data || !playlist.data.name) { console.log("ERROR: Couldn't update playlist name"); return false; }
-    const emptyString = playlist.data.name === '';
-    const startsWithSpace = playlist.data.name.length > 0 && playlist.data.name[0] === ' ';
-    const endsWithSpace = playlist.data.name.length > 0 && playlist.data.name.slice(-1) === ' ';
-
-    if (emptyString) {
-      alert('Playlist name can not be empty.');
-    } else if (startsWithSpace || endsWithSpace) {
-      alert('Playlist name can not start or end with spaces.');
-    } else if (playlist.data) {
-      alert('Name updated successfully.');
-      return !!updatePlaylist(playlist.data);
-    }
-    return false;
-  };
-
-  const saveChangesToSongPositions = () => {
-    if (!playlist || !songs.data) { return; }
-    for (let i = 0; i < songs.data.length; i += 1) {
-      if (songs.data[i].id) {
-        const song = songs.data[i];
-        if (song.id && playlist.data) {
-          const success = updateSongPlaylist({
-            songID: song.id,
-            playlistID: playlist.data.id,
-            position: song.position,
-          });
-          if (!success) {
-            alert('Error encountered while updated song positions');
-          } else {
-            dispatch(PLAYLIST_ACTIONS.setCurrentMode('normal'));
-          }
-        }
-      }
-    }
-  };
-
-  // Function to update list order on drop
-  const handleDrop = (droppedItem: any) => {
-    // Ignore drop outside droppable container
-    if (!playlist || !songs.data || !droppedItem.destination) {
-      return false;
-    }
-
-    const updatedPlaylistSongs = [...songs.data];
-    // Remove dragged item
-    const [reorderedItem] = updatedPlaylistSongs.splice(droppedItem.source.index, 1);
-
-    // Add dropped item
-    updatedPlaylistSongs.splice(
-      droppedItem.destination.index,
-      0,
-      reorderedItem,
-    );
-
-    // Update State
-    if (reorderedItem.id) {
-      dispatch(PLAYLIST_ACTIONS.setSongs(updatedPlaylistSongs));
-      dispatch(PLAYLIST_ACTIONS.setSongPlaylistPositions());
-    }
-    return true;
-  };
 
   // When component is initally loaded
   useEffect(() => {
@@ -178,7 +111,7 @@ export const Playlist = () => {
           ? (
             <IconButton
               type="save"
-              onClick={saveChangesToSongPositions}
+              onClick={playlistLoader.saveChangesToSongPositions}
             />)
           : (<UserMenu options={menuOptions} />)}
         center={playlist.isLoading
@@ -194,7 +127,13 @@ export const Playlist = () => {
                   dispatch(PLAYLIST_ACTIONS.setPlaylist(updatedPlaylist));
                 }
               }}
-              onSubmit={changePlaylistName}
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!playlist.data) {
+                  return;
+                }
+                changePlaylistName(playlist.data);
+              }}
             />
           )}
       />
@@ -210,7 +149,7 @@ export const Playlist = () => {
 
       <DragIconPortal />
 
-      <DragDropContext onDragEnd={handleDrop}>
+      <DragDropContext onDragEnd={playlistLoader.handleDrop}>
         {/* <SearchBar /> */}
         <Accordion>
           {songsToShow && songsToShow.map((song: Song, index) => (

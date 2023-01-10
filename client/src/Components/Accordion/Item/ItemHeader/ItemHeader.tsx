@@ -16,6 +16,7 @@ export const ItemHeader = () => {
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
   const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
   const dispatch = useAppDispatch();
+  const playlistLoader = new PlaylistLoader();
 
   if (itemContext === null) {
     return null;
@@ -37,7 +38,7 @@ export const ItemHeader = () => {
     return null;
   }
 
-  const playlistLoader = new PlaylistLoader(playlist.data.id.toString());
+  playlistLoader.setPlaylistID(playlist.data.id.toString());
 
   // When add button is clicked for a particular item
   const addSongToCurrentPlaylist = async (id: number) => {

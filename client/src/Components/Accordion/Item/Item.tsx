@@ -40,12 +40,13 @@ export const Item = ({
   const [bodyType, setBodyType] = useState<BodyType>('info');
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const mode = useAppSelector(PLAYLIST_SELECTORS.mode);
+  const playlistLoader = new PlaylistLoader();
 
   if (!playlist.data) {
     return null;
   }
 
-  const playlistLoader = new PlaylistLoader(playlist.data.id.toString());
+  playlistLoader.setPlaylistID(playlist.data.id.toString());
 
   const wereEditsMade = () => {
     let wasTempoChanged = null;

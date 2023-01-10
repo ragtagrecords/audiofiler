@@ -17,13 +17,14 @@ export const SongVersionHeader = ({ song, hasVersions }: SongVersionHeaderProps)
   const songs = useAppSelector(PLAYLIST_SELECTORS.songs);
   const playlist = useAppSelector(PLAYLIST_SELECTORS.playlist);
   const dispatch = useAppDispatch();
+  const playlistLoader = new PlaylistLoader();
 
   if (!playlist.data) {
     console.log('ERROR: No playlist found');
     return null;
   }
 
-  const playlistLoader = new PlaylistLoader(playlist.data.id.toString());
+  playlistLoader.setPlaylistID(playlist.data.id.toString());
 
   if (!song || !song.id) {
     console.log('ERROR: No song found');
