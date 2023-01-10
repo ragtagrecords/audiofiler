@@ -2,6 +2,9 @@ const DbSvc = require('../services/Db.js');
 const UserSvc = require('../services/Users.js');
 const AuthSvc = require('../services/Auth.js');
 
+// The user objects returned here explicitly do not include the hashed password and salt.
+// DO NOT return the whole user object, always use destructuring to return the columns you want.
+
 exports.authorize = (async function (req, res) {
     const username = req.body.username;
     const password = req.body.password;
@@ -18,7 +21,11 @@ exports.authorize = (async function (req, res) {
         res.status(200).json({
             auth: true,
             token: token,
-            result: user
+            user: {
+                id: user.id,
+                username: user.username,
+                createTimestamp: user.createTimestamp
+            }
         });
         return true;
     }

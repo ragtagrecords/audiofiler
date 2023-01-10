@@ -25,7 +25,7 @@ export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<User | null>) => {
       state.user.data = action.payload;
       state.user.error = null;
       state.user.isLoading = false;
